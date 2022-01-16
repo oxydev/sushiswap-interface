@@ -77,6 +77,7 @@ import { warningSeverity } from '../../../functions/prices'
 import Image from 'next/image'
 import Banner from '../../../components/Banner'
 import { fetchAPI } from '../../../lib/api'
+import { SUPPORTED_NETWORKS } from '../../../modals/NetworkModal'
 
 export async function getServerSideProps() {
   try {
@@ -472,11 +473,13 @@ export default function Swap({ banners }) {
           content="SushiSwap allows for swapping of ERC20 compatible tokens across multiple networks"
         />
       </Head>
-      <TokenWarningModal
-        isOpen={importTokensNotInDefault.length > 0 && !dismissTokenWarning}
-        tokens={importTokensNotInDefault}
-        onConfirm={handleConfirmTokenWarning}
-      />
+      {chainId === Number(SUPPORTED_NETWORKS[ChainId.AVALANCHE].chainId) && (
+        <TokenWarningModal
+          isOpen={importTokensNotInDefault.length > 0 && !dismissTokenWarning}
+          tokens={importTokensNotInDefault}
+          onConfirm={handleConfirmTokenWarning}
+        />
+      )}
       <DoubleGlowShadow>
         <div className="p-4 space-y-4 rounded bg-dark-900 z-1">
           <SwapHeader

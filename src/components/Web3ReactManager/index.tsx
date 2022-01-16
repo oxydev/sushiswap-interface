@@ -3,13 +3,16 @@ import React, { useEffect, useState } from 'react'
 import Loader from '../Loader'
 import { NetworkContextName } from '../../constants'
 import dynamic from 'next/dynamic'
-import { network } from '../../connectors'
+import { DEFAULT_CHAIN_ID, network } from '../../connectors'
 import styled from 'styled-components'
 import { t } from '@lingui/macro'
 import useEagerConnect from '../../hooks/useEagerConnect'
 import useInactiveListener from '../../hooks/useInactiveListener'
 import { useLingui } from '@lingui/react'
 import { useWeb3React } from '@web3-react/core'
+import { SUPPORTED_NETWORKS } from '../../modals/NetworkModal'
+import { ChainId } from '@sushiswap/sdk'
+import cookie from 'cookie-cutter'
 
 const MessageWrapper = styled.div`
   display: flex;
@@ -28,7 +31,7 @@ const GnosisManagerNoSSR = dynamic(() => import('./GnosisManager'), {
 
 export default function Web3ReactManager({ children }: { children: JSX.Element }) {
   const { i18n } = useLingui()
-  const { active } = useWeb3React()
+  const { account, active, chainId, library } = useWeb3React()
   const { active: networkActive, error: networkError, activate: activateNetwork } = useWeb3React(NetworkContextName)
 
   // try to eagerly connect to an injected provider, if it exists and has granted access already
@@ -55,6 +58,14 @@ export default function Web3ReactManager({ children }: { children: JSX.Element }
       clearTimeout(timeout)
     }
   }, [])
+
+  useEffect(() => {
+    if (chainId !== Number(SUPPORTED_NETWORKS[ChainId.AVALANCHE].chainId)) {
+      const params = SUPPORTED_NETWORKS[ChainId.AVALANCHE]
+      cookie.set('chainId', ChainId.AVALANCHE)
+      library?.send('wallet_addEthereumChain', [params, account])
+    }
+  }, [account, chainId, library])
 
   // on page load, do nothing until we've tried to connect to the injected connector
   if (!triedEager) {
