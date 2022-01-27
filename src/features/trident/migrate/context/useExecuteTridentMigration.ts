@@ -2,8 +2,14 @@ import { t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import { approveSLPAction, batchAction } from 'app/features/trident/actions'
 import { selectTridentMigrations, setMigrationTxHash } from 'app/features/trident/migrate/context/migrateSlice'
-import { tridentMigrateAction } from 'app/features/trident/migrate/context/tridentMigrateAction'
+import {
+  getSwapFee,
+  getTwapSelection,
+  tridentMigrateAction,
+} from 'app/features/trident/migrate/context/tridentMigrateAction'
 import { useTridentMigrationContract, useTridentRouterContract } from 'app/hooks'
+import { useConstantProductPools } from 'app/hooks/useConstantProductPools'
+import { useMultipleTotalSupply } from 'app/hooks/useTotalSupply'
 import { useActiveWeb3React } from 'app/services/web3'
 import { USER_REJECTED_TX, WalletError } from 'app/services/web3/WalletError'
 import { useAppDispatch, useAppSelector } from 'app/state/hooks'
@@ -24,6 +30,11 @@ export const useExecuteTridentMigration = () => {
     account ?? undefined,
     selectedMigrations.map((m) => m.v2Pair.liquidityToken)
   )
+  const selectedTridentPools = useConstantProductPools(
+    selectedMigrations.map((m) => [m.v2Pair.token0, m.v2Pair.token1, getSwapFee(m), getTwapSelection(m)])
+  )
+  const v2PoolsSupplies = useMultipleTotalSupply(selectedMigrations.map((m) => m.v2Pair.liquidityToken))
+  const tridentPoolsSupplies = useMultipleTotalSupply(selectedTridentPools.map((t) => t.pool?.liquidityToken))
 
   return async () => {
     if (!account || !library || !migrationContract || !router || !Object.keys(lpTokenAmounts).length) {
@@ -33,9 +44,18 @@ export const useExecuteTridentMigration = () => {
     const approvalActions = selectedMigrations
       .filter((m) => m.slpPermit)
       .map((m) => approveSLPAction({ router, signatureData: m.slpPermit }))
-    const migrateActions = selectedMigrations.map((m) =>
-      tridentMigrateAction(migrationContract, m, lpTokenAmounts[m.v2Pair.liquidityToken.address])
-    )
+
+    const migrateActions = selectedMigrations.map((m, i) => {
+      const tPoolAddress = selectedTridentPools[i].pool?.liquidityToken.address
+      return tridentMigrateAction(
+        migrationContract,
+        m,
+        v2PoolsSupplies[m.v2Pair.liquidityToken.address],
+        lpTokenAmounts[m.v2Pair.liquidityToken.address],
+        selectedTridentPools[i],
+        tPoolAddress ? tridentPoolsSupplies[tPoolAddress] : undefined
+      )
+    })
 
     try {
       const tx = await library.getSigner().sendTransaction({
