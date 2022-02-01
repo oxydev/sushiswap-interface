@@ -296,9 +296,7 @@ const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
     [ChainId.AVALANCHE]: 'Avalanche',
     [ChainId.FUJI]: 'Fuji',
     [ChainId.HECO]: 'HECO',
-    [ChainId.HECO_TESTNET]: 'HECO Testnet',
-    [ChainId.HARMONY]: 'Harmony',
-    [ChainId.HARMONY_TESTNET]: 'Harmony Testnet'
+    [ChainId.HECO_TESTNET]: 'HECO Testnet'
 }
 
 export default function Header() {

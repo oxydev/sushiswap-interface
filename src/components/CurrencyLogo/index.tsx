@@ -10,7 +10,8 @@ import xDaiLogo from '../../assets/images/xdai-logo.png'
 import MoonbeamLogo from '../../assets/images/moonbeam-logo.png'
 import AvalancheLogo from '../../assets/images/avalanche-logo.png'
 import HecoLogo from '../../assets/images/heco-logo.png'
-import HarmonyLogo from '../../assets/images/harmony-logo.png'
+import OKTLogo from '../../assets/images/logo-rose.png'
+import OasisRoseToken from '../../assets/images/logo-rose.png'
 import useHttpLocations from '../../hooks/useHttpLocations'
 import { WrappedTokenInfo } from '../../state/lists/hooks'
 import Logo from '../Logo'
@@ -48,8 +49,10 @@ const logo: { readonly [chainId in ChainId]?: string } = {
     [ChainId.FUJI]: AvalancheLogo,
     [ChainId.HECO]: HecoLogo,
     [ChainId.HECO_TESTNET]: HecoLogo,
-    [ChainId.HARMONY]: HarmonyLogo,
-    [ChainId.HARMONY_TESTNET]: HarmonyLogo
+    [ChainId.OKCHAIN]: OKTLogo,
+    [ChainId.OKCHAIN_TEST]: OKTLogo,
+    [ChainId.OASISETH_TEST]: OasisRoseToken,
+    [ChainId.OASISETH_MAIN]: OasisRoseToken
 }
 
 export default function CurrencyLogo({
