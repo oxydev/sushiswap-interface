@@ -28,12 +28,12 @@ const RPC = {
     [ChainId.FUJI]: 'https://api.avax-test.network/ext/bc/C/rpc',
     [ChainId.HECO]: 'https://http-mainnet.hecochain.com',
     [ChainId.HECO_TESTNET]: 'https://http-testnet.hecochain.com',
-    [ChainId.HARMONY]: 'https://explorer.harmony.one',
-    [ChainId.HARMONY_TESTNET]: 'https://explorer.pops.one'
+    [ChainId.OASISETH_TEST]: 'https://testnet.emerald.oasis.dev',
+    [ChainId.OASISETH_MAIN]: 'https://emerald.oasis.dev'
 }
 
 export const network = new NetworkConnector({
-    defaultChainId: 1,
+    defaultChainId: 42261,
     urls: RPC
 })
 
@@ -61,8 +61,8 @@ export const injected = new InjectedConnector({
         43113, // fuji
         128, // heco
         256, // heco testnet
-        1666600000, // harmony
-        1666700000 // harmony testnet
+        42261,//oasis test
+        42262,//oasis main
     ]
 })
 
@@ -72,8 +72,7 @@ export const walletconnect = new WalletConnectConnector({
         [ChainId.MAINNET]: RPC[ChainId.MAINNET]
     },
     bridge: 'https://bridge.walletconnect.org',
-    qrcode: true,
-    pollingInterval: 15000
+    qrcode: true
 })
 
 // mainnet only

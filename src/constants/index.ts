@@ -88,8 +88,10 @@ const WRAPPED_NATIVE_ONLY: ChainTokenList = {
     [ChainId.FUJI]: [WETH[ChainId.FUJI]],
     [ChainId.HECO]: [WETH[ChainId.HECO]],
     [ChainId.HECO_TESTNET]: [WETH[ChainId.HECO_TESTNET]],
-    [ChainId.HARMONY]: [WETH[ChainId.HARMONY]],
-    [ChainId.HARMONY_TESTNET]: [WETH[ChainId.HARMONY_TESTNET]]
+    [ChainId.OASISETH_MAIN]: [WETH[ChainId.OASISETH_MAIN]],
+    [ChainId.OASISETH_TEST]: [WETH[ChainId.OASISETH_TEST]],
+    [ChainId.OKCHAIN]: [WETH[ChainId.OKCHAIN]],
+    [ChainId.OKCHAIN_TEST]: [WETH[ChainId.OKCHAIN_TEST]]
 }
 
 // Default Ethereum chain tokens

@@ -55,8 +55,10 @@ const EMPTY_LIST: TokenAddressMap = {
     [ChainId.FUJI]: {},
     [ChainId.HECO]: {},
     [ChainId.HECO_TESTNET]: {},
-    [ChainId.HARMONY]: {},
-    [ChainId.HARMONY_TESTNET]: {}
+    [ChainId.OASISETH_TEST]: {},
+    [ChainId.OASISETH_MAIN]: {},
+    [ChainId.OKCHAIN]: {},
+    [ChainId.OKCHAIN_TEST]: {}
 }
 
 const listCache: WeakMap<TokenList, TokenAddressMap> | null =
@@ -65,8 +67,11 @@ const listCache: WeakMap<TokenList, TokenAddressMap> | null =
 export function listToTokenMap(list: TokenList): TokenAddressMap {
     const result = listCache?.get(list)
     if (result) return result
-
-    const map = list.tokens.reduce<TokenAddressMap>(
+    const listt = list.tokens.filter((tokenInfo) => {
+        return tokenInfo.chainId !== 1666600000 && tokenInfo.chainId !== 1666700000;
+        
+    })
+    const map = listt.reduce<TokenAddressMap>(
         (tokenMap, tokenInfo) => {
             const tags: TagInfo[] =
                 tokenInfo.tags
@@ -76,6 +81,7 @@ export function listToTokenMap(list: TokenList): TokenAddressMap {
                     })
                     ?.filter((x): x is TagInfo => Boolean(x)) ?? []
             const token = new WrappedTokenInfo(tokenInfo, tags)
+            
             if (tokenMap[token.chainId][token.address] !== undefined) throw Error('Duplicate tokens.')
             return {
                 ...tokenMap,
@@ -125,8 +131,10 @@ function combineMaps(map1: TokenAddressMap, map2: TokenAddressMap): TokenAddress
         256: { ...map1[256], ...map2[256] }, // heco testnet
         43114: { ...map1[43114], ...map2[43114] }, // avax mainnet
         43113: { ...map1[43113], ...map2[43113] }, // avax testnet fuji
-        1666600000: { ...map1[1666600000], ...map2[1666600000] }, // harmony
-        1666700000: { ...map1[1666700000], ...map2[1666700000] } // harmony testnet
+        65: { ...map1[65], ...map2[65] } ,
+        66: { ...map1[66], ...map2[66] } ,
+        42261: { ...map1[42261], ...map2[42261] } ,
+        42262: { ...map1[42262], ...map2[42262] } 
     }
 }
 

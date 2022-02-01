@@ -340,7 +340,27 @@ const builders = {
             default:
                 return `${prefix}/${type}/${data}`
         }
-    }
+    },
+
+    oasistest: (chainName = '', data: string, type: 'transaction' | 'token' | 'address' | 'block') => {
+        const prefix = `https://explorer.testnet.oasis.updev.si/`
+        switch (type) {
+          case 'transaction':
+            return `${prefix}/tx/${data}`
+          default:
+            return `${prefix}/${type}/${data}`
+        }
+      },
+
+    oasismain:(chainName = '', data: string, type: 'transaction' | 'token' | 'address' | 'block') => {
+        const prefix = `https://explorer.emerald.oasis.dev/`
+        switch (type) {
+          case 'transaction':
+            return `${prefix}/tx/${data}`
+          default:
+            return `${prefix}/${type}/${data}`
+        }
+    },
 }
 
 interface ChainObject {
@@ -423,14 +443,14 @@ const chains: ChainObject = {
         chainName: 'testnet',
         builder: builders.heco
     },
-    [ChainId.HARMONY]: {
-        chainName: '',
-        builder: builders.harmony
+    [ChainId.OASISETH_TEST]: {
+        chainName: 'oasis test',
+        builder: builders.oasistest
     },
-    [ChainId.HARMONY_TESTNET]: {
-        chainName: '',
-        builder: builders.harmonyTestnet
-    }
+    [ChainId.OASISETH_MAIN]: {
+        chainName: 'Emerald mainnet',
+        builder: builders.oasismain
+    },
 }
 
 export function getExplorerLink(
