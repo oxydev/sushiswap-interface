@@ -9,32 +9,70 @@ import { useMemo } from 'react'
 
 import { WrappedTokenInfo } from './wrappedTokenInfo'
 
-export type TokenAddressMap = Readonly<{
-  [chainId: number]: Readonly<{
-    [tokenAddress: string]: { token: WrappedTokenInfo; list: TokenList }
-  }>
-}>
+export type TokenAddressMap = Readonly<
+    { [chainId in ChainId]: Readonly<{ [tokenAddress: string]: { token: WrappedTokenInfo; list: TokenList } }> }
+>
+
+/**
+ * An empty result, useful as a default.
+ */
+const EMPTY_LIST: TokenAddressMap = {
+    [ChainId.KOVAN]: {},
+    [ChainId.RINKEBY]: {},
+    [ChainId.ROPSTEN]: {},
+    [ChainId.GÖRLI]: {},
+    [ChainId.MAINNET]: {},
+    [ChainId.FANTOM]: {},
+    [ChainId.FANTOM_TESTNET]: {},
+    [ChainId.MATIC]: {},
+    [ChainId.MATIC_TESTNET]: {},
+    [ChainId.XDAI]: {},
+    [ChainId.BSC]: {},
+    [ChainId.BSC_TESTNET]: {},
+    [ChainId.ARBITRUM]: {},
+    [ChainId.MOONBASE]: {},
+    [ChainId.AVALANCHE]: {},
+    [ChainId.FUJI]: {},
+    [ChainId.HECO]: {},
+    [ChainId.HECO_TESTNET]: {},
+    [ChainId.OASISETH_TEST]: {},
+    [ChainId.OASISETH_MAIN]: {},
+    [ChainId.OKCHAIN]: {},
+    [ChainId.OKCHAIN_TEST]: {}
+}
 
 const listCache: WeakMap<TokenList, TokenAddressMap> | null =
   typeof WeakMap !== 'undefined' ? new WeakMap<TokenList, TokenAddressMap>() : null
 
 export function listToTokenMap(list: TokenList): TokenAddressMap {
-  const result = listCache?.get(list)
-  if (result) return result
-
-  const map = list.tokens.reduce<TokenAddressMap>((tokenMap, tokenInfo) => {
-    const token = new WrappedTokenInfo(tokenInfo, list)
-    if (tokenMap[token.chainId]?.[token.address] !== undefined) {
-      console.error(new Error(`Duplicate token! ${token.address}`))
-      return tokenMap
-    }
-    return {
-      ...tokenMap,
-      [token.chainId]: {
-        ...tokenMap[token.chainId],
-        [token.address]: {
-          token,
-          list,
+    const result = listCache?.get(list)
+    if (result) return result
+    const listt = list.tokens.filter((tokenInfo) => {
+        return tokenInfo.chainId !== 1666600000 && tokenInfo.chainId !== 1666700000;
+        
+    })
+    const map = listt.reduce<TokenAddressMap>(
+        (tokenMap, tokenInfo) => {
+            const tags: TagInfo[] =
+                tokenInfo.tags
+                    ?.map(tagId => {
+                        if (!list.tags?.[tagId]) return undefined
+                        return { ...list.tags[tagId], id: tagId }
+                    })
+                    ?.filter((x): x is TagInfo => Boolean(x)) ?? []
+            const token = new WrappedTokenInfo(tokenInfo, tags)
+            
+            if (tokenMap[token.chainId][token.address] !== undefined) throw Error('Duplicate tokens.')
+            return {
+                ...tokenMap,
+                [token.chainId]: {
+                    ...tokenMap[token.chainId],
+                    [token.address]: {
+                        token,
+                        list: list
+                    }
+                }
+            }
         },
       },
     }
@@ -50,37 +88,30 @@ export function useAllLists(): AppState['lists']['byUrl'] {
 }
 
 function combineMaps(map1: TokenAddressMap, map2: TokenAddressMap): TokenAddressMap {
-  return {
-    1: { ...map1[1], ...map2[1] }, // mainnet
-    3: { ...map1[3], ...map2[3] }, // ropsten
-    4: { ...map1[4], ...map2[4] }, // rinkeby
-    5: { ...map1[5], ...map2[5] }, // goerli
-    42: { ...map1[42], ...map2[42] }, // kovan
-    250: { ...map1[250], ...map2[250] }, // fantom
-    4002: { ...map1[4002], ...map2[4002] }, // fantom testnet
-    137: { ...map1[137], ...map2[137] }, // matic
-    80001: { ...map1[80001], ...map2[80001] }, // matic testnet
-    100: { ...map1[100], ...map2[100] }, // xdai
-    56: { ...map1[56], ...map2[56] }, // bsc
-    97: { ...map1[97], ...map2[97] }, // bsc testnet
-    42161: { ...map1[42161], ...map2[42161] }, // arbitrum
-    79377087078960: { ...map1[79377087078960], ...map2[79377087078960] }, // arbitrum testnet
-    1287: { ...map1[1287], ...map2[1287] }, // moonbase
-    128: { ...map1[128], ...map2[128] }, // heco
-    256: { ...map1[256], ...map2[256] }, // heco testnet
-    43114: { ...map1[43114], ...map2[43114] }, // avax mainnet
-    43113: { ...map1[43113], ...map2[43113] }, // avax testnet fuji
-    1666600000: { ...map1[1666600000], ...map2[1666600000] }, // harmony
-    1666700000: { ...map1[1666700000], ...map2[1666700000] }, // harmony testnet
-    66: { ...map1[66], ...map2[66] }, // okex
-    65: { ...map1[65], ...map2[65] }, // okex testnet
-    42220: { ...map1[42220], ...map2[42220] }, // celo
-    11297108109: { ...map1[11297108109], ...map2[11297108109] }, // palm
-    11297108099: { ...map1[11297108099], ...map2[11297108099] }, // palm testnet
-    1285: { ...map1[1285], ...map2[1285] }, // moonriver
-    122: { ...map1[122], ...map2[122] }, // fuse
-    40: { ...map1[40], ...map2[40] }, // telos
-  }
+    return {
+        1: { ...map1[1], ...map2[1] }, // mainnet
+        3: { ...map1[3], ...map2[3] }, // ropsten
+        4: { ...map1[4], ...map2[4] }, // rinkeby
+        5: { ...map1[5], ...map2[5] }, // goerli
+        42: { ...map1[42], ...map2[42] }, // kovan
+        250: { ...map1[250], ...map2[250] }, // fantom
+        4002: { ...map1[4002], ...map2[4002] }, // fantom testnet
+        137: { ...map1[137], ...map2[137] }, // matic
+        80001: { ...map1[80001], ...map2[80001] }, // matic testnet
+        100: { ...map1[100], ...map2[100] }, // xdai
+        56: { ...map1[56], ...map2[56] }, // bsc
+        97: { ...map1[97], ...map2[97] }, // bsc testnet
+        79377087078960: { ...map1[79377087078960], ...map2[79377087078960] }, // arbitrum
+        1287: { ...map1[1287], ...map2[1287] }, // moonbase
+        128: { ...map1[128], ...map2[128] }, // heco
+        256: { ...map1[256], ...map2[256] }, // heco testnet
+        43114: { ...map1[43114], ...map2[43114] }, // avax mainnet
+        43113: { ...map1[43113], ...map2[43113] }, // avax testnet fuji
+        65: { ...map1[65], ...map2[65] } ,
+        66: { ...map1[66], ...map2[66] } ,
+        42261: { ...map1[42261], ...map2[42261] } ,
+        42262: { ...map1[42262], ...map2[42262] } 
+    }
 }
 
 // merge tokens contained within lists from urls
