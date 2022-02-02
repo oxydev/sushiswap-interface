@@ -82,26 +82,26 @@ export default function Menu() {
                         <Info size={14} />
                         About
                     </MenuItem>
-                    <MenuItem id="link" href="https://docs.sushi.com">
-                        <BookOpen size={14} />
-                        Docs
-                    </MenuItem>
-                    <MenuItem id="link" href={CODE_LINK}>
-                        <Code size={14} />
-                        Code
-                    </MenuItem>
-                    <MenuItem id="link" href="https://discord.gg/NVPXN4e">
-                        <MessageCircle size={14} />
-                        Discord
-                    </MenuItem>
-                    <MenuItem id="link" href="https://analytics.sushi.com/">
-                        <PieChart size={14} />
-                        Analytics
-                    </MenuItem>
-                    <MenuItemInternal id="link" to="/tools">
-                        <Tool size={14} />
-                        Tools
-                    </MenuItemInternal>
+                    {/*<MenuItem id="link" href="https://docs.sushi.com">*/}
+                    {/*    <BookOpen size={14} />*/}
+                    {/*    Docs*/}
+                    {/*</MenuItem>*/}
+                    {/*<MenuItem id="link" href={CODE_LINK}>*/}
+                    {/*    <Code size={14} />*/}
+                    {/*    Code*/}
+                    {/*</MenuItem>*/}
+                    {/*<MenuItem id="link" href="https://discord.gg/NVPXN4e">*/}
+                    {/*    <MessageCircle size={14} />*/}
+                    {/*    Discord*/}
+                    {/*</MenuItem>*/}
+                    {/*<MenuItem id="link" href="https://analytics.sushi.com/">*/}
+                    {/*    <PieChart size={14} />*/}
+                    {/*    Analytics*/}
+                    {/*</MenuItem>*/}
+                    {/*<MenuItemInternal id="link" to="/tools">*/}
+                    {/*    <Tool size={14} />*/}
+                    {/*    Tools*/}
+                    {/*</MenuItemInternal>*/}
                     {/* {account && (
             <ButtonPrimary onClick={openClaimModal} padding="8px 16px" width="100%" borderradius="20px" mt="0.5rem">
               Claim UNI
