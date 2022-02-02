@@ -21,84 +21,43 @@ const useFarms = () => {
     const boringHelperContract = useBoringHelperContract()
 
     const fetchAllFarms = useCallback(async () => {
-        const results = await Promise.all([
-            masterchef.query({
-                // results[0]
-                query: poolsQuery
-            }),
-            exchange.query({
-                // results[1]
-                query: liquidityPositionSubsetQuery,
-                variables: { user: '0xc2edad668740f1aa35e4d8f227fb8e17dca888cd' }
-            }),
-            getAverageBlockTime(), // results[2]
-            sushiData.sushi.priceUSD(), // results[3]
-            sushiData.bentobox.kashiStakedInfo() //results[4]
-        ])
-        const pools = results[0]?.data.pools
-        const pairAddresses = pools
-            .map((pool: any) => {
-                return pool.pair
-            })
-            .sort()
-        const pairsQuery = await exchange.query({
-            query: pairSubsetQuery,
-            variables: { pairAddresses }
-        })
 
-        const liquidityPositions = results[1]?.data.liquidityPositions
-        const averageBlockTime = results[2]
-        const sushiPrice = results[3]
-        const kashiPairs = results[4].filter(result => result !== undefined) // filter out undefined (not in onsen) from all kashiPairs
+        const pools = [{}]
+        const pairAddresses = ['0x689F78AD285d6332A7885D5e44C5B5e698a3cf54']
+            .sort()
+
+        const averageBlockTime = 8
+        const sushiPrice = 1
+        // const kashiPairs = results[4].filter(result => result !== undefined) // filter out undefined (not in onsen) from all kashiPairs
 
         //console.log('kashiPairs:', kashiPairs)
 
-        const pairs = pairsQuery?.data.pairs
-        const KASHI_PAIRS = _.range(190, 230, 1) // kashiPair pids 189-229
+        // const KASHI_PAIRS = _.range(190, 230, 1) // kashiPair pids 189-229
         //console.log('kashiPairs:', KASHI_PAIRS, kashiPairs, pools)
 
         const farms = pools
-            .filter((pool: any) => {
-                //console.log(KASHI_PAIRS.includes(Number(pool.id)), pool, Number(pool.id))
-                return (
-                    !POOL_DENY.includes(pool.id) &&
-                    (pairs.find((pair: any) => pair?.id === pool.pair) || KASHI_PAIRS.includes(Number(pool.id)))
-                )
-            })
             .map((pool: any) => {
-                if (KASHI_PAIRS.includes(Number(pool.id))) {
-                    const pair = kashiPairs.find((pair: any) => pair.id === pool.pair)
-                    //console.log('kpair:', pair, pool)
-                    return {
-                        ...pool,
-                        ...pair,
-                        type: 'KMP',
-                        pid: Number(pool.id),
-                        pairAddress: pair?.id,
-                        pairSymbol: pair?.symbol,
-                        liquidityPair: {
-                            collateral: {
-                                id: pair?.collateral,
-                                symbol: pair?.collateralSymbol,
-                                decimals: pair?.collateralDecimals
-                            },
-                            asset: { id: pair?.asset, symbol: pair?.assetSymbol, decimals: pair?.assetDecimals }
-                        },
-                        roiPerYear: pair?.roiPerYear,
-                        totalAssetStaked: pair?.totalAssetStaked
-                            ? pair?.totalAssetStaked / Math.pow(10, pair?.assetDecimals)
-                            : 0,
-                        tvl: pair?.balanceUSD ? pair?.balanceUSD : 0
-                    }
-                } else {
-                    const pair = pairs.find((pair: any) => pair.id === pool.pair)
-                    const liquidityPosition = liquidityPositions.find(
-                        (liquidityPosition: any) => liquidityPosition.pair.id === pair.id
-                    )
+
                     const blocksPerHour = 3600 / averageBlockTime
+                //todo pool.balance pair.totalSupply pair.reserveUSD pool.allocPoint pool.owner.totalAllocPoint pool.owner.sushiPerBlock
+                    pool.balance = 1
+                    pool.allocPoint = 100
+                    pool.owner = {}
+                    pool.owner.totalAllocPoint = 100
+                    pool.owner.sushiPerBlock = 1000000000
+                    pool.token0 = {}
+                    pool.token1 = {}
+                    pool.token0.symbol = "A"
+                    pool.token0.name = "AA"
+                    pool.token0.address = "0x007906a1f7f34865d6bAc41eeD4Ea3ffF4eE7cf4"
+                    pool.token1.symbol = "B"
+                    pool.token1.name = "BB"
+                    pool.token1.address = "0x77E44D943267014F936299d4a69a2C379A46504b"
+                    pool.id = 0
+                    pool.lpAddress = pairAddresses[pool.id]
                     const balance = Number(pool.balance / 1e18) > 0 ? Number(pool.balance / 1e18) : 0.1
-                    const totalSupply = pair.totalSupply > 0 ? pair.totalSupply : 0.1
-                    const reserveUSD = pair.reserveUSD > 0 ? pair.reserveUSD : 0.1
+                    const totalSupply = 0.1
+                    const reserveUSD = 0.1
                     const balanceUSD = (balance / Number(totalSupply)) * Number(reserveUSD)
                     const rewardPerBlock =
                         ((pool.allocPoint / pool.owner.totalAllocPoint) * pool.owner.sushiPerBlock) / 1e18
@@ -111,26 +70,26 @@ const useFarms = () => {
                     return {
                         ...pool,
                         type: 'SLP',
-                        symbol: pair.token0.symbol + '-' + pair.token1.symbol,
-                        name: pair.token0.name + ' ' + pair.token1.name,
+                        symbol: pool.token0.symbol + '-' + pool.token1.symbol,
+                        name: pool.token0.name + ' ' + pool.token1.name,
                         pid: Number(pool.id),
-                        pairAddress: pair.id,
+                        pairAddress: pool.lpAddress,
                         slpBalance: pool.balance,
-                        liquidityPair: pair,
+                        liquidityPair: pool.lpAddress,
                         roiPerBlock,
                         roiPerHour,
                         roiPerDay,
                         roiPerMonth,
                         roiPerYear,
                         rewardPerThousand: 1 * roiPerDay * (1000 / sushiPrice),
-                        tvl: liquidityPosition?.liquidityTokenBalance
-                            ? (pair.reserveUSD / pair.totalSupply) * liquidityPosition.liquidityTokenBalance
-                            : 0.1
+                        tvlL :1
+                        // tvl: liquidityPosition?.liquidityTokenBalance
+                        //     ? (pair.reserveUSD / pair.totalSupply) * liquidityPosition.liquidityTokenBalance
+                        //     : 0.1
                     }
-                }
             })
 
-        //console.log('farms:', farms)
+        console.log('farms:', farms)
         const sorted = _.orderBy(farms, ['pid'], ['desc'])
 
         const pids = sorted.map(pool => {
@@ -138,8 +97,9 @@ const useFarms = () => {
         })
 
         if (account) {
+          console.log(account, pids)
             const userFarmDetails = await boringHelperContract?.pollPools(account, pids)
-            //console.log('userFarmDetails:', userFarmDetails)
+            console.log('userFarmDetails:', userFarmDetails)
             const userFarms = userFarmDetails
                 .filter((farm: any) => {
                     return farm.balance.gt(BigNumber.from(0)) || farm.pending.gt(BigNumber.from(0))
@@ -153,22 +113,12 @@ const useFarms = () => {
                     console.log('farmDetails:', farmDetails)
                     let deposited
                     let depositedUSD
-                    if (farmDetails && farmDetails.type === 'KMP') {
-                        deposited = Fraction.from(
-                            farm.balance,
-                            BigNumber.from(10).pow(farmDetails.liquidityPair.asset.decimals)
-                        ).toString()
-                        depositedUSD =
-                            farmDetails.totalAssetStaked && farmDetails.totalAssetStaked > 0
-                                ? (Number(deposited) * Number(farmDetails.tvl)) / farmDetails.totalAssetStaked
-                                : 0
-                    } else {
-                        deposited = Fraction.from(farm.balance, BigNumber.from(10).pow(18)).toString(18)
-                        depositedUSD =
-                            farmDetails.slpBalance && Number(farmDetails.slpBalance / 1e18) > 0
-                                ? (Number(deposited) * Number(farmDetails.tvl)) / (farmDetails.slpBalance / 1e18)
-                                : 0
-                    }
+                    deposited = Fraction.from(farm.balance, BigNumber.from(10).pow(18)).toString(18)
+                    depositedUSD =
+                        farmDetails.slpBalance && Number(farmDetails.slpBalance / 1e18) > 0
+                            ? (Number(deposited) * Number(farmDetails.tvl)) / (farmDetails.slpBalance / 1e18)
+                            : 0
+
                     const pending = Fraction.from(farm.pending, BigNumber.from(10).pow(18)).toString(18)
 
                     return {
@@ -176,11 +126,11 @@ const useFarms = () => {
                         type: farmDetails.type, // KMP or SLP
                         depositedLP: deposited,
                         depositedUSD: depositedUSD,
-                        pendingSushi: pending
+                        pendingBling: pending
                     }
                 })
             setFarms({ farms: sorted, userFarms: userFarms })
-            //console.log('userFarms:', userFarms)
+            console.log('userFarms:', userFarms)
         } else {
             setFarms({ farms: sorted, userFarms: [] })
         }

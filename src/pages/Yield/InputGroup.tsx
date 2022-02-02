@@ -55,14 +55,15 @@ export default function InputGroup({
     const pending = usePendingSushi(pid)
 
     //console.log('pending:', pending, pid)
-
     const [approvalState, approve] = useApproveCallback(
         new TokenAmount(
             new Token(chainId || 1, pairAddressChecksum, balance.decimals, pairSymbol, ''),
             ethers.constants.MaxUint256.toString()
         ),
-        MASTERCHEF_ADDRESS[1]
+        MASTERCHEF_ADDRESS[42262]
     )
+    console.log('shit',chainId || 1, pairAddressChecksum, balance, pairSymbol,approvalState)
+
 
     const { deposit, withdraw, harvest } = useMasterChef()
 
@@ -87,22 +88,6 @@ export default function InputGroup({
                                 }
                             >
                                 Remove Liquidity
-                            </Button>
-                        </>
-                    )}
-                    {type === 'KMP' && assetSymbol && (
-                        <>
-                            <Button
-                                color="default"
-                                onClick={() => history.push(`/bento/kashi/lend/${isWETH(pairAddress)}`)}
-                            >
-                                Lend {assetSymbol}
-                            </Button>
-                            <Button
-                                color="default"
-                                onClick={() => history.push(`/bento/kashi/lend/${isWETH(pairAddress)}`)}
-                            >
-                                Withdraw {assetSymbol}
                             </Button>
                         </>
                     )}
@@ -221,7 +206,7 @@ export default function InputGroup({
                             }}
                         >
                             Harvest{'  '}
-                            {formattedNum(pending)} SUSHI
+                            {formattedNum(pending)} BLING
                         </Button>
                     </div>
                 )}

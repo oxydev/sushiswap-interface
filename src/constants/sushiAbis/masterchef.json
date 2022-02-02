@@ -9,7 +9,7 @@
       { "internalType": "address", "name": "_devaddr", "type": "address" },
       {
         "internalType": "uint256",
-        "name": "_sushiPerBlock",
+        "name": "_blingPerBlock",
         "type": "uint256"
       },
       { "internalType": "uint256", "name": "_startBlock", "type": "uint256" },
@@ -140,7 +140,7 @@
       { "internalType": "uint256", "name": "_pid", "type": "uint256" },
       { "internalType": "address", "name": "_user", "type": "address" }
     ],
-    "name": "pendingSushi",
+    "name": "pendingBling",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
@@ -162,7 +162,7 @@
       },
       {
         "internalType": "uint256",
-        "name": "accSushiPerShare",
+        "name": "accBlingPerShare",
         "type": "uint256"
       }
     ],
@@ -210,7 +210,7 @@
   },
   {
     "inputs": [],
-    "name": "sushiPerBlock",
+    "name": "blingPerBlock",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"

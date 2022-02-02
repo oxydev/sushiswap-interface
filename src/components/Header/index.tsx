@@ -352,28 +352,8 @@ export default function Header() {
                             Yield
                         </StyledNavLink>
                     )}
-                    {chainId === ChainId.OASISETH_MAIN && (
-                        <StyledNavLink id={`stake-nav-link`} to={'/stake'}>
-                            Stake
-                        </StyledNavLink>
-                    )}
-                    {chainId === ChainId.OASISETH_MAIN && (
-                        <HideSmall>
-                            <StyledNavLink id={`vesting-nav-link`} to={'/vesting'}>
-                                Vesting
-                            </StyledNavLink>
-                        </HideSmall>
-                    )}
-                    {[ChainId.MAINNET, ChainId.KOVAN, ChainId.BSC].indexOf(chainId || 1) != -1 && (
-                        <StyledNavLink id={`bento-nav-link`} to={'/bento'}>
-                            Apps
-                        </StyledNavLink>
-                    )}
-                    {chainId && (
-                        <StyledExternalLink id={`analytics-nav-link`} href={'https://analytics.sushi.com'}>
-                            Analytics <span style={{ fontSize: '11px' }}>↗</span>
-                        </StyledExternalLink>
-                    )}
+
+
                 </HeaderLinks>
             </HeaderRow>
             <HeaderControls>

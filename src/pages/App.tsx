@@ -19,8 +19,6 @@ import {
     RedirectOldAddLiquidityPathStructure,
     RedirectToAddLiquidity
 } from './AddLiquidity/redirects'
-//import Earn from './Earn'
-//import Manage from './Earn/Manage'
 //import MigrateV1 from './MigrateV1'
 //import MigrateV1Exchange from './MigrateV1/MigrateV1Exchange'
 import MigrateV2 from './MigrateV2'
@@ -57,6 +55,7 @@ import Saave from './Saave'
 import Vesting from './Vesting'
 
 import { KashiProvider } from 'kashi/context'
+import Earn from './Earn'
 
 const AppWrapper = styled.div`
     display: flex;

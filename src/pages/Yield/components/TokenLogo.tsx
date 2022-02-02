@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { ethers } from 'ethers'
 import PlaceHolder from 'assets/images/placeholder.png'
 import KashiLogo from 'assets/kashi/kashi-neon.png'
+import Tether from '../../../assets/images/tether.png'
 //import EthereumLogo from "../../assets/img/eth.png";
 
 const isAddress = (value: any) => {
@@ -61,10 +62,17 @@ export default function TokenLogo({ address, header = false, size, ...rest }: an
         address = '0xc011a72400e58ecd99ee497cf89e3775d4bd732f'
     }
     //console.log('address:', isAddress(address))
+    const tokenLogos: Record<string, string> = {
+        '0xdC19A122e268128B5eE20366299fc7b5b199C8e3': Tether,
+        '0x3223f17957Ba502cbe71401D55A0DB26E5F7c68F':
+          'https://raw.githubusercontent.com/trustwallet/assets/ec4f6c94a95bcddda22fe25659cf02d1d5d67bfc/blockchains/ethereum/info/logo.png'
+    }
+    const getTokenLogoURL = (address: string|false) => {
+        if (address && address in tokenLogos) return tokenLogos[address]
+        return 'https://raw.githubusercontent.com/trustwallet/assets/ad3cfa2e1c8e4b295cd81d64ecc5ab2a9514f79e/blockchains/oasis/info/logo.png'
+    }
 
-    const path = `https://raw.githubusercontent.com/sushiswap/assets/master/blockchains/ethereum/assets/${isAddress(
-        address
-    )}/logo.png`
+    const path = getTokenLogoURL(isAddress(address))
 
     return (
         <Inline>

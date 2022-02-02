@@ -346,5 +346,5 @@ export const BLOCKED_ADDRESSES: string[] = [
 ]
 
 // Boring Helper
-export const BORING_HELPER_ADDRESS = '0x11Ca5375AdAfd6205E41131A4409f182677996E6'
+export const BORING_HELPER_ADDRESS = '0x1c3b634F53033d0b457ea60A49402C7A5e2f6d03'
 export const DefaultChainId: ChainId = (<any>ChainId)[process.env.REACT_APP_DEFAULTCHAINID || 'OASISETH_MAIN']
