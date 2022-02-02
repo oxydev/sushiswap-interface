@@ -347,17 +347,17 @@ export default function Header() {
                     >
                         {t('pool')}
                     </StyledNavLink>
-                    {chainId === ChainId.MAINNET && (
+                    {chainId === ChainId.OASISETH_MAIN && (
                         <StyledNavLink id={`yield-nav-link`} to={'/yield'}>
                             Yield
                         </StyledNavLink>
                     )}
-                    {chainId === ChainId.MAINNET && (
+                    {chainId === ChainId.OASISETH_MAIN && (
                         <StyledNavLink id={`stake-nav-link`} to={'/stake'}>
                             Stake
                         </StyledNavLink>
                     )}
-                    {chainId === ChainId.MAINNET && (
+                    {chainId === ChainId.OASISETH_MAIN && (
                         <HideSmall>
                             <StyledNavLink id={`vesting-nav-link`} to={'/vesting'}>
                                 Vesting
