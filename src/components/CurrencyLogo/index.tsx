@@ -10,6 +10,7 @@ import xDaiLogo from '../../assets/images/xdai-logo.png'
 import MoonbeamLogo from '../../assets/images/moonbeam-logo.png'
 import AvalancheLogo from '../../assets/images/avalanche-logo.png'
 import HecoLogo from '../../assets/images/heco-logo.png'
+import Tether from '../../assets/images/tether.png'
 import OKTLogo from '../../assets/images/logo-rose.png'
 import OasisRoseToken from '../../assets/images/logo-rose.png'
 import useHttpLocations from '../../hooks/useHttpLocations'
@@ -17,8 +18,15 @@ import { WrappedTokenInfo } from '../../state/lists/hooks'
 import Logo from '../Logo'
 import { useActiveWeb3React } from '../../hooks'
 
-const getTokenLogoURL = (address: string) =>
-    `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`
+const tokenLogos: Record<string, string> = {
+    '0xdC19A122e268128B5eE20366299fc7b5b199C8e3': Tether,
+    '0x3223f17957Ba502cbe71401D55A0DB26E5F7c68F':
+        'https://raw.githubusercontent.com/trustwallet/assets/ec4f6c94a95bcddda22fe25659cf02d1d5d67bfc/blockchains/ethereum/info/logo.png'
+}
+const getTokenLogoURL = (address: string) => {
+    if (address in tokenLogos) return tokenLogos[address]
+    return 'https://raw.githubusercontent.com/trustwallet/assets/ad3cfa2e1c8e4b295cd81d64ecc5ab2a9514f79e/blockchains/oasis/info/logo.png'
+}
 
 const StyledNativeCurrencyLogo = styled.img<{ size: string }>`
     width: ${({ size }) => size};

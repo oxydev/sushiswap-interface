@@ -7,7 +7,6 @@ import { useSelector } from 'react-redux'
 import { AppState } from '../index'
 import sortByListPriority from 'utils/listSort'
 import UNSUPPORTED_TOKEN_LIST from '../../constants/tokenLists/uniswap-v2-unsupported.tokenlist.json'
-
 type TagDetails = Tags[keyof Tags]
 export interface TagInfo extends TagDetails {
     id: string

@@ -2747,14 +2747,17 @@
   resolved "https://registry.yarnpkg.com/@sushiswap/core/-/core-1.4.2.tgz#065a6613f842ab7ac6d12878072b59327bffa296"
   integrity sha512-Khd2i6Bob9uk7dCgVkhUioEoxRP28m6aj25MegAHvnJyxZPVzZDhxSkeL6wdv5MeAp2DwHkYqUq03KDfVTTP4Q==
 
-"@sushiswap/default-token-list@5.9.0":
-  version "5.9.0"
-  resolved "https://registry.yarnpkg.com/@sushiswap/default-token-list/-/default-token-list-5.9.0.tgz#0904e39e87a0ec47eb5b25426df8cf2ca0eea81a"
-  integrity sha512-vrQh36p9bLSTdKAFz43zbjojNb7VszE7vz2W7KzplFUlyv1rxqBqTVo0TSuaJZ7pvFcOQgM125I9wuLiIKoyhQ==
+"@sushiswap/default-token-list@git+ssh://git@github.com:oxydev/default-token-list":
+  version "1.0.21"
+  resolved "git+ssh://git@github.com:oxydev/default-token-list#520cef314046dce4dd657204b7570d0a9a5d1b6b"
 
 "@sushiswap/sdk@git+https://github.com/oxydev/bling-sdk.git":
   version "0.1.0"
+<<<<<<< HEAD
   resolved "git+https://github.com/oxydev/bling-sdk.git#52aa2ebe9cee929a6e9db1b50e5062b1c66f559f"
+=======
+  resolved "git+ssh://git@github.com:oxydev/bling-sdk#a349eee0de1bd8d215b02f6c64cc6a8a7fac3845"
+>>>>>>> dc3920b0ef2aea16864774ae2f772dc1dd23b18c
   dependencies:
     "@uniswap/v2-core" "1.0.1"
     big.js "^5.2.2"

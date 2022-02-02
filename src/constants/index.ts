@@ -1,4 +1,4 @@
-import { ChainId, JSBI, Percent, Token, WETH } from '@sushiswap/sdk'
+import { ChainId, JSBI, Percent, Token, WETH, DefaultChainToken } from '@sushiswap/sdk'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 
 import { fortmatic, injected, portis, lattice, walletconnect, walletlink, torus } from '../connectors'
@@ -40,6 +40,7 @@ export const SUSHI: ChainTokenMap = {
         'SUSHI',
         'SushiToken'
     ),
+    [ChainId.OASISETH_MAIN]: DefaultChainToken[ChainId.OASISETH_MAIN].USDT,
     [ChainId.RINKEBY]: new Token(
         ChainId.RINKEBY,
         '0x0769fd68dFb93167989C6f7254cd0D766Fb2841F',
@@ -120,13 +121,26 @@ export const FANTOM: { [key: string]: Token } = {
     DAI: new Token(ChainId.FANTOM, '0x8D11eC38a3EB5E956B052f67Da8Bdc9bef8Abf3E', 18, 'DAI', 'Dai Stablecoin'),
     WETH: new Token(ChainId.FANTOM, '0x74b23882a30290451A17c44f4F05243b6b58C76d', 18, 'WETH', 'Wrapped Ether')
 }
-
+export const OASISETH_TEST_TOKENS = DefaultChainToken[ChainId.OASISETH_TEST]
+export const OASISETH_MAIN_TOKENS = DefaultChainToken[ChainId.OASISETH_MAIN]
+export const AllDefaultChainTokens = DefaultChainToken
 // used to construct intermediary pairs for trading
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     ...WRAPPED_NATIVE_ONLY,
     [ChainId.MAINNET]: [...WRAPPED_NATIVE_ONLY[ChainId.MAINNET], DAI, USDC, USDT, COMP, MKR, WBTC, RUNE, NFTX, STETH],
     [ChainId.FANTOM]: [...WRAPPED_NATIVE_ONLY[ChainId.FANTOM], FANTOM.DAI, FANTOM.USDC, FANTOM.WBTC, FANTOM.WETH],
-    [ChainId.BSC]: [...WRAPPED_NATIVE_ONLY[ChainId.BSC], BSC.DAI, BSC.USD, BSC.USDC, BSC.USDT, BSC.BTCB]
+    [ChainId.BSC]: [...WRAPPED_NATIVE_ONLY[ChainId.BSC], BSC.DAI, BSC.USD, BSC.USDC, BSC.USDT, BSC.BTCB],
+    [ChainId.OASISETH_TEST]: [
+        ...WRAPPED_NATIVE_ONLY[ChainId.OASISETH_TEST],
+        OASISETH_TEST_TOKENS.BTC,
+        OASISETH_TEST_TOKENS.ETH,
+        OASISETH_TEST_TOKENS.USDT
+    ],
+    [ChainId.OASISETH_MAIN]: [
+        ...WRAPPED_NATIVE_ONLY[ChainId.OASISETH_MAIN],
+        OASISETH_MAIN_TOKENS.ETH,
+        OASISETH_MAIN_TOKENS.USDT
+    ]
 }
 
 export const CREAM = new Token(ChainId.MAINNET, '0x2ba592F78dB6436527729929AAf6c908497cB200', 18, 'CREAM', 'Cream')
@@ -246,6 +260,16 @@ export const PINNED_PAIRS: { readonly [chainId in ChainId]?: [Token, Token][] } 
         ],
         [USDC, USDT],
         [DAI, USDT]
+    ],
+    [ChainId.OASISETH_TEST]: [
+        [SUSHI[ChainId.OASISETH_TEST] as Token, WETH[ChainId.OASISETH_TEST]],
+        [OASISETH_TEST_TOKENS.USDT, OASISETH_TEST_TOKENS.ETH],
+        [OASISETH_TEST_TOKENS.USDT, WETH[ChainId.OASISETH_TEST]]
+    ],
+    [ChainId.OASISETH_MAIN]: [
+        [SUSHI[ChainId.OASISETH_MAIN] as Token, WETH[ChainId.OASISETH_MAIN]],
+        [OASISETH_MAIN_TOKENS.USDT, OASISETH_MAIN_TOKENS.ETH],
+        [OASISETH_MAIN_TOKENS.USDT, WETH[ChainId.OASISETH_MAIN]]
     ]
 }
 
@@ -382,11 +406,6 @@ export const BLOCKED_ADDRESSES: string[] = [
     '0xA7e5d5A720f06526557c513402f2e6B5fA20b008'
 ]
 
-// BentoBox Swappers
-export const BASE_SWAPPER: { [chainId in ChainId]?: string } = {
-    [ChainId.MAINNET]: '0x0',
-    [ChainId.ROPSTEN]: '0xe4E2540D421e56b0B786d40c5F5268891288c6fb'
-}
-
 // Boring Helper
 export const BORING_HELPER_ADDRESS = '0x11Ca5375AdAfd6205E41131A4409f182677996E6'
+export const DefaultChainId: ChainId = (<any>ChainId)[process.env.REACT_APP_DEFAULTCHAINID || 'OASISETH_MAIN']

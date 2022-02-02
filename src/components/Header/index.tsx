@@ -11,7 +11,7 @@ import styled from 'styled-components'
 // import LogoDark from '../../assets/svg/logo_white.svg'
 
 import Logo from '../../assets/images/logo.png'
-import LogoHover from '../../assets/svg/logo_hover.svg'
+import LogoHover from '../../assets/images/logo.png'
 
 import { useActiveWeb3React } from '../../hooks'
 import { useDarkModeManager } from '../../state/user/hooks'
@@ -296,7 +296,9 @@ const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
     [ChainId.AVALANCHE]: 'Avalanche',
     [ChainId.FUJI]: 'Fuji',
     [ChainId.HECO]: 'HECO',
-    [ChainId.HECO_TESTNET]: 'HECO Testnet'
+    [ChainId.HECO_TESTNET]: 'HECO Testnet',
+    [ChainId.OASISETH_TEST]: 'Emerald Testnet',
+    [ChainId.OASISETH_MAIN]: 'Emerald Mainnet'
 }
 
 export default function Header() {
@@ -324,9 +326,9 @@ export default function Header() {
                     <HoverIcon>
                         <img width={'48px'} src={LogoHover} alt="logo" />
                     </HoverIcon>
-                    <StaticIcon>
-                        <img width={'40px'} src={Logo} alt="logo" />
-                    </StaticIcon>
+                    {/*<StaticIcon>*/}
+                    {/*    <img width={'40px'} src={Logo} alt="logo" />*/}
+                    {/*</StaticIcon>*/}
                 </Title>
                 <HeaderLinks>
                     <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
