@@ -139,7 +139,8 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     [ChainId.OASISETH_MAIN]: [
         ...WRAPPED_NATIVE_ONLY[ChainId.OASISETH_MAIN],
         OASISETH_MAIN_TOKENS.ETH,
-        OASISETH_MAIN_TOKENS.USDT
+        OASISETH_MAIN_TOKENS.USDT,
+        new Token(ChainId.OASISETH_MAIN, '0x007906a1f7f34865d6bAc41eeD4Ea3ffF4eE7cf4', 18, 'A', 'A')
     ]
 }
 
