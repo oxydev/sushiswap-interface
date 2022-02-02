@@ -316,6 +316,8 @@ export default function Header() {
     const countUpValue = aggregateBalance?.toFixed(0) ?? '0'
     const countUpValuePrevious = usePrevious(countUpValue) ?? '0'
 
+    console.log(chainId)
+
     return (
         <HeaderFrame>
             <Modal isOpen={showUniBalanceModal} onDismiss={() => setShowUniBalanceModal(false)}>
@@ -352,14 +354,12 @@ export default function Header() {
                             Yield
                         </StyledNavLink>
                     )}
-
-
                 </HeaderLinks>
             </HeaderRow>
             <HeaderControls>
                 <HeaderElement>
                     <HideSmall>
-                        {chainId && NETWORK_LABELS[chainId] && (
+                        {account && chainId && NETWORK_LABELS[chainId] && (
                             <NetworkCard title={NETWORK_LABELS[chainId]}>{NETWORK_LABELS[chainId]}</NetworkCard>
                         )}
                     </HideSmall>
