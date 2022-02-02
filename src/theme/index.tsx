@@ -53,8 +53,8 @@ export function colors(darkMode: boolean): Colors {
         text5: darkMode ? '#2C2F36' : '#EDEEF2',
 
         // backgrounds / greys
-        bg1: darkMode ? '#202231' : '#FFFFFF',
-        bg2: darkMode ? '#202d3f' : '#F7F8FA',
+        bg1: darkMode ? '#010326' : '#FFFFFF',
+        bg2: darkMode ? '#192959' : '#F7F8FA',
         bg3: darkMode ? '#2a3a50' : '#EDEEF2',
         bg4: darkMode ? '#3a506f' : '#CED0D9',
         bg5: darkMode ? '#6C7284' : '#888D9B',
@@ -240,7 +240,7 @@ export const ThemedGlobalStyle = createGlobalStyle`
 html {
   color: ${({ theme }) => theme.text1};
   /*background-color: ${({ theme }) => theme.bg2};*/
-  background-color: #0D0415;
+  background: linear-gradient(to top, rgb(90,191,173) 10% , #161459);
 }
 
 body {
