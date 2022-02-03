@@ -14,6 +14,7 @@ const usePending = (pid: number) => {
     const currentBlockNumber = useBlockNumber()
 
     const fetchPending = useCallback(async () => {
+        //todo bling fixing
         const pending = await masterChefContract?.pendingBling(pid, account)
         const formatted = Fraction.from(BigNumber.from(pending), BigNumber.from(10).pow(18)).toString()
         setBalance(formatted)
