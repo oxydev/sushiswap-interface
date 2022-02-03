@@ -17,6 +17,8 @@ import { Button } from './components'
 import { isAddressString, formattedNum, isWETH } from 'utils'
 import Fraction from 'constants/Fraction'
 import { BigNumber } from '@ethersproject/bignumber'
+import Tooltip, { MouseoverTooltip } from 'components/Tooltip'
+import styled from 'styled-components'
 
 const fixedFormatting = (value: BigNumber, decimals?: number) => {
     return Fraction.from(value, BigNumber.from(10).pow(BigNumber.from(decimals))).toString(decimals)
@@ -62,17 +64,19 @@ export default function InputGroup({
         ),
         MASTERCHEF_ADDRESS[42262]
     )
-    console.log('shit',chainId || 1, pairAddressChecksum, balance, pairSymbol,approvalState)
-
+    console.log('shit', chainId || 1, pairAddressChecksum, balance, pairSymbol, approvalState)
 
     const { deposit, withdraw, harvest } = useMasterChef()
 
     //console.log('depositValue:', depositValue)
 
+    const [toolTipShow, setToolTipShow] = useState(false)
+    console.log(toolTipShow)
+
     return (
         <>
-            <div className="flex flex-col space-y-4 py-6">
-                <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 px-4">
+            <div className="flex flex-col py-6 space-y-4">
+                <div className="grid grid-cols-1 gap-4 px-4 sm:grid-cols-2">
                     {type === 'LP' && (
                         <>
                             <Button
@@ -101,18 +105,18 @@ export default function InputGroup({
                     </div>
                 )}
                 {approvalState === ApprovalState.APPROVED && (
-                    <div className="grid gap-4 grid-cols-2 px-4">
+                    <div className="grid grid-cols-2 gap-4 px-4">
                         {/* Deposit */}
-                        <div className="text-center col-span-2 md:col-span-1">
+                        <div className="col-span-2 text-center md:col-span-1">
                             {account && (
-                                <div className="text-sm text-secondary cursor-pointer text-right mb-2 pr-4">
+                                <div className="pr-4 mb-2 text-sm text-right cursor-pointer text-secondary">
                                     Wallet Balance: {formattedNum(fixedFormatting(balance.value, balance.decimals))}{' '}
                                     {type}
                                 </div>
                             )}
-                            <div className="flex items-center relative w-full mb-4">
+                            <div className="relative flex items-center w-full mb-4">
                                 <NumericalInput
-                                    className="w-full p-3 bg-input rounded focus:ring focus:ring-blue"
+                                    className="w-full p-3 rounded bg-input focus:ring focus:ring-blue"
                                     value={depositValue}
                                     onUserInput={value => {
                                         setDepositValue(value)
@@ -125,7 +129,7 @@ export default function InputGroup({
                                         onClick={() => {
                                             setDepositValue(fixedFormatting(balance.value, balance.decimals))
                                         }}
-                                        className="absolute right-4 focus:ring focus:ring-blue border-0"
+                                        className="absolute border-0 right-4 focus:ring focus:ring-blue"
                                     >
                                         MAX
                                     </Button>
@@ -149,15 +153,15 @@ export default function InputGroup({
                             </Button>
                         </div>
                         {/* Withdraw */}
-                        <div className="text-center col-span-2 md:col-span-1">
+                        <div className="col-span-2 text-center md:col-span-1">
                             {account && (
-                                <div className="text-sm text-secondary cursor-pointer text-right mb-2 pr-4">
+                                <div className="pr-4 mb-2 text-sm text-right cursor-pointer text-secondary">
                                     Deposited: {formattedNum(fixedFormatting(staked.value, staked.decimals))} {type}
                                 </div>
                             )}
-                            <div className="flex items-center relative w-full mb-4">
+                            <div className="relative flex items-center w-full mb-4">
                                 <NumericalInput
-                                    className="w-full p-3 bg-input rounded focus:ring focus:ring-pink"
+                                    className="w-full p-3 rounded bg-input focus:ring focus:ring-pink"
                                     value={withdrawValue}
                                     onUserInput={value => {
                                         setWithdrawValue(value)
@@ -170,7 +174,7 @@ export default function InputGroup({
                                         onClick={() => {
                                             setWithdrawValue(fixedFormatting(staked.value, staked.decimals))
                                         }}
-                                        className="absolute right-4 focus:ring focus:ring-pink border-0"
+                                        className="absolute border-0 right-4 focus:ring focus:ring-pink"
                                     >
                                         MAX
                                     </Button>
@@ -196,21 +200,39 @@ export default function InputGroup({
                     </div>
                 )}
                 {pending && Number(pending) > 0 && (
-                    <div className=" px-4">
-                        <Button
-                            color="default"
-                            onClick={async () => {
-                                setPendingTx(true)
-                                await harvest(pid, pairSymbol)
-                                setPendingTx(false)
-                            }}
-                        >
-                            Harvest{'  '}
-                            {formattedNum(pending)} BLING
-                        </Button>
-                    </div>
+                    <HarvestContainer
+                        className="px-4"
+                        onMouseEnter={() => {
+                            console.log('hello')
+                            setToolTipShow(true)
+                        }}
+                        onMouseLeave={() => {
+                            setToolTipShow(false)
+                        }}
+                    >
+                        <Tooltip text="This is a tooltip" show={toolTipShow}>
+                            <Button
+                                disabled
+                                color="default"
+                                onClick={async () => {
+                                    setPendingTx(true)
+                                    await harvest(pid, pairSymbol)
+                                    setPendingTx(false)
+                                }}
+                            >
+                                Harvest{'  '}
+                                {formattedNum(pending)} BLING
+                            </Button>
+                        </Tooltip>
+                    </HarvestContainer>
                 )}
             </div>
         </>
     )
 }
+
+const HarvestContainer = styled.div`
+    & > div {
+        width: 100%;
+    }
+`
