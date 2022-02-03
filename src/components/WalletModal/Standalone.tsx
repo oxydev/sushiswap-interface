@@ -1,6 +1,7 @@
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
+import { ButtonGray } from 'components/Button'
 import React, { useEffect, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import ReactGA from 'react-ga'
@@ -303,7 +304,19 @@ export default function WalletStandalone({
                     </HeaderRow>
                     <ContentWrapper>
                         {error instanceof UnsupportedChainIdError ? (
-                            <h5>Please connect to the appropriate Ethereum network.</h5>
+                            <>
+                                <h5>Please connect to the appropriate Ethereum network.</h5>
+                                <ButtonGray
+                                    padding="8px"
+                                    borderRadius="8px"
+                                    width="100%"
+                                    onClick={() => {
+                                        console.log('hello')
+                                    }}
+                                >
+                                    Switch to Emerald network
+                                </ButtonGray>
+                            </>
                         ) : (
                             'Error connecting. Try refreshing the page.'
                         )}
