@@ -34,12 +34,12 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade | undefined; al
             <AutoColumn style={{ padding: '0 16px' }}>
                 <RowBetween>
                     <RowFixed>
-                        <TYPE.black fontSize={14} fontWeight={400} color={theme.text3}>
+                        <TYPE.black fontSize={14} fontWeight={400} color={'#7b76a0'}>
                             {isExactIn ? 'Min Received' : 'Max Sold'}
                         </TYPE.black>
                     </RowFixed>
                     <RowFixed>
-                        <TYPE.black color={theme.text3} fontSize={14}>
+                        <TYPE.black color={'#7b76a0'} fontSize={14}>
                             {trade
                                 ? isExactIn
                                     ? `${slippageAdjustedAmounts[Field.OUTPUT]?.toSignificant(
@@ -55,7 +55,7 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade | undefined; al
                 </RowBetween>
                 <RowBetween>
                     <RowFixed>
-                        <TYPE.black fontSize={14} fontWeight={400} color={theme.text3}>
+                        <TYPE.black fontSize={14} fontWeight={400} color={'#7b76a0'}>
                             Price Impact
                         </TYPE.black>
                     </RowFixed>
@@ -67,12 +67,12 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade | undefined; al
 
                 <RowBetween>
                     <RowFixed>
-                        <TYPE.black fontSize={14} fontWeight={400} color={theme.text3}>
+                        <TYPE.black fontSize={14} fontWeight={400} color={'#7b76a0'}>
                             Fee
                         </TYPE.black>
                     </RowFixed>
                     <RowFixed>
-                        <TYPE.black fontSize={14} color={theme.text3}>
+                        <TYPE.black fontSize={14} color={'#7b76a0'}>
                             {realizedLPFee
                                 ? realizedLPFee
                                     ? `${realizedLPFee.toSignificant(4)} ${trade?.inputAmount.currency.getSymbol(

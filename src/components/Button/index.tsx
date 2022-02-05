@@ -47,7 +47,8 @@ const sheen = keyframes`{
 export const ButtonPrimary = styled(Base)`
   /* background-color: ${({ theme }) => theme.primary1}; */
   overflow:hidden;
-  background: linear-gradient(to right, #0094ec , #f537c3);
+//   background: linear-gradient(to right, #0094ec , #f537c3);
+    background: linear-gradient(to right, #3ffff4 , #00ff2a);
   background-origin: border-box;
   color: white;
   &:focus {
