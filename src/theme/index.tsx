@@ -13,6 +13,7 @@ import { Colors } from './styled'
 
 //import BentoBackground from '../assets/kashi/bento-background.jpg'
 import BrickWallBackground from '../assets/kashi/brickwall.png'
+import MainBackground from '../assets/images/website_background.png'
 
 export * from './components'
 
@@ -241,6 +242,9 @@ html {
   color: ${({ theme }) => theme.text1};
   /*background-color: ${({ theme }) => theme.bg2};*/
   background: linear-gradient(to top, #3c74a6 10% , #161459);
+  background-image: url(${MainBackground});
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
 body {
