@@ -76,7 +76,8 @@ const InputPanel = styled.div<{ hideInput?: boolean }>`
     ${({ theme }) => theme.flexColumnNoWrap}
     position: relative;
     border-radius: ${({ hideInput }) => (hideInput ? '8px' : '20px')};
-    background-color: ${({ theme }) => theme.bg2};
+    // background-color: ${({ theme }) => theme.bg2};
+    background-color: rgba(16,14,28,0.85);
     z-index: 1;
 `
 
@@ -189,13 +190,13 @@ export default function CurrencyInputPanel({
                 {!hideInput && (
                     <LabelRow>
                         <RowBetween>
-                            <TYPE.body color={theme.text3} fontWeight={500} fontSize={14}>
+                            <TYPE.body color={'#fff'} fontWeight={500} fontSize={14}>
                                 {label}
                             </TYPE.body>
                             {account && (
                                 <TYPE.body
                                     onClick={onMax}
-                                    color={theme.text3}
+                                    color={'#fff'}
                                     fontWeight={500}
                                     fontSize={14}
                                     style={{ display: 'inline', cursor: 'pointer' }}

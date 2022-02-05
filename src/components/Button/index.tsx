@@ -51,6 +51,7 @@ export const ButtonPrimary = styled(Base)`
     background: linear-gradient(to right, #3ffff4 , #00ff2a);
   background-origin: border-box;
   color: white;
+  border-radius: 0 10px 0 10px;
   &:focus {
     box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.primary1)};
     /*background: ${({ theme }) => darken(0.05, theme.primary1)};*/
@@ -65,6 +66,7 @@ export const ButtonPrimary = styled(Base)`
     pointer-events: none;
     background: ${({ theme, altDisabledStyle, disabled }) =>
         altDisabledStyle ? (disabled ? theme.bg3 : theme.primary1) : theme.bg3};
+    background-color: rgba(3,82,57,0.7);
     color: ${({ theme, altDisabledStyle, disabled }) =>
         altDisabledStyle ? (disabled ? theme.text3 : 'white') : theme.text3};
     cursor: auto;
@@ -72,6 +74,7 @@ export const ButtonPrimary = styled(Base)`
     border: 1px solid transparent;
     outline: none;
     opacity: ${({ altDisabledStyle }) => (altDisabledStyle ? '0.5' : '1')};
+    border: 1px solid #062a26;
   }
   &:hover {
     /*background: ${({ theme }) => darken(0.05, theme.primary1)};*/
