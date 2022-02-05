@@ -9,14 +9,17 @@ export const StyledMenuButton = styled.button`
   margin: 0;
   padding: 0;
   height: 35px;
-  background-color: ${({ theme }) => theme.bg3};
+  // background-color: ${({ theme }) => theme.bg3};
+  background-color: #268646;
   padding: 0.15rem 0.5rem;
   border-radius: 10px;
   :hover,
   :focus {
     cursor: pointer;
-    outline: none;
-    background-color: ${({ theme }) => theme.bg4};
+    outline: 1px solid #b0fff2;;
+    // background-color: ${({ theme }) => theme.bg4};
+    background-color: #46c5b1;
+    // border: 1px solid #b0fff2;
   }
   /*
   svg {
