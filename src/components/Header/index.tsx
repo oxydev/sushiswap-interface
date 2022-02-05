@@ -11,7 +11,7 @@ import styled from 'styled-components'
 // import LogoDark from '../../assets/svg/logo_white.svg'
 
 import Logo from '../../assets/images/logo.png'
-import LogoHover from '../../assets/images/logo.png'
+import LogoHover from '../../assets/images/main_logo.png'
 
 import { useActiveWeb3React } from '../../hooks'
 import { useDarkModeManager } from '../../state/user/hooks'
