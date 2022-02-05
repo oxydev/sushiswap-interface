@@ -69,6 +69,7 @@ export const ButtonPrimary = styled(Base)`
     background-color: rgba(3,82,57,0.7);
     color: ${({ theme, altDisabledStyle, disabled }) =>
         altDisabledStyle ? (disabled ? theme.text3 : 'white') : theme.text3};
+    color: #309e90;
     cursor: auto;
     box-shadow: none;
     border: 1px solid transparent;
