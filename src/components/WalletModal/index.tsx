@@ -139,7 +139,39 @@ export default function WalletModal({
     const toggleWalletModal = useWalletModalToggle()
 
     const previousAccount = usePrevious(account)
-
+    const switchNetwork = () => {
+        if (window.ethereum) {
+            try {
+                window.ethereum.request({
+                    method: 'wallet_switchEthereumChain',
+                    params: [{ chainId: '0xA516' }]
+                })
+            } catch (switchError) {
+                const data = [
+                    {
+                        chainId: '0xA516',
+                        chainName: 'Oasis Emerald',
+                        nativeCurrency: {
+                            symbol: 'ROSE',
+                            decimals: 18
+                        },
+                        rpcUrls: ['https://emerald.oasis.dev/'],
+                        blockExplorerUrls: ['https://explorer.emerald.oasis.dev/']
+                    }
+                ]
+                if (switchError.code === 4902) {
+                    try {
+                        window.ethereum.request({
+                            method: 'wallet_addEthereumChain',
+                            params: data
+                        })
+                    } catch (addError) {
+                        // handle "add" error
+                    }
+                }
+            }
+        }
+    }
     // close on connection, when logged out before
     useEffect(() => {
         if (account && !previousAccount && walletModalOpen) {
@@ -312,7 +344,7 @@ export default function WalletModal({
                                     borderRadius="8px"
                                     width="100%"
                                     onClick={() => {
-                                        console.log('hello')
+                                        switchNetwork()
                                     }}
                                 >
                                     Switch to Emerald network

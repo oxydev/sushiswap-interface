@@ -29,7 +29,7 @@ import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../constants/multicall'
 import { getContract } from '../utils'
 import { useActiveWeb3React } from '../hooks/index'
 import { FACTORY_ADDRESS as UNI_FACTORY_ADDRESS } from '@uniswap/sdk'
-
+import ZAP_ABI from './ZAP_ABI.json'
 // Factory address already in SDK
 import {
     FACTORY_ADDRESS,
@@ -223,4 +223,8 @@ export function useDashboard2Contract(): Contract | null {
         }
     }
     return useContract(address, DASHBOARD2_ABI, false)
+}
+
+export function useZooZapExtContract(zapAddress?: string, withSignerIfPossible?: boolean): Contract | null {
+    return useContract(zapAddress, ZAP_ABI, withSignerIfPossible)
 }

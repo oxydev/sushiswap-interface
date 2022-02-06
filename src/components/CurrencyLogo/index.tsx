@@ -11,6 +11,12 @@ import MoonbeamLogo from '../../assets/images/moonbeam-logo.png'
 import AvalancheLogo from '../../assets/images/avalanche-logo.png'
 import HecoLogo from '../../assets/images/heco-logo.png'
 import Tether from '../../assets/images/tether.png'
+import Tulip from '../../assets/images/tulip.png'
+import Tulip2 from '../../assets/images/Tulip2.png'
+import Dune from '../../assets/images/dune.png'
+import Yuzu from '../../assets/images/yuzu.png'
+import Bitcoin from '../../assets/images/bitcoin.png'
+import Bling from '../../assets/images/main_logo.png'
 import OKTLogo from '../../assets/images/logo-rose.png'
 import OasisRoseToken from '../../assets/images/logo-rose.png'
 import useHttpLocations from '../../hooks/useHttpLocations'
@@ -20,11 +26,12 @@ import { useActiveWeb3React } from '../../hooks'
 
 const tokenLogos: Record<string, string> = {
     '0xdC19A122e268128B5eE20366299fc7b5b199C8e3': Tether,
-    '0x2736643C7fFFe186984f60a2d34b91b1b7398bF1': 'https://tulip.money/static/media/petal.7c733a1e.png',
-    '0x9e832CaE5d19e7ff2f0D62881D1E33bb16Ac9bdc': 'https://tulip.money/static/media/tulip.83aa8a9a.png',
-    '0xaC5487bFE2502eCc06e057912b6F4946471093b9': 'https://www.duneswap.com/_next/image?url=%2Flogo.png&w=256&q=75',
-    '0xf02b3e437304892105992512539F769423a515Cb': 'https://raw.githubusercontent.com/Yuzu-swap/swap-front-site/main/src/assets/tokenlogo/0x015e3f7A499B4bdD2104470b1324d5940C3447AC/logo.png',
-    '0xd43ce0aa2a29DCb75bDb83085703dc589DE6C7eb': 'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/bitcoin/info/logo.png',
+    '0x2736643C7fFFe186984f60a2d34b91b1b7398bF1': Tulip,
+    '0x9e832CaE5d19e7ff2f0D62881D1E33bb16Ac9bdc': Tulip2,
+    '0xaC5487bFE2502eCc06e057912b6F4946471093b9': Dune,
+    '0xf02b3e437304892105992512539F769423a515Cb': Yuzu,
+    '0xd43ce0aa2a29DCb75bDb83085703dc589DE6C7eb': Bitcoin,
+    '0xc9273cac55e68407d11477a44dB3d269af1cee12': Bling,
     '0x3223f17957Ba502cbe71401D55A0DB26E5F7c68F':
         'https://raw.githubusercontent.com/trustwallet/assets/ec4f6c94a95bcddda22fe25659cf02d1d5d67bfc/blockchains/ethereum/info/logo.png'
 }

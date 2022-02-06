@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { BookOpen, Code, Info, MessageCircle, PieChart, Tool } from 'react-feather'
+import { BookOpen, Code, GitHub, Info, MessageCircle, PieChart, Tool, Twitter } from 'react-feather'
 import styled from 'styled-components'
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
 import { useActiveWeb3React } from '../../hooks'
@@ -82,18 +82,26 @@ export default function Menu() {
                         <Info size={14} />
                         About
                     </MenuItem>
-                    {/*<MenuItem id="link" href="https://docs.sushi.com">*/}
-                    {/*    <BookOpen size={14} />*/}
-                    {/*    Docs*/}
-                    {/*</MenuItem>*/}
-                    {/*<MenuItem id="link" href={CODE_LINK}>*/}
-                    {/*    <Code size={14} />*/}
-                    {/*    Code*/}
-                    {/*</MenuItem>*/}
-                    {/*<MenuItem id="link" href="https://discord.gg/NVPXN4e">*/}
-                    {/*    <MessageCircle size={14} />*/}
-                    {/*    Discord*/}
-                    {/*</MenuItem>*/}
+                    <MenuItem id="link" href="https://docs.sushi.com">
+                        <BookOpen size={14} />
+                        Docs
+                    </MenuItem>
+                    <MenuItem id="link" href="https://github.com/GemKeeperDEV/GemKeeperFinance">
+                        <GitHub size={14} />
+                        GitHub
+                    </MenuItem>
+                    <MenuItem id="link" href="https://t.me/GemKeeperAnnouncements">
+                        <MessageCircle size={14} />
+                        Telegram
+                    </MenuItem>
+                    <MenuItem id="link" href="https://twitter.com/GemKeeperDeFi">
+                        <Twitter size={14} />
+                        Twitter
+                    </MenuItem>
+                    <MenuItem id="link" href="https://discord.gg/NVPXN4e">
+                        <MessageCircle size={14} />
+                        Discord
+                    </MenuItem>
                     {/*<MenuItem id="link" href="https://analytics.sushi.com/">*/}
                     {/*    <PieChart size={14} />*/}
                     {/*    Analytics*/}

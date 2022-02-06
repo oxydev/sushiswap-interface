@@ -21,7 +21,7 @@ export default function BentoBalances(): JSX.Element {
     const query = useFarms()
     const farms = query?.farms
     const userFarms = query?.userFarms
-    console.log(farms)
+    // console.log(farms)
     // Search Setup
     const options = { keys: ['symbol', 'name', 'pairAddress'], threshold: 0.4 }
     const { result, search, term } = useFuse({
@@ -136,12 +136,7 @@ const TokenBalance = ({ farm }: any) => {
                     >
                         <div className="flex items-center">
                             <div className="mr-4">
-                                <DoubleLogo
-                                    a0={farm.token0.address}
-                                    a1={farm.token1.address}
-                                    size={32}
-                                    margin={true}
-                                />
+                                <DoubleLogo a0={farm.token0.address} a1={farm.token1.address} size={32} margin={true} />
                             </div>
                             <div className="hidden sm:block">
                                 {farm && farm.token0.symbol + '-' + farm.token1.symbol}
@@ -190,12 +185,7 @@ const UserBalance = ({ farm }: any) => {
                     >
                         <div className="flex items-center">
                             <div className="mr-4">
-                                <DoubleLogo
-                                    a0={farm.token0.address}
-                                    a1={farm.token1.address}
-                                    size={26}
-                                    margin={true}
-                                />
+                                <DoubleLogo a0={farm.token0.address} a1={farm.token1.address} size={26} margin={true} />
                             </div>
                             <div className="hidden sm:block">
                                 {farm && farm.token0.symbol + '-' + farm.token1.symbol}
@@ -217,14 +207,14 @@ const UserBalance = ({ farm }: any) => {
                         </div>
                     </div>
                     {expand && (
-                      <InputGroup
-                        pid={farm.pid}
-                        pairAddress={farm.pairAddress}
-                        pairSymbol={farm.symbol}
-                        token0Address={farm.token0.address}
-                        token1Address={farm.token1.address}
-                        type={'LP'}
-                      />
+                        <InputGroup
+                            pid={farm.pid}
+                            pairAddress={farm.pairAddress}
+                            pairSymbol={farm.symbol}
+                            token0Address={farm.token0.address}
+                            token1Address={farm.token1.address}
+                            type={'LP'}
+                        />
                     )}
                 </Paper>
             )}

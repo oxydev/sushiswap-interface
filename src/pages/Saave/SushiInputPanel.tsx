@@ -152,7 +152,7 @@ export default function CurrencyInputPanel({
     const sushiBalance = formatFromBalance(sushiBalanceBigInt?.value, sushiBalanceBigInt?.decimals)
     const decimals = sushiBalanceBigInt?.decimals
 
-    console.log('sushiBalance:', sushiBalance, sushiBalanceBigInt, decimals)
+    // console.log('sushiBalance:', sushiBalance, sushiBalanceBigInt, decimals)
 
     // handle approval
     const [requestedApproval, setRequestedApproval] = useState(false)

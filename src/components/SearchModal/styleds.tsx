@@ -112,3 +112,16 @@ export const SeparatorDark = styled.div`
     height: 1px;
     background-color: ${({ theme }) => theme.bg3};
 `
+export const LPMenuItem = styled(RowBetween)`
+    padding: 4px 20px;
+    height: 56px;
+    display: grid;
+    grid-template-columns: auto minmax(auto, 1fr) auto;
+    grid-gap: 16px;
+    cursor: ${({ disabled }) => !disabled && 'pointer'};
+    pointer-events: ${({ disabled }) => disabled && 'none'};
+    :hover {
+        background-color: ${({ theme, disabled }) => !disabled && theme.bg2};
+    }
+    opacity: ${({ disabled, selected }) => (disabled || selected ? 0.5 : 1)};
+`

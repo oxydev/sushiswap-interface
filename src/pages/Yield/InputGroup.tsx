@@ -64,7 +64,6 @@ export default function InputGroup({
         ),
         MASTERCHEF_ADDRESS[42262]
     )
-    console.log('shit', chainId || 1, pairAddressChecksum, balance, pairSymbol, approvalState)
 
     const { deposit, withdraw, harvest } = useMasterChef()
 
@@ -203,7 +202,6 @@ export default function InputGroup({
                     <HarvestContainer
                         className="px-4"
                         onMouseEnter={() => {
-                            console.log('hello')
                             setToolTipShow(true)
                         }}
                         onMouseLeave={() => {

@@ -316,7 +316,7 @@ export default function Header() {
     const countUpValue = aggregateBalance?.toFixed(0) ?? '0'
     const countUpValuePrevious = usePrevious(countUpValue) ?? '0'
 
-    console.log(chainId)
+    // console.log(chainId)
 
     return (
         <HeaderFrame>
@@ -347,13 +347,12 @@ export default function Header() {
                             pathname.startsWith('/find')
                         }
                     >
-                        {t('pool')}
+                        Liquidity
                     </StyledNavLink>
-                    {chainId === ChainId.OASISETH_MAIN && (
-                        <StyledNavLink id={`yield-nav-link`} to={'/yield'}>
-                            Yield
-                        </StyledNavLink>
-                    )}
+
+                    <StyledNavLink id={`yield-nav-link`} to={'/yield'}>
+                        Gem Mine
+                    </StyledNavLink>
                 </HeaderLinks>
             </HeaderRow>
             <HeaderControls>

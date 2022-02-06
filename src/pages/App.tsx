@@ -56,6 +56,7 @@ import Vesting from './Vesting'
 
 import { KashiProvider } from 'kashi/context'
 import Earn from './Earn'
+import { Zap } from './Zap'
 
 const AppWrapper = styled.div`
     display: flex;
@@ -124,7 +125,7 @@ function App() {
                                 <PublicRoute exact path="/connect" component={Connect} />
                                 {/* BentoApps */}
                                 <Route exact strict path="/bento" component={Bento} />
-                                <WalletRoute exact strict path="/bento/balances" component={BentoBalances} />
+                                {/*<WalletRoute exact strict path="/bento/balances" component={BentoBalances} />*/}
 
                                 {/* Kashi */}
                                 <Route
@@ -133,38 +134,43 @@ function App() {
                                     path="/bento/kashi"
                                     render={() => <Redirect to="/bento/kashi/borrow" />}
                                 />
-                                <WalletRoute exact strict path="/bento/kashi/lend" component={LendMarkets} />
-                                <WalletRoute exact strict path="/bento/kashi/borrow" component={BorrowMarkets} />
-                                <WalletRoute exact strict path="/bento/kashi/create" component={KashiCreate} />
-                                <WalletRoute exact strict path="/bento/kashi/lend/:pairAddress" component={LendPair} />
-                                <WalletRoute
-                                    exact
-                                    strict
-                                    path="/bento/kashi/borrow/:pairAddress"
-                                    component={BorrowPair}
-                                />
+                                {/*<WalletRoute exact strict path="/bento/kashi/lend" component={LendMarkets} />*/}
+                                {/*<WalletRoute exact strict path="/bento/kashi/borrow" component={BorrowMarkets} />*/}
+                                {/*<WalletRoute exact strict path="/bento/kashi/create" component={KashiCreate} />*/}
+                                {/*<WalletRoute exact strict path="/bento/kashi/lend/:pairAddress" component={LendPair} />*/}
+                                {/*<WalletRoute*/}
+                                {/*    exact*/}
+                                {/*    strict*/}
+                                {/*    path="/bento/kashi/borrow/:pairAddress"*/}
+                                {/*    component={BorrowPair}*/}
+                                {/*/>*/}
 
-                                <Route exact strict path="/claim" component={OpenClaimAddressModalAndRedirectToSwap} />
-                                <Route exact strict path="/yield" component={Yield} />
-                                <Route exact strict path="/vesting" component={Vesting} />
-                                {chainId === ChainId.MAINNET && (
-                                    <Route exact strict path="/migrate/v2" component={MigrateV2} />
+                                {/*<Route exact strict path="/claim" component={OpenClaimAddressModalAndRedirectToSwap} />*/}
+                                <Route exact strict path="/zap" component={Zap} />
+                                {chainId === ChainId.OASISETH_MAIN && (
+                                    <Route exact strict path="/yield" component={Yield} />
                                 )}
+                                {/*<Route exact strict path="/vesting" component={Vesting} />*/}
+                                {/*{chainId === ChainId.MAINNET && (*/}
+                                {/*    <Route exact strict path="/migrate/v2" component={MigrateV2} />*/}
+                                {/*)}*/}
 
                                 {/* Tools */}
-                                <Route exact strict path="/tools" component={Tools} />
-                                <Route exact strict path="/saave" component={Saave} />
+                                {/*<Route exact strict path="/tools" component={Tools} />*/}
+                                {/*<Route exact strict path="/saave" component={Saave} />*/}
 
-                                {/* Pages */}
-                                {chainId === ChainId.MAINNET && (
-                                    <Route exact strict path="/stake" component={SushiBar} />
-                                )}
-                                <Route exact path="/sushibar" render={() => <Redirect to="/stake" />} />
+                                {/*/!* Pages *!/*/}
+                                {/*{chainId === ChainId.MAINNET && (*/}
+                                {/*    <Route exact strict path="/stake" component={SushiBar} />*/}
+                                {/*)}*/}
+                                {/*<Route exact path="/sushibar" render={() => <Redirect to="/stake" />} />*/}
                                 <Route exact strict path="/swap" component={Swap} />
                                 <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
                                 <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
                                 <Route exact strict path="/find" component={PoolFinder} />
-                                <Route exact strict path="/pool" component={Pool} />
+                                {chainId === ChainId.OASISETH_MAIN && (
+                                    <Route exact strict path="/pool" component={Pool} />
+                                )}
                                 <Route exact strict path="/create" component={RedirectToAddLiquidity} />
                                 <Route exact path="/add" component={AddLiquidity} />
                                 <Route

@@ -4,6 +4,12 @@ import { ethers } from 'ethers'
 import PlaceHolder from 'assets/images/placeholder.png'
 import KashiLogo from 'assets/kashi/kashi-neon.png'
 import Tether from '../../../assets/images/tether.png'
+import Tulip from '../../../assets/images/tulip.png'
+import Tulip2 from '../../../assets/images/Tulip2.png'
+import Dune from '../../../assets/images/dune.png'
+import Yuzu from '../../../assets/images/yuzu.png'
+import Bitcoin from '../../../assets/images/bitcoin.png'
+import Bling from '../../../assets/images/main_logo.png'
 //import EthereumLogo from "../../assets/img/eth.png";
 
 const isAddress = (value: any) => {
@@ -64,10 +70,16 @@ export default function TokenLogo({ address, header = false, size, ...rest }: an
     //console.log('address:', isAddress(address))
     const tokenLogos: Record<string, string> = {
         '0xdC19A122e268128B5eE20366299fc7b5b199C8e3': Tether,
+        '0x2736643C7fFFe186984f60a2d34b91b1b7398bF1': Tulip,
+        '0x9e832CaE5d19e7ff2f0D62881D1E33bb16Ac9bdc': Tulip2,
+        '0xaC5487bFE2502eCc06e057912b6F4946471093b9': Dune,
+        '0xf02b3e437304892105992512539F769423a515Cb': Yuzu,
+        '0xd43ce0aa2a29DCb75bDb83085703dc589DE6C7eb': Bitcoin,
+        '0xc9273cac55e68407d11477a44dB3d269af1cee12': Bling,
         '0x3223f17957Ba502cbe71401D55A0DB26E5F7c68F':
-          'https://raw.githubusercontent.com/trustwallet/assets/ec4f6c94a95bcddda22fe25659cf02d1d5d67bfc/blockchains/ethereum/info/logo.png'
+            'https://raw.githubusercontent.com/trustwallet/assets/ec4f6c94a95bcddda22fe25659cf02d1d5d67bfc/blockchains/ethereum/info/logo.png'
     }
-    const getTokenLogoURL = (address: string|false) => {
+    const getTokenLogoURL = (address: string | false) => {
         if (address && address in tokenLogos) return tokenLogos[address]
         return 'https://raw.githubusercontent.com/trustwallet/assets/ad3cfa2e1c8e4b295cd81d64ecc5ab2a9514f79e/blockchains/oasis/info/logo.png'
     }
