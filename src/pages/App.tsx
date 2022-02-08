@@ -56,7 +56,7 @@ import Vesting from './Vesting'
 
 import { KashiProvider } from 'kashi/context'
 import Earn from './Earn'
-import { Zap } from './Zap'
+import Zap from './Zap'
 
 const AppWrapper = styled.div`
     display: flex;

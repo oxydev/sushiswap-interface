@@ -24,8 +24,32 @@ import Decimal from 'decimal.js'
 import { AutoRow, RowBetween } from '../../components/Row'
 import Loader from '../../components/Loader'
 import LpTokenListModal from '../../components/SearchModal/LpTokenListModal'
+import { transparentize } from 'polished'
+import { TYPE } from 'theme'
 
-export function Zap() {
+export default function Zap(): JSX.Element {
+    const BodyWrapper = styled.div`
+    padding: 1rem;
+    padding-bottom: 3rem;
+    position: relative;
+    max-width: 420px;
+    width: 100%;
+    // background: ${({ theme }) => transparentize(0.25, theme.bg1)};
+    background: rgba(61,63,90,0.76);
+    box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.33), 0px 4px 8px rgba(0, 0, 0, 0.33), 0px 16px 24px rgba(0, 0, 0, 0.33),
+        0px 24px 32px rgba(0, 0, 0, 0.33);
+    border-radius: 0 20px 0 40px;
+    border: 1px solid #75818f;
+    `
+
+    const StyledZapHeader = styled.div`
+        padding: 12px 1rem 0px 1.5rem;
+        margin-bottom: -4px;
+        width: 100%;
+        max-width: 420px;
+        color: ${({ theme }) => theme.text2};
+    `
+
     const StyledBalanceMax = styled.button`
         height: 28px;
         padding-right: 8px;
@@ -57,20 +81,47 @@ export function Zap() {
         `};
     `
 
-    const SmallText = styled.div`
-        font-size: 14px;
+    const InputPanel = styled.div<{ hideInput?: boolean }>`
+        ${({ theme }) => theme.flexColumnNoWrap}
+        position: relative;
+        border-radius: ${({ hideInput }) => (hideInput ? '8px' : '20px')};
+        // background-color: ${({ theme }) => theme.bg2};
+        z-index: 1;
+    `
+
+    const ZapTopInput = styled.div`
+        padding: 20px;
+        border-radius: 12px 12px 0 0;
+        background-color: ${({ theme }) => theme.bg1};
+        margin-bottom: 10px;
+        margin-top: 20px;
+    `
+
+    const ZapBottomInput = styled.div`
+        padding: 20px;
+        border-radius: 0 0 12px 12px;
+        background-color: ${({ theme }) => theme.bg1};
         margin-bottom: 20px;
     `
-    const ZapTitle = styled.div`
-        text-align: left;
-        font-weight: 500;
-        color: #333333
-        margin: 0px;
+
+    const ZapInputLine = styled.div`
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    `
+
+    const ArrowContainer = styled.div`
+        position: relative;
     `
     const Arrowline = styled.div`
+        position: absolute;
+        right: 0;
+        left: 0;
+        margin: auto;
         font-weight: 500;
-        color: #333333
-        margin: 15px auto;
+        color: #fff;
+        text-align: center;
+        margin-top: -20px;
     `
     const Line = styled.div`
         display: flex;
@@ -104,25 +155,25 @@ export function Zap() {
     `
 
     const CurrencySelect = styled.button<{ selected: boolean }>`
-        align-items: center;
-        height: 2.2rem;
-        font-size: 20px;
-        font-weight: 500;
-        background: ${({ selected, theme }) =>
-            selected ? theme.bg1 : 'linear-gradient(177deg, #ED4962 0%, #F98F81 100%)'};
-        color: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
-        border-radius: ${({ theme }) => theme.borderRadius};
-        box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')};
-        outline: none;
-        cursor: pointer;
-        user-select: none;
-        border: none;
-        padding: 0 0.5rem;
+    align-items: center;
+    height: 2.2rem;
+    font-size: 20px;
+    font-weight: 500;
+    background-color: ${({ selected, theme }) => (selected ? theme.bg1 : '#3da555')};
+    color: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
+    border-radius: ${({ theme }) => theme.borderRadius};
+    box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')};
+    outline: none;
+    cursor: pointer;
+    user-select: none;
+    border: none;
+    padding: 0 0.5rem;
 
-        :focus,
-        :hover {
-            background-color: ${({ selected, theme }) => (selected ? theme.bg2 : darken(0.05, theme.primary1))};
-        }
+    :focus,
+    :hover {
+        // background-color: ${({ selected, theme }) => (selected ? theme.bg2 : darken(0.05, theme.primary1))};
+        background-color: ${({ selected, theme }) => (selected ? theme.bg2 : '#4de269')};
+    }
     `
 
     const StyledTokenName = styled.span<{ active?: boolean }>`
@@ -245,23 +296,25 @@ export function Zap() {
 
     const { t } = useTranslation()
     return (
-        <div className="s-zap-body">
-            <div className="s-zap-img">
-                <h2>ZAP</h2>
-                <p>Convert single tokens to LP tokens directly.</p>
-                <img style={{ width: '300px', height: '300px' }} src={ZapImg} />
-            </div>
-            <div className="s-zap-exchange">
-                <ZapTitle>ZAP</ZapTitle>
-                <div className="s-zap-input" style={{ marginTop: '20px' }}>
+        <BodyWrapper>
+            <StyledZapHeader>
+                <TYPE.black fontWeight={500} color={'#ffd545'}>
+                    ZAP
+                </TYPE.black>
+                <TYPE.black fontWeight={400}>Convert single tokens to LP tokens directly.</TYPE.black>
+                {/* <img style={{ width: '300px', height: '300px' }} src={ZapImg} /> */}
+            </StyledZapHeader>
+            <InputPanel>
+                <ZapTopInput>
                     <Line style={{ marginBottom: '15px' }}>
-                        <Text1>From Token</Text1>
-                        <Text1>
+                        <TYPE.black fontWeight={500} color={'#fff'} fontSize={14}>
+                            From
+                        </TYPE.black>
+                        <TYPE.black fontWeight={500} color={'#fff'} fontSize={14}>
                             {!!currency && selectedCurrencyBalance ? selectedCurrencyBalance?.toSignificant(6) : ' -'}
-                        </Text1>
+                        </TYPE.black>
                     </Line>
-
-                    <div className="s-zap-line">
+                    <ZapInputLine>
                         <>
                             {
                                 <NumericalInput
@@ -302,18 +355,29 @@ export function Zap() {
                                 <StyledDropDown selected={!!currency} />
                             </Aligner>
                         </CurrencySelect>
-                    </div>
-                </div>
-                <Arrowline>↓</Arrowline>
-                <div className="s-zap-input" style={{ marginBottom: '40px' }}>
+                    </ZapInputLine>
+                </ZapTopInput>
+                <ArrowContainer>
+                    <Arrowline>↓</Arrowline>
+                </ArrowContainer>
+                <ZapBottomInput>
                     <Line style={{ marginBottom: '15px' }}>
-                        <Text1>
+                        <TYPE.black fontWeight={500} color={'#fff'} fontSize={14}>
                             To LP <QuestionHelper text="Estimated Number of LPT You Will Get" />
-                        </Text1>
-                        <Text1>{!!pool ? fixFloatFloor(JSBI.toNumber(pool.myLpBalance) / 1e18, 8) : '-'}</Text1>
+                        </TYPE.black>
+                        <TYPE.black fontWeight={500} color={'#fff'} fontSize={14}>
+                            {!!pool ? fixFloatFloor(JSBI.toNumber(pool.myLpBalance) / 1e18, 8) : '-'}
+                        </TYPE.black>
                     </Line>
                     <Line>
-                        <Text2>{output}</Text2>
+                        <NumericalInput
+                            className="zap-input"
+                            value={output}
+                            disabled={true}
+                            onUserInput={val => {
+                                console.log(val)
+                            }}
+                        />
                         <CurrencySelect
                             selected={!!pool}
                             onClick={() => {
@@ -328,7 +392,7 @@ export function Zap() {
                             </Aligner>
                         </CurrencySelect>
                     </Line>
-                </div>
+                </ZapBottomInput>
 
                 {/*<ButtonPrimary disabled={true}>
                     <TYPE.main mb="4px">{t('invalidassets')}</TYPE.main>
@@ -392,7 +456,7 @@ export function Zap() {
                     onPoolSelect={handleOutputSelect}
                     selectedPool={pool}
                 />
-            </div>
-        </div>
+            </InputPanel>
+        </BodyWrapper>
     )
 }
