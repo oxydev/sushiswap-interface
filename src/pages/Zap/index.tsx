@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import ZapImg from '../../assets/images/bitcoin.png'
 import QuestionHelper from '../../components/QuestionHelper'
-import { darken } from 'polished'
+import { darken, margin } from 'polished'
 import React, { useCallback, useContext, useRef, useEffect, useMemo, useState } from 'react'
 import { CurrencyAmount, JSBI, Token, TokenAmount, ZOO_ZAP_ADDRESS, Currency, StakePool } from '@sushiswap/sdk'
 import { useTranslation } from 'react-i18next'
@@ -28,6 +28,17 @@ import { transparentize } from 'polished'
 import { TYPE } from 'theme'
 
 export default function Zap(): JSX.Element {
+    const ZapPage = styled.div`
+        display: flex;
+        align-items: center;
+    `
+
+    const ZapImage = styled.div`
+        width: 420px;
+        height: 420px;
+        margin-left: 3rem;
+        diaplay: flex;
+    `
     const BodyWrapper = styled.div`
     padding: 1rem;
     padding-bottom: 3rem;
@@ -296,167 +307,180 @@ export default function Zap(): JSX.Element {
 
     const { t } = useTranslation()
     return (
-        <BodyWrapper>
-            <StyledZapHeader>
-                <TYPE.black fontWeight={500} color={'#ffd545'}>
-                    ZAP
-                </TYPE.black>
-                <TYPE.black fontWeight={400}>Convert single tokens to LP tokens directly.</TYPE.black>
-                {/* <img style={{ width: '300px', height: '300px' }} src={ZapImg} /> */}
-            </StyledZapHeader>
-            <InputPanel>
-                <ZapTopInput>
-                    <Line style={{ marginBottom: '15px' }}>
-                        <TYPE.black fontWeight={500} color={'#fff'} fontSize={14}>
-                            From
-                        </TYPE.black>
-                        <TYPE.black fontWeight={500} color={'#fff'} fontSize={14}>
-                            {!!currency && selectedCurrencyBalance ? selectedCurrencyBalance?.toSignificant(6) : ' -'}
-                        </TYPE.black>
-                    </Line>
-                    <ZapInputLine>
-                        <>
-                            {
-                                <NumericalInput
-                                    className="zap-input"
-                                    value={input}
-                                    onUserInput={val => {
-                                        setInput(val)
-                                    }}
-                                />
-                            }
-                            {account && currency && (
-                                <StyledBalanceMax style={{ marginTop: 'auto', marginBottom: 'auto' }} onClick={onMax}>
-                                    Max
-                                </StyledBalanceMax>
-                            )}
-                        </>
-                        <CurrencySelect
-                            selected={!!currency}
-                            onClick={() => {
-                                SetShowSelectCurreny(true)
-                            }}
-                        >
-                            <Aligner>
-                                {currency ? <CurrencyLogo currency={currency} size={'24px'} /> : null}
+        <ZapPage>
+            <BodyWrapper>
+                <StyledZapHeader>
+                    <TYPE.black fontWeight={500} color={'#ffd545'}>
+                        ZAP
+                    </TYPE.black>
+                    <TYPE.black fontWeight={400}>Convert single tokens to LP tokens directly.</TYPE.black>
+                </StyledZapHeader>
+                <InputPanel>
+                    <ZapTopInput>
+                        <Line style={{ marginBottom: '15px' }}>
+                            <TYPE.black fontWeight={500} color={'#fff'} fontSize={14}>
+                                From
+                            </TYPE.black>
+                            <TYPE.black fontWeight={500} color={'#fff'} fontSize={14}>
+                                {!!currency && selectedCurrencyBalance
+                                    ? selectedCurrencyBalance?.toSignificant(6)
+                                    : ' -'}
+                            </TYPE.black>
+                        </Line>
+                        <ZapInputLine>
+                            <>
+                                {
+                                    <NumericalInput
+                                        className="zap-input"
+                                        value={input}
+                                        onUserInput={val => {
+                                            setInput(val)
+                                        }}
+                                    />
+                                }
+                                {account && currency && (
+                                    <StyledBalanceMax
+                                        style={{ marginTop: 'auto', marginBottom: 'auto' }}
+                                        onClick={onMax}
+                                    >
+                                        Max
+                                    </StyledBalanceMax>
+                                )}
+                            </>
+                            <CurrencySelect
+                                selected={!!currency}
+                                onClick={() => {
+                                    SetShowSelectCurreny(true)
+                                }}
+                            >
+                                <Aligner>
+                                    {currency ? <CurrencyLogo currency={currency} size={'24px'} /> : null}
 
-                                <StyledTokenName
-                                    className="token-symbol-container"
-                                    active={Boolean(currency && currency.symbol)}
-                                >
-                                    {(currency && currency.symbol && currency.symbol.length > 20
-                                        ? currency.symbol.slice(0, 4) +
-                                          '...' +
-                                          currency.symbol.slice(currency.symbol.length - 5, currency.symbol.length)
-                                        : currency?.getSymbol(chainId)) ||
-                                        t('selectToken') ||
-                                        t('selectToken')}
-                                </StyledTokenName>
-                                <StyledDropDown selected={!!currency} />
-                            </Aligner>
-                        </CurrencySelect>
-                    </ZapInputLine>
-                </ZapTopInput>
-                <ArrowContainer>
-                    <Arrowline>↓</Arrowline>
-                </ArrowContainer>
-                <ZapBottomInput>
-                    <Line style={{ marginBottom: '15px' }}>
-                        <TYPE.black fontWeight={500} color={'#fff'} fontSize={14}>
-                            To LP <QuestionHelper text="Estimated Number of LPT You Will Get" />
-                        </TYPE.black>
-                        <TYPE.black fontWeight={500} color={'#fff'} fontSize={14}>
-                            {!!pool ? fixFloatFloor(JSBI.toNumber(pool.myLpBalance) / 1e18, 8) : '-'}
-                        </TYPE.black>
-                    </Line>
-                    <Line>
-                        <NumericalInput
-                            className="zap-input"
-                            value={output}
-                            disabled={true}
-                            onUserInput={val => {
-                                console.log(val)
-                            }}
-                        />
-                        <CurrencySelect
-                            selected={!!pool}
-                            onClick={() => {
-                                SetShowSelectLp(true)
-                            }}
-                        >
-                            <Aligner>
-                                <StyledTokenName className="token-symbol-container" active={Boolean(pool)}>
-                                    {pool ? pool.token0.symbol + '-' + pool.token1.symbol : 'Select a LP'}
-                                </StyledTokenName>
-                                <StyledDropDown selected={!!pool} />
-                            </Aligner>
-                        </CurrencySelect>
-                    </Line>
-                </ZapBottomInput>
+                                    <StyledTokenName
+                                        className="token-symbol-container"
+                                        active={Boolean(currency && currency.symbol)}
+                                    >
+                                        {(currency && currency.symbol && currency.symbol.length > 20
+                                            ? currency.symbol.slice(0, 4) +
+                                              '...' +
+                                              currency.symbol.slice(currency.symbol.length - 5, currency.symbol.length)
+                                            : currency?.getSymbol(chainId)) ||
+                                            t('selectToken') ||
+                                            t('selectToken')}
+                                    </StyledTokenName>
+                                    <StyledDropDown selected={!!currency} />
+                                </Aligner>
+                            </CurrencySelect>
+                        </ZapInputLine>
+                    </ZapTopInput>
+                    <ArrowContainer>
+                        <Arrowline>↓</Arrowline>
+                    </ArrowContainer>
+                    <ZapBottomInput>
+                        <Line style={{ marginBottom: '15px' }}>
+                            <TYPE.black fontWeight={500} color={'#fff'} fontSize={14}>
+                                To LP <QuestionHelper text="Estimated Number of LPT You Will Get" />
+                            </TYPE.black>
+                            <TYPE.black fontWeight={500} color={'#fff'} fontSize={14}>
+                                {!!pool ? fixFloatFloor(JSBI.toNumber(pool.myLpBalance) / 1e18, 8) : '-'}
+                            </TYPE.black>
+                        </Line>
+                        <Line>
+                            <NumericalInput
+                                className="zap-input"
+                                value={output}
+                                disabled={true}
+                                onUserInput={val => {
+                                    console.log(val)
+                                }}
+                            />
+                            <CurrencySelect
+                                selected={!!pool}
+                                onClick={() => {
+                                    SetShowSelectLp(true)
+                                }}
+                            >
+                                <Aligner>
+                                    <StyledTokenName className="token-symbol-container" active={Boolean(pool)}>
+                                        {pool ? pool.token0.symbol + '-' + pool.token1.symbol : 'Select a LP'}
+                                    </StyledTokenName>
+                                    <StyledDropDown selected={!!pool} />
+                                </Aligner>
+                            </CurrencySelect>
+                        </Line>
+                    </ZapBottomInput>
 
-                {/*<ButtonPrimary disabled={true}>
+                    {/*<ButtonPrimary disabled={true}>
                     <TYPE.main mb="4px">{t('invalidassets')}</TYPE.main>
                                 </ButtonPrimary>*/}
 
-                {!account ? (
-                    <ButtonLight onClick={toggleWalletModal}>{t('connectwallet')}</ButtonLight>
-                ) : !currency || !pool ? (
-                    // eslint-disable-next-line @typescript-eslint/no-empty-function
-                    <ButtonPrimary disabled={true} onClick={() => {}}>
-                        Select Token
-                    </ButtonPrimary>
-                ) : approval === ApprovalState.NOT_APPROVED || approval === ApprovalState.PENDING ? (
-                    <ButtonConfirmed
-                        onClick={approveCallback}
-                        disabled={approval !== ApprovalState.NOT_APPROVED || approvalSubmitted}
-                        altDisabledStyle={approval === ApprovalState.PENDING} // show solid button while waiting
-                    >
-                        {approval === ApprovalState.PENDING ? (
-                            <AutoRow gap="6px" justify="center">
-                                Approving <Loader stroke="white" />
-                            </AutoRow>
-                        ) : (
-                            'Approve ' + currency.symbol
-                        )}
-                    </ButtonConfirmed>
-                ) : estimateLp ? (
-                    <ButtonPrimary
-                        disabled={!inputCheck}
-                        onClick={() =>
-                            doZapWrapper(
-                                () => {
-                                    console.log('zap submit')
-                                },
-                                (error: Error) => {
-                                    console.log('zap error' + error.message)
-                                }
-                            )
-                        }
-                    >
-                        ZAP
-                    </ButtonPrimary>
-                ) : (
-                    <ButtonPrimary disabled={true}>Route Not Available</ButtonPrimary>
-                )}
-                <CurrencyListModal
-                    isOpen={showSelectCurreny}
-                    onDismiss={() => {
-                        SetShowSelectCurreny(false)
-                    }}
-                    onCurrencySelect={handleInputSelect}
-                    selectedCurrency={currency}
-                    otherSelectedCurrency={null}
-                />
+                    {!account ? (
+                        <ButtonLight onClick={toggleWalletModal}>{t('connectwallet')}</ButtonLight>
+                    ) : !currency || !pool ? (
+                        // eslint-disable-next-line @typescript-eslint/no-empty-function
+                        <ButtonPrimary disabled={true} onClick={() => {}}>
+                            Select Token
+                        </ButtonPrimary>
+                    ) : approval === ApprovalState.NOT_APPROVED || approval === ApprovalState.PENDING ? (
+                        <ButtonConfirmed
+                            onClick={approveCallback}
+                            disabled={approval !== ApprovalState.NOT_APPROVED || approvalSubmitted}
+                            altDisabledStyle={approval === ApprovalState.PENDING} // show solid button while waiting
+                        >
+                            {approval === ApprovalState.PENDING ? (
+                                <AutoRow gap="6px" justify="center">
+                                    Approving <Loader stroke="white" />
+                                </AutoRow>
+                            ) : (
+                                'Approve ' + currency.symbol
+                            )}
+                        </ButtonConfirmed>
+                    ) : estimateLp ? (
+                        <ButtonPrimary
+                            disabled={!inputCheck}
+                            onClick={() =>
+                                doZapWrapper(
+                                    () => {
+                                        console.log('zap submit')
+                                    },
+                                    (error: Error) => {
+                                        console.log('zap error' + error.message)
+                                    }
+                                )
+                            }
+                        >
+                            ZAP
+                        </ButtonPrimary>
+                    ) : (
+                        <ButtonPrimary disabled={true}>Route Not Available</ButtonPrimary>
+                    )}
+                    <CurrencyListModal
+                        isOpen={showSelectCurreny}
+                        onDismiss={() => {
+                            SetShowSelectCurreny(false)
+                        }}
+                        onCurrencySelect={handleInputSelect}
+                        selectedCurrency={currency}
+                        otherSelectedCurrency={null}
+                    />
 
-                <LpTokenListModal
-                    isOpen={showSelectLp}
-                    onDismiss={() => {
-                        SetShowSelectLp(false)
-                    }}
-                    onPoolSelect={handleOutputSelect}
-                    selectedPool={pool}
+                    <LpTokenListModal
+                        isOpen={showSelectLp}
+                        onDismiss={() => {
+                            SetShowSelectLp(false)
+                        }}
+                        onPoolSelect={handleOutputSelect}
+                        selectedPool={pool}
+                    />
+                </InputPanel>
+            </BodyWrapper>
+            <ZapImage>
+                <img
+                    style={{ width: '100%', height: '100%', objectFit: 'contain', margin: 'auto' }}
+                    src={ZapImg}
+                    alt="ZapLogo"
                 />
-            </InputPanel>
-        </BodyWrapper>
+            </ZapImage>
+        </ZapPage>
     )
 }
