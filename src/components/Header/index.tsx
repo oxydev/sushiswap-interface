@@ -353,6 +353,10 @@ export default function Header() {
                     <StyledNavLink id={`yield-nav-link`} to={'/yield'}>
                         Gem Mine
                     </StyledNavLink>
+
+                    <StyledNavLink id={`zap-nav-link`} to={'/zap'}>
+                        Zap
+                    </StyledNavLink>
                 </HeaderLinks>
             </HeaderRow>
             <HeaderControls>
