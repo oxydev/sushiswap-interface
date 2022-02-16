@@ -146,7 +146,7 @@ function App() {
                                 {/*/>*/}
 
                                 {/*<Route exact strict path="/claim" component={OpenClaimAddressModalAndRedirectToSwap} />*/}
-                                <Route exact strict path="/zap" component={Zap} />
+                                {/*<Route exact strict path="/zap" component={Zap} />*/}
                                 {chainId === ChainId.OASISETH_MAIN && (
                                     <Route exact strict path="/yield" component={Yield} />
                                 )}

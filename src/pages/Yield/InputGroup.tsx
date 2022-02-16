@@ -70,7 +70,7 @@ export default function InputGroup({
     //console.log('depositValue:', depositValue)
 
     const [toolTipShow, setToolTipShow] = useState(false)
-    console.log(toolTipShow)
+    // console.log(toolTipShow)
 
     return (
         <>
@@ -208,7 +208,7 @@ export default function InputGroup({
                             setToolTipShow(false)
                         }}
                     >
-                        <Tooltip text="This is a tooltip" show={toolTipShow}>
+                        <Tooltip text="Token can be harvested after the vesting period." show={toolTipShow}>
                             <Button
                                 disabled
                                 color="default"

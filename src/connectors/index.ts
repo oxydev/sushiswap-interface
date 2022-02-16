@@ -33,7 +33,7 @@ const RPC = {
 }
 
 export const network = new NetworkConnector({
-    defaultChainId: 42261,
+    defaultChainId: 42262,
     urls: RPC
 })
 
@@ -44,8 +44,6 @@ export function getNetworkLibrary(): Web3Provider {
 
 export const injected = new InjectedConnector({
     supportedChainIds: [
-        80001,
-        42261, //oasis test
         42262 //oasis main
     ]
 })

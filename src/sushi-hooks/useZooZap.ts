@@ -14,8 +14,8 @@ import { tokenAmountForshow } from 'utils/BlingSwap'
 export function useEstimateZapInTokenLpAmount(inToken: CurrencyAmount | null, pair: Pair | null): TokenAmount | null {
     const { chainId } = useActiveWeb3React()
     const toLpAddress = pair?.liquidityToken.address
+    // console.log(ZOO_ZAP_ADDRESS[chainId ?? DefaultChainId])
     const contract = useZooZapExtContract(ZOO_ZAP_ADDRESS[chainId ?? DefaultChainId], false)
-    const routerAddr = ROUTER_ADDRESS[chainId ?? DefaultChainId]
     const wToken = WETH[chainId || DefaultChainId]
     const tokenAddr = inToken instanceof TokenAmount ? inToken?.token.address || '' : wToken.address
     const tokenAmount = inToken?.raw.toString() || ''
@@ -26,7 +26,6 @@ export function useEstimateZapInTokenLpAmount(inToken: CurrencyAmount | null, pa
         useSingleCallResult(argsValide ? contract : undefined, 'estimateZapInToken', [
             tokenAddr,
             toLpAddress,
-            routerAddr,
             tokenAmount
         ]).result || []
     //    console.log("token0Amount ",token0Amount ," token1Amount ",token1Amount)
@@ -76,12 +75,12 @@ export function useZapInTokenLpAmount(
                 ? await zapContract.estimateGas
                       .zapIn(toLpAddress, routerAddr, account, { value: tokenAmount })
                       .catch(() => {
-                          return zapContract?.estimateGas.zapIn(toLpAddress, routerAddr, account, {
+                          return zapContract?.estimateGas.zapIn(toLpAddress, account, {
                               value: tokenAmount
                           })
                       })
                 : await zapContract.estimateGas
-                      .zapInToken(tokenAddr, tokenAmount, toLpAddress, routerAddr, account)
+                      .zapInToken(tokenAddr, tokenAmount, toLpAddress, account)
                       .catch(() => {
                           return zapContract?.estimateGas.zapInToken(
                               tokenAddr,
@@ -93,7 +92,7 @@ export function useZapInTokenLpAmount(
                       })
             if (!(inToken instanceof TokenAmount)) {
                 return zapContract
-                    .zapIn(toLpAddress, routerAddr, account, {
+                    .zapIn(toLpAddress, account, {
                         gasLimit: calculateGasMargin(estimatedGas),
                         value: tokenAmount
                     })
@@ -113,7 +112,7 @@ export function useZapInTokenLpAmount(
                     })
             } else {
                 return zapContract
-                    .zapInToken(tokenAddr, tokenAmount, toLpAddress, routerAddr, account, {
+                    .zapInToken(tokenAddr, tokenAmount, toLpAddress, account, {
                         gasLimit: calculateGasMargin(estimatedGas)
                     })
                     .then((response: TransactionResponse) => {

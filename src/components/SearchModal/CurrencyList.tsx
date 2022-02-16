@@ -187,9 +187,10 @@ export default function CurrencyList({
     const Row = useCallback(
         ({ data, index, style }) => {
             const currency: Currency = data[index]
+
             const isSelected = Boolean(
                 (selectedCurrency && currencyEquals(selectedCurrency, currency)) ||
-                    currency.getSymbol(chainId) === 'BLING'
+              (currency && currency.getSymbol(chainId) === 'BLING')
             )
             const otherSelected = Boolean(otherCurrency && currencyEquals(otherCurrency, currency))
             const handleSelect = () => onCurrencySelect(currency)

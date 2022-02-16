@@ -12,6 +12,7 @@ import useFarms from 'sushi-hooks/useFarms'
 
 import { ChevronUp, ChevronDown } from 'react-feather'
 import InputGroup from './InputGroup'
+import usePendingSushi from '../../sushi-hooks/usePendingSushi'
 
 export const FixedHeightRow = styled(RowBetween)`
     height: 24px;
@@ -41,7 +42,7 @@ export default function BentoBalances(): JSX.Element {
                         <div className="flex w-full justify-between">
                             <div className="hidden md:flex items-center">
                                 {/* <BackButton defaultRoute="/pool" /> */}
-                                <div className="text-lg mr-2 whitespace-nowrap">Yield Instruments</div>
+                                <div className="text-lg mr-2 whitespace-nowrap">Yield Mines</div>
                             </div>
                             <Search search={search} term={term} />
                         </div>
@@ -60,7 +61,7 @@ export default function BentoBalances(): JSX.Element {
                                     <div>Deposited</div>
                                 </div>
                                 <div className="flex items-center justify-end">
-                                    <div>Claim</div>
+                                    <div>Claimable</div>
                                 </div>
                             </div>
                             <div className="flex-col space-y-2">
@@ -77,7 +78,7 @@ export default function BentoBalances(): JSX.Element {
                         className="flex items-center cursor-pointer hover:text-secondary"
                         onClick={() => requestSort('symbol')}
                     >
-                        <div>Instruments</div>
+                        <div>Mines</div>
                         {sortConfig &&
                             sortConfig.key === 'symbol' &&
                             ((sortConfig.direction === 'ascending' && <ChevronUp size={12} />) ||
@@ -105,7 +106,7 @@ export default function BentoBalances(): JSX.Element {
                 <div className="flex-col space-y-2">
                     {items && items.length > 0 ? (
                         items.map((farm: any, i: number) => {
-                            return <TokenBalance key={farm.address + '_' + i} farm={farm} />
+                            return <TokenBalance key={farm.address + '_' + i} farm={farm}/>
                         })
                     ) : (
                         <>
@@ -124,7 +125,7 @@ export default function BentoBalances(): JSX.Element {
     )
 }
 
-const TokenBalance = ({ farm }: any) => {
+const TokenBalance = ({ farm  }: any) => {
     const [expand, setExpand] = useState<boolean>(false)
     return (
         <>
@@ -146,14 +147,17 @@ const TokenBalance = ({ farm }: any) => {
                             <div>
                                 <div className="text-right">{formattedNum(farm.tvl, true)} </div>
                                 <div className="text-secondary text-right">
-                                    {formattedNum(farm.slpBalance / 1e18, false)} SLP
+                                    {/*{formattedNum(balance, false)} GLP*/}
+
+                                    {formattedNum(farm.balance, false)} GLP
                                 </div>
                             </div>
                         </div>
                         <div className="flex justify-end items-center">
                             <div className="text-right font-semibold text-xl">
-                                {/*{formattedPercent(farm.roiPerYear * 100)}{' '}*/}
-                                {formattedPercent(1 * 100)}{' '}
+                                {formattedPercent(farm.roiPerYear * 100)}{' '}
+                                {/*{formattedPercent(1 * 100)}{' '}*/}
+                                {/*Coming Soon...*/}
                             </div>
                         </div>
                     </div>
@@ -175,6 +179,8 @@ const TokenBalance = ({ farm }: any) => {
 
 const UserBalance = ({ farm }: any) => {
     const [expand, setExpand] = useState<boolean>(false)
+    const pending = usePendingSushi(farm.pid)
+
     return (
         <>
             {farm.type === 'SLP' && (
@@ -195,13 +201,13 @@ const UserBalance = ({ farm }: any) => {
                             <div>
                                 <div className="text-right">{formattedNum(farm.depositedUSD, true)} </div>
                                 <div className="text-secondary text-right">
-                                    {formattedNum(farm.depositedLP, false)} SLP
+                                    {formattedNum(farm.depositedLP, false)} GLP
                                 </div>
                             </div>
                         </div>
                         <div className="flex justify-end items-center">
                             <div>
-                                <div className="text-right">{formattedNum(farm.pendingBling)} </div>
+                                <div className="text-right">{formattedNum(pending)} </div>
                                 <div className="text-secondary text-right">BLING</div>
                             </div>
                         </div>

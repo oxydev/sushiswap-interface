@@ -1,62 +1,133 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useActiveWeb3React } from 'hooks'
 
-import { exchange, masterchef } from 'sushi-hooks/apollo/client'
-import { getAverageBlockTime } from 'sushi-hooks/apollo/getAverageBlockTime'
-import { liquidityPositionSubsetQuery, pairSubsetQuery, poolsQuery } from 'sushi-hooks/apollo/queries'
-
-import sushiData from '@sushiswap/sushi-data'
 import _ from 'lodash'
 
 import { useBoringHelperContract } from 'hooks/useContract'
 import { BigNumber } from '@ethersproject/bignumber'
 import Fraction from '../constants/Fraction'
 
-import { POOL_DENY } from '../constants'
-
-// Todo: Rewrite in terms of web3 as opposed to subgraph
 const useFarms = () => {
     const [farms, setFarms] = useState<any | undefined>()
     const { account } = useActiveWeb3React()
     const boringHelperContract = useBoringHelperContract()
-
     const fetchAllFarms = useCallback(async () => {
-        const pools = [{}]
-        const pairAddresses = ['0x689F78AD285d6332A7885D5e44C5B5e698a3cf54'].sort()
+        let bnbPrice = await bnbFetcher()
+        const pools = [{
+            balance:1,
+            allocPoint:150,
+            owner:{
+                totalAllocPoint: 650,
+                sushiPerBlock: 11.152637748
+            },
+            token0: {
+                symbol:"wROSE",
+                name:"Wrapped ROSE",
+                address:"0x21C718C22D52d0F3a789b752D4c2fD5908a8A733"
+            },
+            token1: {
+                symbol:"weUSDT",
+                name:"Tether - Wormhole",
+                address:"0xdC19A122e268128B5eE20366299fc7b5b199C8e3"
+            },
+            id:0,
+            lpAddress:"0xD9F3Be6497B26EFBEd163A95912FB5e2F235Fd53"
+        },
+            {
+                balance:1,
+                allocPoint:125,
+                owner:{
+                    totalAllocPoint: 650,
+                    sushiPerBlock: 11.152637748
+                },
+                token0  : {
+                    symbol:"USDC",
+                    name:"USDC - Multichain",
+                    address:"0x80A16016cC4A2E6a2CACA8a4a498b1699fF0f844"
+                },
+                token1: {
+                    symbol:"weUSDT",
+                    name:"Tether - Wormhole",
+                    address:"0xdC19A122e268128B5eE20366299fc7b5b199C8e3"
+                },
+                id:1,
+                lpAddress:"0x7Bf986f1373B5554634aF98A9772BaA2085fc84F"
+            },
+            {
+                balance:1,
+                allocPoint:125,
+                owner:{
+                    totalAllocPoint: 650,
+                    sushiPerBlock: 11.152637748
+                },
+                token0: {
+                    symbol:"wROSE",
+                    name:"Wrapped ROSE",
+                    address:"0x21C718C22D52d0F3a789b752D4c2fD5908a8A733"
+                },
+                token1: {
+                    symbol:"BUSD",
+                    name:"BUSD - Multichain",
+                    address:"0x639A647fbe20b6c8ac19E48E2de44ea792c62c5C"
+                },
+                id:2,
+                lpAddress:"0xe593c42780ccbe7723B67b3E5FD3e0cdd2E25017"
+            },
+            {
+                balance:1,
+                allocPoint:150,
+                owner:{
+                    totalAllocPoint: 650,
+                    sushiPerBlock: 11.152637748
+                },
+                token1: {
+                    symbol:"USDC",
+                    name:"USDC - Multichain",
+                    address:"0x80A16016cC4A2E6a2CACA8a4a498b1699fF0f844"
+                },
+                token0: {
+                    symbol:"wROSE",
+                    name:"Wrapped ROSE",
+                    address:"0x21C718C22D52d0F3a789b752D4c2fD5908a8A733"
+                },
+                id:3,
+                lpAddress:"0x89f5e345b7837E950136811b94af6CcBa199eFa8"
+            },
+            {
+                balance:1,
+                allocPoint:100,
+                owner:{
+                    totalAllocPoint: 650,
+                    sushiPerBlock: 11.152637748
+                },
+                token1: {
+                    symbol:"BNB",
+                    name:"Binance - Multichain",
+                    address:"0xE3F5a90F9cb311505cd691a46596599aA1A0AD7D"
+                },
+                token0: {
+                    symbol:"wROSE",
+                    name:"Wrapped ROSE",
+                    address:"0x21C718C22D52d0F3a789b752D4c2fD5908a8A733"
+                },
+                id:4,
+                lpAddress:"0x41953bAca0A634732365093f848CcFc968EF0C69"
+            }
+        ]
 
-        const averageBlockTime = 8
-        const sushiPrice = 1
-        // const kashiPairs = results[4].filter(result => result !== undefined) // filter out undefined (not in onsen) from all kashiPairs
+        const averageBlockTime = 7.4
+        const sushiPrice = 0.3
 
-        //console.log('kashiPairs:', kashiPairs)
-
-        // const KASHI_PAIRS = _.range(190, 230, 1) // kashiPair pids 189-229
-        //console.log('kashiPairs:', KASHI_PAIRS, kashiPairs, pools)
 
         const farms = pools.map((pool: any) => {
             const blocksPerHour = 3600 / averageBlockTime
-            //todo pool.balance pair.totalSupply pair.reserveUSD pool.allocPoint pool.owner.totalAllocPoint pool.owner.sushiPerBlock
-            pool.balance = 1
-            pool.allocPoint = 100
-            pool.owner = {}
-            pool.owner.totalAllocPoint = 100
-            pool.owner.sushiPerBlock = 1000000000
-            pool.token0 = {}
-            pool.token1 = {}
-            pool.token0.symbol = 'A'
-            pool.token0.name = 'AA'
-            pool.token0.address = '0x007906a1f7f34865d6bAc41eeD4Ea3ffF4eE7cf4'
-            pool.token1.symbol = 'B'
-            pool.token1.name = 'BB'
-            pool.token1.address = '0x77E44D943267014F936299d4a69a2C379A46504b'
-            pool.id = 0
-            pool.lpAddress = pairAddresses[pool.id]
-            const balance = Number(pool.balance / 1e18) > 0 ? Number(pool.balance / 1e18) : 0.1
-            const totalSupply = 0.1
-            const reserveUSD = 0.1
-            const balanceUSD = (balance / Number(totalSupply)) * Number(reserveUSD)
-            const rewardPerBlock = ((pool.allocPoint / pool.owner.totalAllocPoint) * pool.owner.sushiPerBlock) / 1e18
-            const roiPerBlock = (rewardPerBlock * sushiPrice) / balanceUSD
+
+            // const balance = Number(pool.balance / 1e18) > 0 ? Number(pool.balance / 1e18) : 0.1
+            // const totalSupply = 0.1
+            // const reserveUSD = 0.1
+            // const balanceUSD = (balance / Number(totalSupply)) * Number(reserveUSD)
+
+            const roiPerBlock = 1
             const roiPerHour = roiPerBlock * blocksPerHour
             const roiPerDay = roiPerHour * 24
             const roiPerMonth = roiPerDay * 30
@@ -77,10 +148,7 @@ const useFarms = () => {
                 roiPerMonth,
                 roiPerYear,
                 rewardPerThousand: 1 * roiPerDay * (1000 / sushiPrice),
-                tvlL: 1
-                // tvl: liquidityPosition?.liquidityTokenBalance
-                //     ? (pair.reserveUSD / pair.totalSupply) * liquidityPosition.liquidityTokenBalance
-                //     : 0.1
+                tvl: 1
             }
         })
 
@@ -90,10 +158,40 @@ const useFarms = () => {
         const pids = sorted.map(pool => {
             return pool.pid
         })
+        const userFarmDetails = await boringHelperContract?.pollPools(account, pids)
+        for (let userFarmDetailsKey in userFarmDetails) {
+            let totalSupply = Fraction.from(userFarmDetails[userFarmDetailsKey].totalSupply, BigNumber.from(10).pow(18)).toString(18)
+            farms[userFarmDetails[userFarmDetailsKey].pid.toNumber()].balance = totalSupply;
+            let address0 = farms[userFarmDetails[userFarmDetailsKey].pid.toNumber()].token0.address
+            let address1 = farms[userFarmDetails[userFarmDetailsKey].pid.toNumber()].token1.address
+            if(!sortedBefore(address0,address1)){
+                [address0, address1] = [address1,address0]
+            }
+            let reserveUSD :any = 0
+            if (address0 === "0xdC19A122e268128B5eE20366299fc7b5b199C8e3" || address0 === "0x80A16016cC4A2E6a2CACA8a4a498b1699fF0f844")
+                reserveUSD = userFarmDetails[userFarmDetailsKey].reserve0 * 2 / 1e6
+            else if (address1 === "0xdC19A122e268128B5eE20366299fc7b5b199C8e3" || address1 === "0x80A16016cC4A2E6a2CACA8a4a498b1699fF0f844")
+                reserveUSD = userFarmDetails[userFarmDetailsKey].reserve1 * 2 / 1e6
+            else if (address0 === "0x639A647fbe20b6c8ac19E48E2de44ea792c62c5C")
+                reserveUSD = userFarmDetails[userFarmDetailsKey].reserve0 * 2 / 1e18
+            else if (address1 === "0x639A647fbe20b6c8ac19E48E2de44ea792c62c5C")
+                reserveUSD = userFarmDetails[userFarmDetailsKey].reserve1 * 2 / 1e18
+            else if (address0 === "0xE3F5a90F9cb311505cd691a46596599aA1A0AD7D")
+                reserveUSD = userFarmDetails[userFarmDetailsKey].reserve0 * bnbPrice * 2 / 1e18
+            else if (address1 === "0xE3F5a90F9cb311505cd691a46596599aA1A0AD7D")
+                reserveUSD = userFarmDetails[userFarmDetailsKey].reserve1 * bnbPrice * 2 / 1e18
+            const balanceUSD = (Number(totalSupply) / userFarmDetails[userFarmDetailsKey].lpTotalSupply) * Number(reserveUSD)
 
+            const rewardPerBlock = ((farms[userFarmDetails[userFarmDetailsKey].pid.toNumber()].allocPoint
+              / farms[userFarmDetails[userFarmDetailsKey].pid.toNumber()].owner.totalAllocPoint)
+              * farms[userFarmDetails[userFarmDetailsKey].pid.toNumber()].owner.sushiPerBlock) / 1e18
+            const roiPerBlock = (rewardPerBlock * sushiPrice) / balanceUSD
+            farms[userFarmDetails[userFarmDetailsKey].pid.toNumber()].tvl = (reserveUSD / userFarmDetails[userFarmDetailsKey].lpTotalSupply) * userFarmDetails[userFarmDetailsKey].totalSupply
+            farms[userFarmDetails[userFarmDetailsKey].pid.toNumber()].roiPerYear = roiPerBlock * 3600 / averageBlockTime * 24 * 30 * 12
+
+        }
         if (account) {
             // console.log(account, pids)
-            const userFarmDetails = await boringHelperContract?.pollPools(account, pids)
             // console.log('userFarmDetails:', userFarmDetails)
             const userFarms = userFarmDetails
                 .filter((farm: any) => {
@@ -105,28 +203,29 @@ const useFarms = () => {
                     const pid = farm.pid.toNumber()
                     const farmDetails = sorted.find((pair: any) => pair.pid === pid)
 
-                    // console.log('farmDetails:', farmDetails)
+                    console.log('farmDetails:', farmDetails)
+                    console.log('farmDetails:', farm)
                     let deposited
                     let depositedUSD
                     deposited = Fraction.from(farm.balance, BigNumber.from(10).pow(18)).toString(18)
-                    depositedUSD =
-                        farmDetails.slpBalance && Number(farmDetails.slpBalance / 1e18) > 0
-                            ? (Number(deposited) * Number(farmDetails.tvl)) / (farmDetails.slpBalance / 1e18)
-                            : 0
+                    depositedUSD = (Number(deposited) * Number(farmDetails.tvl)) / (farm.lpTotalSupply / 1e18)
 
                     const pending = Fraction.from(farm.pending, BigNumber.from(10).pow(18)).toString(18)
+                    console.log(farms[pid])
 
                     return {
                         ...farmDetails,
                         type: farmDetails.type, // KMP or SLP
                         depositedLP: deposited,
                         depositedUSD: depositedUSD,
-                        pendingBling: pending
+                        pendingBling: pending,
                     }
                 })
+
             setFarms({ farms: sorted, userFarms: userFarms })
             // console.log('userFarms:', userFarms)
         } else {
+
             setFarms({ farms: sorted, userFarms: [] })
         }
     }, [account, boringHelperContract])
@@ -134,8 +233,22 @@ const useFarms = () => {
     useEffect(() => {
         fetchAllFarms()
     }, [fetchAllFarms])
+    async function bnbFetcher(){
+        let response = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=binancecoin&vs_currencies=usd", {
+            method: 'GET',
+            redirect: 'follow'
+        })
+        let result = await response.text()
+        return JSON.parse(result).binancecoin.usd
 
+
+    }
     return farms
 }
+
+function sortedBefore(address0:string, address1:string){
+    return address0.toLowerCase() < address1.toLowerCase()
+}
+
 
 export default useFarms

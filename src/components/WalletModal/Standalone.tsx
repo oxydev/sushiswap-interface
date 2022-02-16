@@ -310,9 +310,7 @@ export default function WalletStandalone({
                                     padding="8px"
                                     borderRadius="8px"
                                     width="100%"
-                                    onClick={() => {
-                                        console.log('hello')
-                                    }}
+
                                 >
                                     Switch to Emerald network
                                 </ButtonPrimary>

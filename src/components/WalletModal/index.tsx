@@ -142,14 +142,9 @@ export default function WalletModal({
     const switchNetwork = () => {
         if (window.ethereum) {
             try {
-                window.ethereum.request({
-                    method: 'wallet_switchEthereumChain',
-                    params: [{ chainId: '0xA516' }]
-                })
-            } catch (switchError) {
                 const data = [
                     {
-                        chainId: '0xA516',
+                        chainId: '0xa516',
                         chainName: 'Oasis Emerald',
                         nativeCurrency: {
                             symbol: 'ROSE',
@@ -159,16 +154,22 @@ export default function WalletModal({
                         blockExplorerUrls: ['https://explorer.emerald.oasis.dev/']
                     }
                 ]
-                if (switchError.code === 4902) {
-                    try {
-                        window.ethereum.request({
-                            method: 'wallet_addEthereumChain',
-                            params: data
-                        })
-                    } catch (addError) {
-                        // handle "add" error
-                    }
+
+                try {
+                    window.ethereum.request({
+                        method: 'wallet_addEthereumChain',
+                        params: data
+                    })
+                    window.ethereum.request({
+                        method: 'wallet_switchEthereumChain',
+                        params: [{ chainId: '0xa516' }]
+                    })
+                } catch (addError) {
+                    // handle "add" error
                 }
+
+            } catch (e) {
+                
             }
         }
     }

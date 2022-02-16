@@ -10,6 +10,7 @@ import Dune from '../../../assets/images/dune.png'
 import Yuzu from '../../../assets/images/yuzu.png'
 import Bitcoin from '../../../assets/images/bitcoin.png'
 import Bling from '../../../assets/images/main_logo.png'
+import Binance from '../../../assets/images/binance.png'
 //import EthereumLogo from "../../assets/img/eth.png";
 
 const isAddress = (value: any) => {
@@ -75,12 +76,22 @@ export default function TokenLogo({ address, header = false, size, ...rest }: an
         '0xaC5487bFE2502eCc06e057912b6F4946471093b9': Dune,
         '0xf02b3e437304892105992512539F769423a515Cb': Yuzu,
         '0xd43ce0aa2a29DCb75bDb83085703dc589DE6C7eb': Bitcoin,
-        '0xc9273cac55e68407d11477a44dB3d269af1cee12': Bling,
+        '0x72Ad551af3c884d02e864B182aD9A34EE414C36C': Bling,
+        '0xE3F5a90F9cb311505cd691a46596599aA1A0AD7D': Binance,
+        '0xB44a9B6905aF7c801311e8F4E76932ee959c663C': "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png",
+        '0x639A647fbe20b6c8ac19E48E2de44ea792c62c5C': "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/assets/BUSD-BD1/logo.png",
+        '0x2bF9b864cdc97b08B6D79ad4663e71B8aB65c45c': "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/assets/DAI-D75/logo.png",
+        '0x80A16016cC4A2E6a2CACA8a4a498b1699fF0f844': "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/assets/USDC-CD2/logo.png",
+        '0x6aB6d61428fde76768D7b45D8BFeec19c6eF91A8': Tether,
+        '0x5D9ab5522c64E1F6ef5e3627ECCc093f56167818': Bitcoin,
+        '0x21C718C22D52d0F3a789b752D4c2fD5908a8A733': "https://raw.githubusercontent.com/trustwallet/assets/ad3cfa2e1c8e4b295cd81d64ecc5ab2a9514f79e/blockchains/oasis/info/logo.png",
         '0x3223f17957Ba502cbe71401D55A0DB26E5F7c68F':
-            'https://raw.githubusercontent.com/trustwallet/assets/ec4f6c94a95bcddda22fe25659cf02d1d5d67bfc/blockchains/ethereum/info/logo.png'
+          'https://raw.githubusercontent.com/trustwallet/assets/ec4f6c94a95bcddda22fe25659cf02d1d5d67bfc/blockchains/ethereum/info/logo.png'
     }
     const getTokenLogoURL = (address: string | false) => {
-        if (address && address in tokenLogos) return tokenLogos[address]
+        if (address && (address in tokenLogos || address.toLowerCase() in tokenLogos || address.toUpperCase() in tokenLogos)) {
+            return tokenLogos[address]
+        }
         return 'https://raw.githubusercontent.com/trustwallet/assets/ad3cfa2e1c8e4b295cd81d64ecc5ab2a9514f79e/blockchains/oasis/info/logo.png'
     }
 

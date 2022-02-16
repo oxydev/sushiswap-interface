@@ -17,7 +17,7 @@ type ChainTokenMap = {
 }
 
 // Block time here is slightly higher (~1s) than average in order to avoid ongoing proposals past the displayed time
-export const AVERAGE_BLOCK_TIME_IN_SECS = 13
+export const AVERAGE_BLOCK_TIME_IN_SECS = 7
 export const PROPOSAL_LENGTH_IN_BLOCKS = 40_320
 export const PROPOSAL_LENGTH_IN_SECS = AVERAGE_BLOCK_TIME_IN_SECS * PROPOSAL_LENGTH_IN_BLOCKS
 
@@ -346,5 +346,5 @@ export const BLOCKED_ADDRESSES: string[] = [
 ]
 
 // Boring Helper
-export const BORING_HELPER_ADDRESS = '0x1c3b634F53033d0b457ea60A49402C7A5e2f6d03'
+export const BORING_HELPER_ADDRESS = '0xa496848a844322dBe8Fc7c9B706a44f76857d8F7'
 export const DefaultChainId: ChainId = (<any>ChainId)[process.env.REACT_APP_DEFAULTCHAINID || 'OASISETH_MAIN']

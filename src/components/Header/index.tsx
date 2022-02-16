@@ -354,8 +354,11 @@ export default function Header() {
                         Gem Mine
                     </StyledNavLink>
 
-                    <StyledNavLink id={`zap-nav-link`} to={'/zap'}>
-                        Zap
+                    {/*<StyledNavLink id={`zap-nav-link`} to={'/zap'}>*/}
+                    {/*    Zap*/}
+                    {/*</StyledNavLink>*/}
+                    <StyledNavLink id={`zap-nav-link`} as="a" href="https://app.multichain.org/#/router" target="_blank" >
+                        Bridge
                     </StyledNavLink>
                 </HeaderLinks>
             </HeaderRow>

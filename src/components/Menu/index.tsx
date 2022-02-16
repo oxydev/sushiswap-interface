@@ -82,7 +82,7 @@ export default function Menu() {
                         <Info size={14} />
                         About
                     </MenuItem>
-                    <MenuItem id="link" href="https://docs.sushi.com">
+                    <MenuItem id="link" href="https://gemkeeper-finance.gitbook.io/docs/">
                         <BookOpen size={14} />
                         Docs
                     </MenuItem>
@@ -98,7 +98,7 @@ export default function Menu() {
                         <Twitter size={14} />
                         Twitter
                     </MenuItem>
-                    <MenuItem id="link" href="https://discord.gg/NVPXN4e">
+                    <MenuItem id="link" href="https://discord.gg/Jcbj5E9Ysd">
                         <MessageCircle size={14} />
                         Discord
                     </MenuItem>

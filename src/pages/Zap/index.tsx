@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import ZapImg from '../../assets/images/bitcoin.png'
+import ZapImg from '../../assets/images/zapp.png'
 import QuestionHelper from '../../components/QuestionHelper'
 import { darken, margin } from 'polished'
 import React, { useCallback, useContext, useRef, useEffect, useMemo, useState } from 'react'
@@ -246,7 +246,6 @@ export default function Zap(): JSX.Element {
     }
 
     const [approval, approveCallback] = useApproveCallback(inputToken || undefined, ZOO_ZAP_ADDRESS[DefaultChainId])
-
     const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
 
     // mark when a user has submitted an approval, reset onTokenSelection for input field
@@ -373,9 +372,7 @@ export default function Zap(): JSX.Element {
                             </CurrencySelect>
                         </ZapInputLine>
                     </ZapTopInput>
-                    <ArrowContainer>
-                        <Arrowline>↓</Arrowline>
-                    </ArrowContainer>
+
                     <ZapBottomInput>
                         <Line style={{ marginBottom: '15px' }}>
                             <TYPE.black fontWeight={500} color={'#fff'} fontSize={14}>
@@ -391,7 +388,7 @@ export default function Zap(): JSX.Element {
                                 value={output}
                                 disabled={true}
                                 onUserInput={val => {
-                                    console.log(val)
+                                    // console.log(val)
                                 }}
                             />
                             <CurrencySelect
