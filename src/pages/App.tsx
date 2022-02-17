@@ -57,6 +57,7 @@ import Vesting from './Vesting'
 import { KashiProvider } from 'kashi/context'
 import Earn from './Earn'
 import Zap from './Zap'
+import Bridge from './Bridge'
 
 const AppWrapper = styled.div`
     display: flex;
@@ -168,6 +169,7 @@ function App() {
                                 <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
                                 <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
                                 <Route exact strict path="/find" component={PoolFinder} />
+                                <Route exact strict path="/bridge" component={Bridge} />
                                 {chainId === ChainId.OASISETH_MAIN && (
                                     <Route exact strict path="/pool" component={Pool} />
                                 )}
