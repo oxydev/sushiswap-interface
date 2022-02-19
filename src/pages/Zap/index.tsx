@@ -192,6 +192,11 @@ export default function Zap(): JSX.Element {
     const StyledTokenName = styled.span<{ active?: boolean }>`
         ${({ active }) => (active ? '  margin: 0 0.25rem 0 0.75rem;' : '  margin: 0 0.25rem 0 0.25rem;')}
         font-size:  ${({ active }) => (active ? '20px' : '16px')};
+        display: flex;
+        align-items: center;
+        & > div {
+            margin-right: 25px;
+        }
 
     `
 
@@ -384,7 +389,11 @@ export default function Zap(): JSX.Element {
                                 To LP <QuestionHelper text="Estimated Number of GLP You Will Recieve" />
                             </TYPE.black>
                             <TYPE.black fontWeight={500} color={'#fff'} fontSize={14}>
-                                {!!pool ? fixFloatFloor(JSBI.toNumber(pool.myLpBalance) / 1e18, 18) : '-'}
+                                {!!pool
+                                    ? JSBI.toNumber(pool.myLpBalance) / 1e18 === 0
+                                        ? '0'
+                                        : fixFloatFloor(JSBI.toNumber(pool.myLpBalance) / 1e18, 18)
+                                    : '-'}
                             </TYPE.black>
                         </Line>
                         <Line>
@@ -403,9 +412,15 @@ export default function Zap(): JSX.Element {
                                 }}
                             >
                                 <Aligner>
-
                                     <StyledTokenName className="token-symbol-container" active={Boolean(pool)}>
-                                        {pool ? <DoubleLogo a0={pool.token0.address} a1={pool.token1.address} size={20} margin={true} /> : null}
+                                        {pool ? (
+                                            <DoubleLogo
+                                                a0={pool.token0.address}
+                                                a1={pool.token1.address}
+                                                size={20}
+                                                margin={true}
+                                            />
+                                        ) : null}
                                         {pool ? pool.token0.symbol + '-' + pool.token1.symbol : 'Select a LP'}
                                     </StyledTokenName>
                                     <StyledDropDown selected={!!pool} />
