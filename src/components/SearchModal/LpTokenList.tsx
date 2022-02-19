@@ -106,7 +106,15 @@ function LpTokenRow({
                 <Text fontWeight={500}>{pool.token0.symbol + '-' + pool.token1.symbol}</Text>
             </Column>
             <p style={{ justifySelf: 'flex-end' }}>
-                {balance ? <Text>{(JSBI.toNumber(balance) / 1e18).toFixed(18)}</Text> : account ? <Loader /> : null}
+                {balance ? (
+                    JSBI.toNumber(balance) / 1e18 === 0 ? (
+                        <Text>0.000</Text>
+                    ) : (
+                        <Text>{(JSBI.toNumber(balance) / 1e18).toFixed(18)}</Text>
+                    )
+                ) : account ? (
+                    <Loader />
+                ) : null}
             </p>
         </LPMenuItem>
     )

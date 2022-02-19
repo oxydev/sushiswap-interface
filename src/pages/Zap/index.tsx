@@ -391,7 +391,7 @@ export default function Zap(): JSX.Element {
                             <TYPE.black fontWeight={500} color={'#fff'} fontSize={14}>
                                 {!!pool
                                     ? JSBI.toNumber(pool.myLpBalance) / 1e18 === 0
-                                        ? '0'
+                                        ? '0.000'
                                         : fixFloatFloor(JSBI.toNumber(pool.myLpBalance) / 1e18, 18)
                                     : '-'}
                             </TYPE.black>
