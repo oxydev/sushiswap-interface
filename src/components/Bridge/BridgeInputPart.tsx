@@ -225,6 +225,7 @@ export default function BridgeInputPart({
                         <CurrencySelect
                             selected={!!currency}
                             className="open-currency-select-button"
+                            style={{ marginRight: '10px' }}
                             onClick={() => {
                                 if (!disableCurrencySelect) {
                                     setModalOpen(true)
