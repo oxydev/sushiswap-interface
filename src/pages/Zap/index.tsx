@@ -26,6 +26,8 @@ import Loader from '../../components/Loader'
 import LpTokenListModal from '../../components/SearchModal/LpTokenListModal'
 import { transparentize } from 'polished'
 import { TYPE } from 'theme'
+import { DoubleLogo } from '../Yield/components'
+import { LPMenuItem } from '../../components/SearchModal/styleds'
 
 export default function Zap(): JSX.Element {
     const ZapPage = styled.div`
@@ -209,7 +211,7 @@ export default function Zap(): JSX.Element {
 
     const relevantTokenBalances = useCurrencyBalances(account ?? undefined, [currency ?? undefined])
 
-    const [input, setInput] = useState<string>('0.0')
+    const [input, setInput] = useState<string>('')
     const [output, setOutput] = useState<string>('0.0')
 
     const onMax = useCallback(() => {
@@ -238,12 +240,13 @@ export default function Zap(): JSX.Element {
             : null
     }, [currency, input])
 
+    // console.log(Number(input))
     const estimateLp = useEstimateZapInTokenLpAmount(inputToken, pair)
-    if (estimateLp) {
-        console.log('estimateLp is ', estimateLp, ' estimateLp amount is ', tokenAmountForshow(estimateLp?.raw || 0))
-    } else {
-        console.log("can't zap because estimatLp is null")
-    }
+    // if (estimateLp) {
+    //     console.log('estimateLp is ', estimateLp, ' estimateLp amount is ', tokenAmountForshow(estimateLp?.raw || 0))
+    // } else {
+    //     console.log("can't zap because estimatLp is null")
+    // }
 
     const [approval, approveCallback] = useApproveCallback(inputToken || undefined, ZOO_ZAP_ADDRESS[DefaultChainId])
     const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
@@ -260,7 +263,7 @@ export default function Zap(): JSX.Element {
             setApprovalSubmitted(false) // reset 2 step UI for approvals
             setCurrency(inputCurrency)
             setOutput('0.0')
-            setInput('0.0')
+            setInput('')
         },
         [setCurrency]
     )
@@ -288,7 +291,8 @@ export default function Zap(): JSX.Element {
         }
     }, [approval])
     useEffect(() => {
-        estimateLp && estimateLp?.raw && setOutput(String(tokenAmountForshow(estimateLp?.raw || 0)))
+        // console.log(tokenAmountForshow(estimateLp?.raw || 0).toFixed(18))
+        estimateLp && estimateLp?.raw && setOutput(tokenAmountForshow(estimateLp?.raw || 0).toFixed(18))
     }, [estimateLp])
     const doZap = useZapInTokenLpAmount(inputToken, pair)
     const doZapWrapper = useCallback(
@@ -332,6 +336,7 @@ export default function Zap(): JSX.Element {
                                     <NumericalInput
                                         className="zap-input"
                                         value={input}
+                                        autoFocus
                                         onUserInput={val => {
                                             setInput(val)
                                         }}
@@ -376,10 +381,10 @@ export default function Zap(): JSX.Element {
                     <ZapBottomInput>
                         <Line style={{ marginBottom: '15px' }}>
                             <TYPE.black fontWeight={500} color={'#fff'} fontSize={14}>
-                                To LP <QuestionHelper text="Estimated Number of LPT You Will Get" />
+                                To LP <QuestionHelper text="Estimated Number of GLP You Will Recieve" />
                             </TYPE.black>
                             <TYPE.black fontWeight={500} color={'#fff'} fontSize={14}>
-                                {!!pool ? fixFloatFloor(JSBI.toNumber(pool.myLpBalance) / 1e18, 8) : '-'}
+                                {!!pool ? fixFloatFloor(JSBI.toNumber(pool.myLpBalance) / 1e18, 18) : '-'}
                             </TYPE.black>
                         </Line>
                         <Line>
@@ -398,7 +403,9 @@ export default function Zap(): JSX.Element {
                                 }}
                             >
                                 <Aligner>
+
                                     <StyledTokenName className="token-symbol-container" active={Boolean(pool)}>
+                                        {pool ? <DoubleLogo a0={pool.token0.address} a1={pool.token1.address} size={20} margin={true} /> : null}
                                         {pool ? pool.token0.symbol + '-' + pool.token1.symbol : 'Select a LP'}
                                     </StyledTokenName>
                                     <StyledDropDown selected={!!pool} />
@@ -438,10 +445,10 @@ export default function Zap(): JSX.Element {
                             onClick={() =>
                                 doZapWrapper(
                                     () => {
-                                        console.log('zap submit')
+                                        // console.log('zap submit')
                                     },
                                     (error: Error) => {
-                                        console.log('zap error' + error.message)
+                                        // console.log('zap error' + error.message)
                                     }
                                 )
                             }

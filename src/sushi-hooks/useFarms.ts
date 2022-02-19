@@ -12,12 +12,16 @@ const useFarms = () => {
     const { account } = useActiveWeb3React()
     const boringHelperContract = useBoringHelperContract()
     const fetchAllFarms = useCallback(async () => {
-        let bnbPrice = await bnbFetcher()
+        let prices = await bnbFetcher()
+        let chainPrice
+        let bnbPrice
+        [bnbPrice, chainPrice] = prices
+        console.log(bnbPrice,chainPrice)
         const pools = [{
             balance:1,
             allocPoint:150,
             owner:{
-                totalAllocPoint: 650,
+                totalAllocPoint: 800,
                 sushiPerBlock: 11.152637748
             },
             token0: {
@@ -37,7 +41,7 @@ const useFarms = () => {
                 balance:1,
                 allocPoint:125,
                 owner:{
-                    totalAllocPoint: 650,
+                    totalAllocPoint: 800,
                     sushiPerBlock: 11.152637748
                 },
                 token0  : {
@@ -57,7 +61,7 @@ const useFarms = () => {
                 balance:1,
                 allocPoint:125,
                 owner:{
-                    totalAllocPoint: 650,
+                    totalAllocPoint: 800,
                     sushiPerBlock: 11.152637748
                 },
                 token0: {
@@ -77,7 +81,7 @@ const useFarms = () => {
                 balance:1,
                 allocPoint:150,
                 owner:{
-                    totalAllocPoint: 650,
+                    totalAllocPoint: 800,
                     sushiPerBlock: 11.152637748
                 },
                 token1: {
@@ -97,7 +101,7 @@ const useFarms = () => {
                 balance:1,
                 allocPoint:100,
                 owner:{
-                    totalAllocPoint: 650,
+                    totalAllocPoint: 800,
                     sushiPerBlock: 11.152637748
                 },
                 token1: {
@@ -112,6 +116,26 @@ const useFarms = () => {
                 },
                 id:4,
                 lpAddress:"0x41953bAca0A634732365093f848CcFc968EF0C69"
+            },
+            {
+                balance:1,
+                allocPoint:150,
+                owner:{
+                    totalAllocPoint: 800,
+                    sushiPerBlock: 11.152637748
+                },
+                token1: {
+                    symbol:"LINK",
+                    name:"ChainLink - Multichain",
+                    address:"0xc9BAA8cfdDe8E328787E29b4B078abf2DaDc2055"
+                },
+                token0: {
+                    symbol:"wROSE",
+                    name:"Wrapped ROSE",
+                    address:"0x21C718C22D52d0F3a789b752D4c2fD5908a8A733"
+                },
+                id:5,
+                lpAddress:"0xbf6ABe88a1A780d17786A82c93b56941a281DB66"
             }
         ]
 
@@ -158,7 +182,7 @@ const useFarms = () => {
         const pids = sorted.map(pool => {
             return pool.pid
         })
-        const userFarmDetails = await boringHelperContract?.pollPools(account, pids)
+        const userFarmDetails = await boringHelperContract?.pollPools(account??"0x35d43B3B122D6d112801B391B375d9377f0Ff7a6", pids)
         for (let userFarmDetailsKey in userFarmDetails) {
             let totalSupply = Fraction.from(userFarmDetails[userFarmDetailsKey].totalSupply, BigNumber.from(10).pow(18)).toString(18)
             farms[userFarmDetails[userFarmDetailsKey].pid.toNumber()].balance = totalSupply;
@@ -180,6 +204,10 @@ const useFarms = () => {
                 reserveUSD = userFarmDetails[userFarmDetailsKey].reserve0 * bnbPrice * 2 / 1e18
             else if (address1 === "0xE3F5a90F9cb311505cd691a46596599aA1A0AD7D")
                 reserveUSD = userFarmDetails[userFarmDetailsKey].reserve1 * bnbPrice * 2 / 1e18
+            else if (address0 === "0xc9BAA8cfdDe8E328787E29b4B078abf2DaDc2055")
+                reserveUSD = userFarmDetails[userFarmDetailsKey].reserve0 * chainPrice * 2 / 1e18
+            else if (address1 === "0xc9BAA8cfdDe8E328787E29b4B078abf2DaDc2055")
+                reserveUSD = userFarmDetails[userFarmDetailsKey].reserve1 * chainPrice * 2 / 1e18
             const balanceUSD = (Number(totalSupply) / userFarmDetails[userFarmDetailsKey].lpTotalSupply) * Number(reserveUSD)
 
             const rewardPerBlock = ((farms[userFarmDetails[userFarmDetailsKey].pid.toNumber()].allocPoint
@@ -203,15 +231,15 @@ const useFarms = () => {
                     const pid = farm.pid.toNumber()
                     const farmDetails = sorted.find((pair: any) => pair.pid === pid)
 
-                    console.log('farmDetails:', farmDetails)
-                    console.log('farmDetails:', farm)
+                    // console.log('farmDetails:', farmDetails)
+                    // console.log('farmDetails:', farm)
                     let deposited
                     let depositedUSD
                     deposited = Fraction.from(farm.balance, BigNumber.from(10).pow(18)).toString(18)
                     depositedUSD = (Number(deposited) * Number(farmDetails.tvl)) / (farm.lpTotalSupply / 1e18)
 
                     const pending = Fraction.from(farm.pending, BigNumber.from(10).pow(18)).toString(18)
-                    console.log(farms[pid])
+                    // console.log(farms[pid])
 
                     return {
                         ...farmDetails,
@@ -233,16 +261,17 @@ const useFarms = () => {
     useEffect(() => {
         fetchAllFarms()
     }, [fetchAllFarms])
-    async function bnbFetcher(){
-        let response = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=binancecoin&vs_currencies=usd", {
+    async function bnbFetcher() {
+        let response = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=binancecoin,chainlink&vs_currencies=usd", {
             method: 'GET',
             redirect: 'follow'
         })
         let result = await response.text()
-        return JSON.parse(result).binancecoin.usd
+        return [JSON.parse(result).binancecoin.usd, JSON.parse(result).chainlink.usd]
 
 
     }
+
     return farms
 }
 

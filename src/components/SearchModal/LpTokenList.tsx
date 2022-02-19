@@ -11,6 +11,7 @@ import { LPMenuItem } from './styleds'
 import Loader from '../Loader'
 import useTheme from 'hooks/useTheme'
 import { fixFloatFloor } from 'utils/fixFloat'
+import { DoubleLogo } from '../../pages/Yield/components'
 
 function currencyKey(currency: Currency): string {
     return currency instanceof Token ? currency.address : currency === ETHER ? 'ETHER' : ''
@@ -100,12 +101,12 @@ function LpTokenRow({
     // only show add or remove buttons if not on selected list
     return (
         <LPMenuItem style={style} onClick={() => (isSelected ? null : onSelect())} disabled={isSelected}>
-            <span>LP</span>
+            <DoubleLogo a0={pool.token0.address} a1={pool.token1.address} size={26} margin={true} />
             <Column>
                 <Text fontWeight={500}>{pool.token0.symbol + '-' + pool.token1.symbol}</Text>
             </Column>
             <p style={{ justifySelf: 'flex-end' }}>
-                {balance ? <Text>{fixFloatFloor(JSBI.toNumber(balance) / 1e18, 8)}</Text> : account ? <Loader /> : null}
+                {balance ? <Text>{(JSBI.toNumber(balance) / 1e18).toFixed(18)}</Text> : account ? <Loader /> : null}
             </p>
         </LPMenuItem>
     )

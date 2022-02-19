@@ -1,4 +1,4 @@
-import { CurrencyAmount, TokenAmount, ROUTER_ADDRESS, ZOO_ZAP_ADDRESS, Pair, WETH } from '@sushiswap/sdk'
+import { CurrencyAmount, TokenAmount, ROUTER_ADDRESS, ZOO_ZAP_ADDRESS, Pair, WETH, JSBI } from '@sushiswap/sdk'
 import { useZooZapExtContract } from './useContract'
 import { useSingleCallResult } from '../state/multicall/hooks'
 import { useActiveWeb3React } from '../hooks'
@@ -18,8 +18,8 @@ export function useEstimateZapInTokenLpAmount(inToken: CurrencyAmount | null, pa
     const contract = useZooZapExtContract(ZOO_ZAP_ADDRESS[chainId ?? DefaultChainId], false)
     const wToken = WETH[chainId || DefaultChainId]
     const tokenAddr = inToken instanceof TokenAmount ? inToken?.token.address || '' : wToken.address
-    const tokenAmount = inToken?.raw.toString() || ''
 
+    const tokenAmount = inToken?.raw.toString() || '0'
     const argsValide = tokenAddr != '' && toLpAddress != '' && tokenAmount != ''
 
     const [token0Amount, token1Amount] =
@@ -30,8 +30,9 @@ export function useEstimateZapInTokenLpAmount(inToken: CurrencyAmount | null, pa
         ]).result || []
     //    console.log("token0Amount ",token0Amount ," token1Amount ",token1Amount)
     const pairContract = usePairContract(toLpAddress)
+
     const totalSupply =
-        useSingleCallResult(argsValide && token0Amount && token1Amount ? pairContract : undefined, 'totalSupply', [])
+        useSingleCallResult(argsValide && token0Amount && token1Amount && pairContract ? pairContract : undefined, 'totalSupply', [])
             .result?.[0] || 0
 
     const [token0, token1] =
@@ -39,7 +40,6 @@ export function useEstimateZapInTokenLpAmount(inToken: CurrencyAmount | null, pa
             ? [new TokenAmount(pair?.token0, token0Amount), new TokenAmount(pair?.token1, token1Amount)]
             : []
     const tokenSupplyToken = totalSupply && pair ? new TokenAmount(pair.liquidityToken, totalSupply) : null
-
     const expectLiquidityMinted = useMemo(() => {
         if (pair && tokenSupplyToken && token0 && token1) {
             return pair.getLiquidityMinted(tokenSupplyToken, token0, token1)

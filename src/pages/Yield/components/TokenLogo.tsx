@@ -11,6 +11,8 @@ import Yuzu from '../../../assets/images/yuzu.png'
 import Bitcoin from '../../../assets/images/bitcoin.png'
 import Bling from '../../../assets/images/main_logo.png'
 import Binance from '../../../assets/images/binance.png'
+import OasisApe from '../../../assets/images/oasis-apes.png'
+
 //import EthereumLogo from "../../assets/img/eth.png";
 
 const isAddress = (value: any) => {
@@ -78,6 +80,8 @@ export default function TokenLogo({ address, header = false, size, ...rest }: an
         '0xd43ce0aa2a29DCb75bDb83085703dc589DE6C7eb': Bitcoin,
         '0x72Ad551af3c884d02e864B182aD9A34EE414C36C': Bling,
         '0xE3F5a90F9cb311505cd691a46596599aA1A0AD7D': Binance,
+        '0xf4dEAd672d2E3e16A3dCAeF4C2bA7Cb1b4D304Ff': OasisApe,
+        '0xc9BAA8cfdDe8E328787E29b4B078abf2DaDc2055': "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x514910771AF9Ca656af840dff83E8264EcF986CA/logo.png",
         '0xB44a9B6905aF7c801311e8F4E76932ee959c663C': "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png",
         '0x639A647fbe20b6c8ac19E48E2de44ea792c62c5C': "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/assets/BUSD-BD1/logo.png",
         '0x2bF9b864cdc97b08B6D79ad4663e71B8aB65c45c': "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/assets/DAI-D75/logo.png",

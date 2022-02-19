@@ -76,7 +76,7 @@ export const Input = React.memo(function InnerInput({
             // text-specific options
             type="text"
             pattern="^[0-9]*[.,]?[0-9]*$"
-            placeholder={placeholder || '0.0'}
+            placeholder={'0.0'}
             min={0}
             minLength={1}
             maxLength={79}
