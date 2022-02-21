@@ -282,6 +282,7 @@ const StyledExternalLink = styled(ExternalLink).attrs({
 
 const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
     [ChainId.RINKEBY]: 'Rinkeby',
+    [ChainId.MAINNET]: 'Ethereum',
     [ChainId.ROPSTEN]: 'Ropsten',
     [ChainId.GÖRLI]: 'Görli',
     [ChainId.KOVAN]: 'Kovan',
