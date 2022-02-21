@@ -254,17 +254,18 @@ export default function Bridge() {
                 ]
 
                 try {
-                    window.ethereum.request({
-                        method: 'wallet_switchEthereumChain',
-                        params: [{ chainId: '0x' + chainIDRequest.toString(16), }]
-                    })
-                } catch (addError) {
                     console.log(data)
 
                     window.ethereum.request({
                         method: 'wallet_addEthereumChain',
                         params: data
                     })
+                    window.ethereum.request({
+                        method: 'wallet_switchEthereumChain',
+                        params: [{ chainId: '0x' + chainIDRequest.toString(16), }]
+                    })
+                } catch (addError) {
+
                 }
 
             } catch (e) {
