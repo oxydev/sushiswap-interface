@@ -273,13 +273,29 @@ export default function Bridge() {
             const selectedChainId = chainData.bridgeChain[chainIndex].chainid
             // console.log(chainId, selectedChainId)
             if (selectedChainId !== undefined && chainId !== selectedChainId) {
-                // // @ts-ignore
                 switchNetwork(selectedChainId)
             }
         } else {
             console.log(chainId)
         }
     }, [chainIndex])
+
+    useEffect(() => {
+        if (chainIndex !== undefined && chainId !== undefined) {
+            let idList = []
+            for (const item of chainData.bridgeChain) {
+                idList.push(item.chainid)
+            }
+            const newIndex = idList.indexOf(chainId)
+
+            // console.log(chainId, selectedChainId)
+            if (newIndex !== chainIndex) {
+                setChainIndex(newIndex)
+            }
+        } else {
+            console.log(chainId)
+        }
+    }, [chainId])
 
     return (
         <>
