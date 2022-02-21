@@ -50,6 +50,7 @@ interface CurrencySearchProps {
     showManageView: () => void
     showImportView: () => void
     setImportToken: (token: Token) => void
+    currencyList?: any
 }
 
 export function CurrencySearch({
@@ -61,7 +62,8 @@ export function CurrencySearch({
     isOpen,
     showManageView,
     showImportView,
-    setImportToken
+    setImportToken,
+    currencyList
 }: CurrencySearchProps) {
     const { t } = useTranslation()
     const { chainId } = useActiveWeb3React()
@@ -192,6 +194,27 @@ export function CurrencySearch({
                 <Column style={{ padding: '20px 0', height: '100%' }}>
                     <ImportRow token={searchToken} showImportView={showImportView} setImportToken={setImportToken} />
                 </Column>
+            ) : currencyList ? (
+                <div style={{ flex: '1' }}>
+                    <AutoSizer disableWidth>
+                        {({ height }) => (
+                            <CurrencyList
+                                height={height}
+                                showETH={showETH}
+                                currencies={currencyList}
+                                breakIndex={
+                                    inactiveTokens && filteredSortedTokens ? filteredSortedTokens.length : undefined
+                                }
+                                onCurrencySelect={handleCurrencySelect}
+                                otherCurrency={otherSelectedCurrency}
+                                selectedCurrency={selectedCurrency}
+                                fixedListRef={fixedList}
+                                showImportView={showImportView}
+                                setImportToken={setImportToken}
+                            />
+                        )}
+                    </AutoSizer>
+                </div>
             ) : filteredSortedTokens?.length > 0 || filteredInactiveTokens?.length > 0 ? (
                 <div style={{ flex: '1' }}>
                     <AutoSizer disableWidth>

@@ -25,6 +25,7 @@ interface bridgeInputProps {
     onChainSelect?: (chain: number) => void
     chainIndex?: number | null
     currency?: Currency | null
+    currencyList?: any
     disableCurrencySelect?: boolean
     disableChainSelect?: boolean
     hideBalance?: boolean
@@ -168,6 +169,7 @@ export default function BridgeInputPart({
     onCurrencySelect,
     onChainSelect,
     currency,
+    currencyList,
     chainIndex,
     disableCurrencySelect = false,
     disableChainSelect = false,
@@ -310,6 +312,7 @@ export default function BridgeInputPart({
                         selectedCurrency={currency}
                         otherSelectedCurrency={otherCurrency}
                         showCommonBases={showCommonBases}
+                        currencyList={currencyList}
                     />
                 )}
                 {!disableChainSelect && onChainSelect && (
