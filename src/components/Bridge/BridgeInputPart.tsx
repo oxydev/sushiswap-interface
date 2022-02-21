@@ -13,7 +13,7 @@ import CurrencyLogo from 'components/CurrencyLogo'
 import { useTranslation } from 'react-i18next'
 import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
 import ChainListModal from 'components/SearchModal/ChainListModal'
-import chainData from '../../data/statics/bridgeChain.json'
+import { networkData } from '../../pages/Bridge/index'
 
 interface bridgeInputProps {
     value: string
@@ -23,7 +23,7 @@ interface bridgeInputProps {
     label?: string
     onCurrencySelect?: (currency: Currency) => void
     onChainSelect?: (chain: number) => void
-    chainIndex?: number | undefined
+    chain?: number | undefined
     currency?: Currency | null
     currencyList?: any
     disableCurrencySelect?: boolean
@@ -170,7 +170,7 @@ export default function BridgeInputPart({
     onChainSelect,
     currency,
     currencyList,
-    chainIndex,
+    chain,
     disableCurrencySelect = false,
     disableChainSelect = false,
     hideBalance = false,
@@ -291,9 +291,9 @@ export default function BridgeInputPart({
                             }}
                         >
                             <Aligner>
-                                {chainIndex !== undefined ? (
-                                    <StyledTokenName className="token-symbol-container" active={Boolean(chainIndex)}>
-                                        {chainData.bridgeChain[chainIndex].name}
+                                {chain !== undefined ? (
+                                    <StyledTokenName className="token-symbol-container" active={Boolean(chain)}>
+                                        {networkData[chain].chainName}
                                     </StyledTokenName>
                                 ) : (
                                     t('selectChain')
@@ -322,7 +322,7 @@ export default function BridgeInputPart({
                             setChainModalOpen(false)
                         }}
                         onChainSelect={onChainSelect}
-                        selectedChain={chainIndex}
+                        selectedChain={chain}
                     />
                 )}
             </InputPanel>
