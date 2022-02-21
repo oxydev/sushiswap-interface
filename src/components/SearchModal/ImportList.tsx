@@ -31,7 +31,7 @@ interface ImportProps {
     listURL: string
     list: TokenList
     onDismiss: () => void
-    setModalView: (view: CurrencyModalView) => void
+    setModalView: (view: any) => void
 }
 
 export function ImportList({ listURL, list, setModalView, onDismiss }: ImportProps) {

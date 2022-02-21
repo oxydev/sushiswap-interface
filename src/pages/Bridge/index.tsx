@@ -216,6 +216,13 @@ export default function Bridge() {
 
     const defaultTrade = showWrap ? undefined : tradesByVersion[DEFAULT_VERSION]
 
+    const [chainIndex, setChainIndex] = useState()
+    const handelChainSelect = useCallback(index => {
+        setChainIndex(index)
+    }, [])
+
+    console.log(chainIndex)
+
     return (
         <>
             <h1>Bridge Page</h1>
@@ -229,6 +236,8 @@ export default function Bridge() {
                             value={formattedAmounts[Field.INPUT]}
                             showMaxButton={!atMaxAmountInput}
                             currency={currencies[Field.INPUT]}
+                            chainIndex={chainIndex}
+                            onChainSelect={handelChainSelect}
                             onUserInput={handleTypeInput}
                             onMax={handleMaxInput}
                             onCurrencySelect={handleInputSelect}
@@ -246,6 +255,8 @@ export default function Bridge() {
                             otherCurrency={currencies[Field.INPUT]}
                             id="swap-currency-output"
                             cornerRadiusTopNone={isExpertMode ? false : true}
+                            disableChainSelect={true}
+                            disableCurrencySelect={true}
                         />
                     </AutoColumn>
                     <BottomGrouping style={{ paddingBottom: '1rem' }}>
