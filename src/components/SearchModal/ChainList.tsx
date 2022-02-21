@@ -12,6 +12,7 @@ import Loader from '../Loader'
 import useTheme from 'hooks/useTheme'
 import { fixFloatFloor } from 'utils/fixFloat'
 import { networkData } from 'pages/Bridge'
+import CurrencyLogo from 'components/CurrencyLogo'
 
 function currencyKey(currency: Currency): string {
     return currency instanceof Token ? currency.address : currency === ETHER ? 'ETHER' : ''
@@ -101,11 +102,10 @@ function ChainRow({
     // only show add or remove buttons if not on selected list
     return (
         <LPMenuItem style={style} onClick={() => (isSelected ? null : onSelect())} disabled={isSelected}>
-            <span>Chain</span>
+            <CurrencyLogo chain={chain} size={'20px'} />
             <Column>
                 <Text fontWeight={500}>{networkData[chain].chainName}</Text>
             </Column>
-            <p style={{ justifySelf: 'flex-end' }}>{chain ? <Text>--</Text> : account ? <Loader /> : null}</p>
         </LPMenuItem>
     )
 }

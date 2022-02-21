@@ -292,9 +292,12 @@ export default function BridgeInputPart({
                         >
                             <Aligner>
                                 {chain !== undefined ? (
-                                    <StyledTokenName className="token-symbol-container" active={Boolean(chain)}>
-                                        {networkData[chain].chainName}
-                                    </StyledTokenName>
+                                    <>
+                                        <CurrencyLogo chain={chain} size={'24px'} />
+                                        <StyledTokenName className="token-symbol-container" active={Boolean(chain)}>
+                                            {networkData[chain].chainName}
+                                        </StyledTokenName>
+                                    </>
                                 ) : (
                                     t('selectChain')
                                 )}
