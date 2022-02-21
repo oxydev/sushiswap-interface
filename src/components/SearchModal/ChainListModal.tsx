@@ -20,6 +20,7 @@ import { DefaultChainId } from '../../constants'
 import { useMultipleContractSingleData } from '../../state/multicall/hooks'
 import ERC20_INTERFACE from '../../constants/abis/erc20'
 import ChainList from './ChainList'
+import { networkData } from 'pages/Bridge'
 
 const ContentWrapper = styled(Column)`
     width: 100%;
@@ -74,7 +75,8 @@ export default function ChainListModal({
     const node = useRef<HTMLDivElement>()
     useOnClickOutside(node, open ? toggle : undefined)
     // const [poolList, statics] = useMyAllStakePoolList()
-    const chains: number[] = [0, 1, 2]
+
+    const chains = Object.keys(networkData)
 
     const allTokens = useAllTokens()
     const [invertSearchOrder] = useState<boolean>(false)

@@ -11,7 +11,7 @@ import { LPMenuItem } from './styleds'
 import Loader from '../Loader'
 import useTheme from 'hooks/useTheme'
 import { fixFloatFloor } from 'utils/fixFloat'
-import chainData from '../../data/statics/bridgeChain.json'
+import { networkData } from 'pages/Bridge'
 
 function currencyKey(currency: Currency): string {
     return currency instanceof Token ? currency.address : currency === ETHER ? 'ETHER' : ''
@@ -103,7 +103,7 @@ function ChainRow({
         <LPMenuItem style={style} onClick={() => (isSelected ? null : onSelect())} disabled={isSelected}>
             <span>Chain</span>
             <Column>
-                <Text fontWeight={500}>{chainData.bridgeChain[chain].name}</Text>
+                <Text fontWeight={500}>{networkData[chain].chainName}</Text>
             </Column>
             <p style={{ justifySelf: 'flex-end' }}>{chain ? <Text>--</Text> : account ? <Loader /> : null}</p>
         </LPMenuItem>
@@ -118,14 +118,14 @@ export default function ChainList({
     fixedListRef
 }: {
     height: number
-    chains: number[]
+    chains: string[]
     selectedChain?: number | null
     onChainSelect: (chain: ChainId) => void
     fixedListRef?: MutableRefObject<FixedSizeList | undefined>
 }) {
     const { chainId } = useActiveWeb3React()
-    const itemData: (number | undefined)[] = useMemo(() => {
-        const formatted: (number | undefined)[] = chains
+    const itemData: (string | undefined)[] = useMemo(() => {
+        const formatted: (string | undefined)[] = chains
         return formatted
     }, [chains])
 
