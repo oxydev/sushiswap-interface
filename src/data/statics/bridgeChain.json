@@ -1,16 +1,16 @@
 {
     "bridgeChain": [
         {
+            "chainid": 42262,
+            "name": "OASISETH"
+        },
+        {
             "chainid": 1,
             "name": "ETHEREUM"
         },
         {
             "chainid": 56,
             "name": "BNB"
-        },
-        {
-            "chainid": 42262,
-            "name": "OASISETH"
         }
     ]
 }

@@ -23,7 +23,7 @@ interface bridgeInputProps {
     label?: string
     onCurrencySelect?: (currency: Currency) => void
     onChainSelect?: (chain: number) => void
-    chainIndex?: number | null
+    chainIndex?: number | undefined
     currency?: Currency | null
     currencyList?: any
     disableCurrencySelect?: boolean
@@ -291,7 +291,7 @@ export default function BridgeInputPart({
                             }}
                         >
                             <Aligner>
-                                {chainIndex ? (
+                                {chainIndex !== undefined ? (
                                     <StyledTokenName className="token-symbol-container" active={Boolean(chainIndex)}>
                                         {chainData.bridgeChain[chainIndex].name}
                                     </StyledTokenName>

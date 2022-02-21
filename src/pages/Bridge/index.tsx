@@ -221,23 +221,23 @@ export default function Bridge() {
 
     console.log(chainIndex)
     const networkData = {
-        [ChainId.MAINNET]:{
+        [ChainId.MAINNET]: {
             chainName: 'Ethereum',
             symbol: 'Ether',
-            blockExplorerUrls: 'https://etherscan.io',
+            blockExplorerUrls: 'https://etherscan.io'
         },
-        [ChainId.OASISETH_MAIN]:{
+        [ChainId.OASISETH_MAIN]: {
             chainName: 'Oasis Emerald',
             symbol: 'Rose',
-            blockExplorerUrls: 'https://explorer.emerald.oasis.dev/',
+            blockExplorerUrls: 'https://explorer.emerald.oasis.dev/'
         },
-        [ChainId.BSC]:{
+        [ChainId.BSC]: {
             chainName: 'Binance Smart Chain Mainnet',
             symbol: 'BNB',
-            blockExplorerUrls: 'https://bscscan.com',
+            blockExplorerUrls: 'https://bscscan.com'
         }
     }
-    const switchNetwork = (chainIDRequest:ChainId.MAINNET | ChainId.OASISETH_MAIN | ChainId.BSC) => {
+    const switchNetwork = (chainIDRequest: ChainId.MAINNET | ChainId.OASISETH_MAIN | ChainId.BSC) => {
         if (window.ethereum) {
             try {
                 const data = [
@@ -262,15 +262,10 @@ export default function Bridge() {
                     })
                     window.ethereum.request({
                         method: 'wallet_switchEthereumChain',
-                        params: [{ chainId: '0x' + chainIDRequest.toString(16), }]
+                        params: [{ chainId: '0x' + chainIDRequest.toString(16) }]
                     })
-                } catch (addError) {
-
-                }
-
-            } catch (e) {
-
-            }
+                } catch (addError) {}
+            } catch (e) {}
         }
     }
     useEffect(() => {
@@ -278,7 +273,7 @@ export default function Bridge() {
             const selectedChainId = chainData.bridgeChain[chainIndex].chainid
             // console.log(chainId, selectedChainId)
             if (selectedChainId !== undefined && chainId !== selectedChainId) {
-                // @ts-ignore
+                // // @ts-ignore
                 switchNetwork(selectedChainId)
             }
         } else {
