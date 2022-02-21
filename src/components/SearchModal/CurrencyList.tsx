@@ -190,7 +190,7 @@ export default function CurrencyList({
 
             const isSelected = Boolean(
                 (selectedCurrency && currencyEquals(selectedCurrency, currency)) ||
-              (currency && currency.getSymbol(chainId) === 'BLING')
+                    (currency && currency.getSymbol(chainId) === 'BLING')
             )
             const otherSelected = Boolean(otherCurrency && currencyEquals(otherCurrency, currency))
             const handleSelect = () => onCurrencySelect(currency)
