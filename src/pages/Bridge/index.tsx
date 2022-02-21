@@ -1,4 +1,4 @@
-import { ChainId, CurrencyAmount, JSBI, Trade } from '@sushiswap/sdk'
+import { ChainId, CurrencyAmount, JSBI, Token, Trade, WETH, Currency } from '@sushiswap/sdk'
 
 import React, { useCallback, useEffect, useState } from 'react'
 import BridgeInputPart from '../../components/Bridge/BridgeInputPart'
@@ -224,19 +224,97 @@ export default function Bridge() {
         [ChainId.MAINNET]: {
             chainName: 'Ethereum',
             symbol: 'Ether',
-            blockExplorerUrls: 'https://etherscan.io'
+            blockExplorerUrls: 'https://etherscan.io',
+            tokenList: [
+                {
+                    src : new Token( ChainId.MAINNET, "0x6B175474E89094C44Da98b954EedeAC495271d0F",18,"DAI","DAI Stablecoin"),
+                    destToken: new Token( ChainId.OASISETH_MAIN, "0x2bF9b864cdc97b08B6D79ad4663e71B8aB65c45c",18,"DAI","DAI Stablecoin"),
+                    destChain:ChainId.OASISETH_MAIN
+                },
+                {
+                    src : Currency.NATIVE[ChainId.MAINNET],
+                    destToken: new Token( ChainId.OASISETH_MAIN, "0xB44a9B6905aF7c801311e8F4E76932ee959c663C",18,"ETH(MULTI)","Ethereum"),
+                    destChain:ChainId.OASISETH_MAIN
+                },
+                {
+                    src : new Token( ChainId.MAINNET, "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",6,"USDC","USD Coin"),
+                    destToken: new Token( ChainId.OASISETH_MAIN, "0x80A16016cC4A2E6a2CACA8a4a498b1699fF0f844",6,"USDC","USD Coin"),
+                    destChain:ChainId.OASISETH_MAIN
+                },
+                {
+                    src : new Token( ChainId.MAINNET, "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",8,"WBTC","Wrapped BTC"),
+                    destToken: new Token( ChainId.OASISETH_MAIN, "0x5D9ab5522c64E1F6ef5e3627ECCc093f56167818",8,"WBTC","Wrapped BTC"),
+                    destChain:ChainId.OASISETH_MAIN
+                },
+                {
+                    src : new Token( ChainId.MAINNET, "0xdAC17F958D2ee523a2206206994597C13D831ec7",6,"USDT","Tether USD"),
+                    destToken: new Token( ChainId.OASISETH_MAIN, "0x6aB6d61428fde76768D7b45D8BFeec19c6eF91A8",6,"USDT","Tether USD"),
+                    destChain:ChainId.OASISETH_MAIN
+                }
+            ]
         },
         [ChainId.OASISETH_MAIN]: {
             chainName: 'Oasis Emerald',
             symbol: 'Rose',
-            blockExplorerUrls: 'https://explorer.emerald.oasis.dev/'
+            blockExplorerUrls: 'https://explorer.emerald.oasis.dev/',
+            tokenList: [
+              {
+                  src : new Token( ChainId.OASISETH_MAIN, "0x639A647fbe20b6c8ac19E48E2de44ea792c62c5C",18,"BUSD","Binance-Peg BUSD Token"),
+                  destToken: new Token( ChainId.OASISETH_MAIN, "0x639A647fbe20b6c8ac19E48E2de44ea792c62c5C",18,"BUSD","Binance-Peg BUSD Token"),
+                  destChain:ChainId.BSC
+              },{
+
+                    src : new Token( ChainId.OASISETH_MAIN, "0xE3F5a90F9cb311505cd691a46596599aA1A0AD7D",18,"BNB","Binance"),
+                    destToken: new Token( ChainId.OASISETH_MAIN, "0xE3F5a90F9cb311505cd691a46596599aA1A0AD7D",18,"BNB","Binance"),
+                    destChain:ChainId.BSC
+                },
+                {
+                    src : new Token( ChainId.OASISETH_MAIN, "0x2bF9b864cdc97b08B6D79ad4663e71B8aB65c45c",18,"DAI","DAI Stablecoin"),
+                    destToken: new Token( ChainId.OASISETH_MAIN, "0x2bF9b864cdc97b08B6D79ad4663e71B8aB65c45c",18,"DAI","DAI Stablecoin"),
+                    destChain:ChainId.MAINNET
+                },
+                {
+                    src : new Token( ChainId.OASISETH_MAIN, "0xB44a9B6905aF7c801311e8F4E76932ee959c663C",18,"ETH(MULTI)","Ethereum"),
+                    destToken: new Token( ChainId.OASISETH_MAIN, "0xB44a9B6905aF7c801311e8F4E76932ee959c663C",18,"ETH(MULTI)","Ethereum"),
+                    destChain:ChainId.MAINNET
+                },
+                {
+                    src : new Token( ChainId.OASISETH_MAIN, "0x80A16016cC4A2E6a2CACA8a4a498b1699fF0f844",6,"USDC","USD Coin"),
+                    destToken: new Token( ChainId.OASISETH_MAIN, "0x80A16016cC4A2E6a2CACA8a4a498b1699fF0f844",6,"USDC","USD Coin"),
+                    destChain:ChainId.MAINNET
+                },
+                {
+                    src : new Token( ChainId.OASISETH_MAIN, "0x5D9ab5522c64E1F6ef5e3627ECCc093f56167818",8,"WBTC","Wrapped BTC"),
+                    destToken: new Token( ChainId.OASISETH_MAIN, "0x5D9ab5522c64E1F6ef5e3627ECCc093f56167818",8,"WBTC","Wrapped BTC"),
+                    destChain:ChainId.MAINNET
+                },
+                {
+                    src : new Token( ChainId.OASISETH_MAIN, "0x6aB6d61428fde76768D7b45D8BFeec19c6eF91A8",6,"USDT","Tether USD"),
+                    destToken: new Token( ChainId.OASISETH_MAIN, "0x6aB6d61428fde76768D7b45D8BFeec19c6eF91A8",6,"USDT","Tether USD"),
+                    destChain:ChainId.MAINNET
+                }
+                ]
+
         },
         [ChainId.BSC]: {
             chainName: 'Binance Smart Chain Mainnet',
             symbol: 'BNB',
-            blockExplorerUrls: 'https://bscscan.com'
+            blockExplorerUrls: 'https://bscscan.com',
+            tokenList:[
+                {
+                    src : Currency.NATIVE[ChainId.BSC],
+                    destToken: new Token( ChainId.OASISETH_MAIN, "0xE3F5a90F9cb311505cd691a46596599aA1A0AD7D",18,"BNB","Binance"),
+                    destChain:ChainId.OASISETH_MAIN
+                },
+                {
+                    src : new Token( ChainId.BSC, "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",18,"BUSD","Binance-Peg BUSD Token"),
+                    destToken: new Token( ChainId.OASISETH_MAIN, "0x639A647fbe20b6c8ac19E48E2de44ea792c62c5C",18,"BUSD","Binance-Peg BUSD Token"),
+                    destChain:ChainId.OASISETH_MAIN
+                }
+            ]
         }
     }
+
     const switchNetwork = (chainIDRequest: ChainId.MAINNET | ChainId.OASISETH_MAIN | ChainId.BSC) => {
         if (window.ethereum) {
             try {
@@ -324,7 +402,7 @@ export default function Bridge() {
                             onUserInput={handleTypeOutput}
                             label={independentField === Field.INPUT && !showWrap && trade ? 'To (estimated)' : 'To'}
                             showMaxButton={false}
-                            currency={currencies[Field.OUTPUT]}
+                            currency={WETH[ChainId.OASISETH_MAIN]}
                             onCurrencySelect={handleOutputSelect}
                             otherCurrency={currencies[Field.INPUT]}
                             id="swap-currency-output"
