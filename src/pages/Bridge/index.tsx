@@ -88,6 +88,7 @@ export const networkData: tNetworkData = {
     [ChainId.MAINNET]: {
         chainName: 'Ethereum',
         symbol: 'Ether',
+        chainHex: '0x1',
         blockExplorerUrls: 'https://etherscan.io',
         tokenList: [
             {
@@ -156,6 +157,7 @@ export const networkData: tNetworkData = {
     [ChainId.OASISETH_MAIN]: {
         chainName: 'Oasis Emerald',
         symbol: 'Rose',
+        chainHex: '0xa516',
         blockExplorerUrls: 'https://explorer.emerald.oasis.dev/',
         tokenList: [
             {
@@ -282,6 +284,7 @@ export const networkData: tNetworkData = {
     [ChainId.BSC]: {
         chainName: 'Binance Smart Chain Mainnet',
         symbol: 'BNB',
+        chainHex: '0x38',
         blockExplorerUrls: 'https://bscscan.com',
         tokenList: [
             {
@@ -474,7 +477,7 @@ export default function Bridge() {
             try {
                 const data = [
                     {
-                        chainId: '0x' + chainIDRequest.toString(16),
+                        chainId: networkData[chainIDRequest].chainHex,
                         chainName: networkData[chainIDRequest].chainName,
                         nativeCurrency: {
                             symbol: networkData[chainIDRequest].symbol,
@@ -494,7 +497,7 @@ export default function Bridge() {
                     })
                     window.ethereum.request({
                         method: 'wallet_switchEthereumChain',
-                        params: [{ chainId: '0x' + chainIDRequest.toString(16) }]
+                        params: [{ chainId: networkData[chainIDRequest].chainHex }]
                     })
                 } catch (addError) {}
             } catch (e) {}
