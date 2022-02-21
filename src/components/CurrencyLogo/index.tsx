@@ -27,20 +27,28 @@ import { useActiveWeb3React } from '../../hooks'
 
 const tokenLogos: Record<string, string> = {
     '0xdC19A122e268128B5eE20366299fc7b5b199C8e3': Tether,
+    '0xdAC17F958D2ee523a2206206994597C13D831ec7': Tether,
     '0x2736643C7fFFe186984f60a2d34b91b1b7398bF1': Tulip,
     '0x9e832CaE5d19e7ff2f0D62881D1E33bb16Ac9bdc': Tulip2,
     '0xaC5487bFE2502eCc06e057912b6F4946471093b9': Dune,
     '0xf02b3e437304892105992512539F769423a515Cb': Yuzu,
     '0xd43ce0aa2a29DCb75bDb83085703dc589DE6C7eb': Bitcoin,
+    '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599': Bitcoin,
     '0x72Ad551af3c884d02e864B182aD9A34EE414C36C': Bling,
     '0xE3F5a90F9cb311505cd691a46596599aA1A0AD7D': Binance,
     '0xB44a9B6905aF7c801311e8F4E76932ee959c663C':
         'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png',
     '0x639A647fbe20b6c8ac19E48E2de44ea792c62c5C':
         'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/assets/BUSD-BD1/logo.png',
+    '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56':
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/assets/BUSD-BD1/logo.png',
     '0x2bF9b864cdc97b08B6D79ad4663e71B8aB65c45c':
         'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/assets/DAI-D75/logo.png',
+    '0x6B175474E89094C44Da98b954EedeAC495271d0F':
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/assets/DAI-D75/logo.png',
     '0x80A16016cC4A2E6a2CACA8a4a498b1699fF0f844':
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/assets/USDC-CD2/logo.png',
+    '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48':
         'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/assets/USDC-CD2/logo.png',
     '0x6aB6d61428fde76768D7b45D8BFeec19c6eF91A8': Tether,
     '0x5D9ab5522c64E1F6ef5e3627ECCc093f56167818': Bitcoin,
@@ -107,6 +115,7 @@ export default function CurrencyLogo({
     chain?: ChainId
 }) {
     const { chainId } = useActiveWeb3React()
+    console.log(currency)
     const uriLocations = useHttpLocations(currency instanceof WrappedTokenInfo ? currency.logoURI : undefined)
 
     const srcs: string[] = useMemo(() => {
@@ -122,7 +131,7 @@ export default function CurrencyLogo({
         return []
     }, [currency, uriLocations])
 
-    if (currency === ETHER && chainId) {
+    if ((currency === ETHER || currency === Currency.NATIVE[ChainId.BSC] ) && chainId) {
         return <StyledNativeCurrencyLogo src={logo[chainId]} size={size} style={style} />
     }
     if (!currency && chain) {
