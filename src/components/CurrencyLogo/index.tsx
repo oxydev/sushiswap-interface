@@ -35,20 +35,28 @@ const tokenLogos: Record<string, string> = {
     '0xd43ce0aa2a29DCb75bDb83085703dc589DE6C7eb': Bitcoin,
     '0x72Ad551af3c884d02e864B182aD9A34EE414C36C': Bling,
     '0xE3F5a90F9cb311505cd691a46596599aA1A0AD7D': Binance,
+    '0xB44a9B6905aF7c801311e8F4E76932ee959c663C':
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png',
+    '0x639A647fbe20b6c8ac19E48E2de44ea792c62c5C':
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/assets/BUSD-BD1/logo.png',
+    '0x2bF9b864cdc97b08B6D79ad4663e71B8aB65c45c':
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/assets/DAI-D75/logo.png',
+    '0x80A16016cC4A2E6a2CACA8a4a498b1699fF0f844':
+        'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/assets/USDC-CD2/logo.png',
     '0xf4dEAd672d2E3e16A3dCAeF4C2bA7Cb1b4D304Ff': OasisApe,
     '0xc9BAA8cfdDe8E328787E29b4B078abf2DaDc2055': "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x514910771AF9Ca656af840dff83E8264EcF986CA/logo.png",
-    '0xB44a9B6905aF7c801311e8F4E76932ee959c663C': "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png",
-    '0x639A647fbe20b6c8ac19E48E2de44ea792c62c5C': "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/assets/BUSD-BD1/logo.png",
-    '0x2bF9b864cdc97b08B6D79ad4663e71B8aB65c45c': "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/assets/DAI-D75/logo.png",
-    '0x80A16016cC4A2E6a2CACA8a4a498b1699fF0f844': "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/assets/USDC-CD2/logo.png",
     '0x6aB6d61428fde76768D7b45D8BFeec19c6eF91A8': Tether,
     '0x5D9ab5522c64E1F6ef5e3627ECCc093f56167818': Bitcoin,
-    '0x21C718C22D52d0F3a789b752D4c2fD5908a8A733': "https://raw.githubusercontent.com/trustwallet/assets/ad3cfa2e1c8e4b295cd81d64ecc5ab2a9514f79e/blockchains/oasis/info/logo.png",
+    '0x21C718C22D52d0F3a789b752D4c2fD5908a8A733':
+        'https://raw.githubusercontent.com/trustwallet/assets/ad3cfa2e1c8e4b295cd81d64ecc5ab2a9514f79e/blockchains/oasis/info/logo.png',
     '0x3223f17957Ba502cbe71401D55A0DB26E5F7c68F':
         'https://raw.githubusercontent.com/trustwallet/assets/ec4f6c94a95bcddda22fe25659cf02d1d5d67bfc/blockchains/ethereum/info/logo.png'
 }
 const getTokenLogoURL = (address: string) => {
-    if (address && (address in tokenLogos || address.toLowerCase() in tokenLogos || address.toUpperCase() in tokenLogos)) {
+    if (
+        address &&
+        (address in tokenLogos || address.toLowerCase() in tokenLogos || address.toUpperCase() in tokenLogos)
+    ) {
         return tokenLogos[address]
     }
 
@@ -93,11 +101,13 @@ const logo: { readonly [chainId in ChainId]?: string } = {
 export default function CurrencyLogo({
     currency,
     size = '24px',
-    style
+    style,
+    chain
 }: {
     currency?: Currency
     size?: string
     style?: React.CSSProperties
+    chain?: ChainId
 }) {
     const { chainId } = useActiveWeb3React()
     const uriLocations = useHttpLocations(currency instanceof WrappedTokenInfo ? currency.logoURI : undefined)
@@ -117,6 +127,9 @@ export default function CurrencyLogo({
 
     if (currency === ETHER && chainId) {
         return <StyledNativeCurrencyLogo src={logo[chainId]} size={size} style={style} />
+    }
+    if (!currency && chain) {
+        return <StyledNativeCurrencyLogo src={logo[chain]} size={size} style={style} />
     }
 
     return <StyledLogo size={size} srcs={srcs} alt={`${currency?.getSymbol(chainId) ?? 'token'} logo`} style={style} />
