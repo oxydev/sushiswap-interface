@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { RowBetween } from 'components/Row'
 import { useActiveWeb3React } from '../../hooks'
 import { TYPE } from '../../theme'
-import { Currency, Pair } from '@sushiswap/sdk'
+import { Currency, Pair, ChainId } from '@sushiswap/sdk'
 import { darken } from 'polished'
 import { Input as NumericalInput } from '../NumericalInput'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
@@ -12,6 +12,8 @@ import DoubleCurrencyLogo from 'components/DoubleLogo'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { useTranslation } from 'react-i18next'
 import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
+import ChainListModal from 'components/SearchModal/ChainListModal'
+import chainData from '../../data/statics/bridgeChain.json'
 
 interface bridgeInputProps {
     value: string
@@ -20,8 +22,11 @@ interface bridgeInputProps {
     showMaxButton: boolean
     label?: string
     onCurrencySelect?: (currency: Currency) => void
+    onChainSelect?: (chain: number) => void
+    chainIndex?: number | null
     currency?: Currency | null
     disableCurrencySelect?: boolean
+    disableChainSelect?: boolean
     hideBalance?: boolean
     pair?: Pair | null
     hideInput?: boolean
@@ -101,6 +106,8 @@ const CurrencySelect = styled.button<{ selected: boolean }>`
     }
 `
 
+const ChainSelect = styled(CurrencySelect)<{ selected: boolean }>``
+
 const Aligner = styled.span`
     display: flex;
     align-items: center;
@@ -146,6 +153,12 @@ const InputPanel = styled.div<{ hideInput?: boolean }>`
     z-index: 1;
 `
 
+const chainList = {
+    1: 'Ethereum',
+    56: 'BNB',
+    42262: 'OASISETH'
+}
+
 export default function BridgeInputPart({
     value,
     onUserInput,
@@ -153,8 +166,11 @@ export default function BridgeInputPart({
     showMaxButton,
     label = 'Input',
     onCurrencySelect,
+    onChainSelect,
     currency,
+    chainIndex,
     disableCurrencySelect = false,
+    disableChainSelect = false,
     hideBalance = false,
     pair = null, // used for double token logo
     hideInput = false,
@@ -169,6 +185,7 @@ export default function BridgeInputPart({
     const { account, chainId } = useActiveWeb3React()
     const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
     const [modalOpen, setModalOpen] = useState(false)
+    const [chainModalOpen, setChainModalOpen] = useState(false)
     const { t } = useTranslation()
 
     const handleDismissSearch = useCallback(() => {
@@ -262,45 +279,26 @@ export default function BridgeInputPart({
                                 {!disableCurrencySelect && <StyledDropDown selected={!!currency} />}
                             </Aligner>
                         </CurrencySelect>
-                        <CurrencySelect
+                        <ChainSelect
                             selected={!!currency}
                             className="open-currency-select-button"
                             onClick={() => {
-                                if (!disableCurrencySelect) {
-                                    setModalOpen(true)
+                                if (!disableChainSelect) {
+                                    setChainModalOpen(true)
                                 }
                             }}
                         >
                             <Aligner>
-                                {pair ? (
-                                    <DoubleCurrencyLogo
-                                        currency0={pair.token0}
-                                        currency1={pair.token1}
-                                        size={24}
-                                        margin={true}
-                                    />
-                                ) : currency ? (
-                                    <CurrencyLogo currency={currency} size={'24px'} />
-                                ) : null}
-                                {pair ? (
-                                    <StyledTokenName className="pair-name-container">
-                                        {pair?.token0.symbol}:{pair?.token1.symbol}
+                                {chainIndex ? (
+                                    <StyledTokenName className="token-symbol-container" active={Boolean(chainIndex)}>
+                                        {chainData.bridgeChain[chainIndex].name}
                                     </StyledTokenName>
                                 ) : (
-                                    <StyledTokenName
-                                        className="token-symbol-container"
-                                        active={Boolean(currency && currency.symbol)}
-                                    >
-                                        {(currency && currency.symbol && currency.symbol.length > 20
-                                            ? currency.symbol.slice(0, 4) +
-                                              '...' +
-                                              currency.symbol.slice(currency.symbol.length - 5, currency.symbol.length)
-                                            : currency?.getSymbol(chainId)) || t('selectToken')}
-                                    </StyledTokenName>
+                                    t('selectChain')
                                 )}
                                 {!disableCurrencySelect && <StyledDropDown selected={!!currency} />}
                             </Aligner>
-                        </CurrencySelect>
+                        </ChainSelect>
                     </InputRow>
                 </Container>
 
@@ -312,6 +310,16 @@ export default function BridgeInputPart({
                         selectedCurrency={currency}
                         otherSelectedCurrency={otherCurrency}
                         showCommonBases={showCommonBases}
+                    />
+                )}
+                {!disableChainSelect && onChainSelect && (
+                    <ChainListModal
+                        isOpen={chainModalOpen}
+                        onDismiss={() => {
+                            setChainModalOpen(false)
+                        }}
+                        onChainSelect={onChainSelect}
+                        selectedChain={chainIndex}
                     />
                 )}
             </InputPanel>
