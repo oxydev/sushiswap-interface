@@ -1,6 +1,6 @@
 import { CurrencyAmount, JSBI, Token, Trade } from '@sushiswap/sdk'
 
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import BridgeInputPart from '../../components/Bridge/BridgeInputPart'
 import {
     useDefaultsFromURLSearch,
@@ -33,6 +33,7 @@ import Card, { GreyCard } from '../../components/Card'
 import Column, { AutoColumn } from '../../components/Column'
 import BetterTradeLink, { DefaultVersionLink } from '../../components/swap/BetterTradeLink'
 import { isTradeBetter } from 'utils/trades'
+import chainData from '../../data/statics/bridgeChain.json'
 
 const BottomGrouping = styled.div`
     margin-top: 1rem;
@@ -100,6 +101,7 @@ export default function Bridge() {
     const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
     const [isExpertMode] = useExpertModeManager()
     const { account, chainId } = useActiveWeb3React()
+    console.log(chainId)
 
     const { independentField, typedValue, recipient } = useSwapState()
     const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
@@ -216,12 +218,32 @@ export default function Bridge() {
 
     const defaultTrade = showWrap ? undefined : tradesByVersion[DEFAULT_VERSION]
 
-    const [chainIndex, setChainIndex] = useState()
+    const [chainIndex, setChainIndex] = useState(0)
     const handelChainSelect = useCallback(index => {
         setChainIndex(index)
     }, [])
 
     console.log(chainIndex)
+
+    useEffect(() => {
+        if (chainIndex !== undefined) {
+            const selectedChainId = chainData.bridgeChain[chainIndex].chainid
+            console.log(selectedChainId)
+            console.log(selectedChainId.toString(16))
+            console.log(chainId)
+            if (chainId !== selectedChainId) {
+                if (window.ethereum) {
+                    console.log('here')
+                    window.ethereum.request({
+                        method: 'wallet_switchEthereumChain',
+                        params: [{ chainId: '0x' + selectedChainId.toString(6) }]
+                    })
+                }
+            }
+        } else {
+            console.log(chainId)
+        }
+    }, [chainIndex])
 
     return (
         <>

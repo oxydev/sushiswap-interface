@@ -44,7 +44,9 @@ export function getNetworkLibrary(): Web3Provider {
 
 export const injected = new InjectedConnector({
     supportedChainIds: [
-        42262 //oasis main
+        42262, //oasis main
+        1,
+        56
     ]
 })
 
