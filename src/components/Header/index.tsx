@@ -32,6 +32,7 @@ import UniBalanceContent from './UniBalanceContent'
 import usePrevious from '../../hooks/usePrevious'
 import LanguageSwitch from '../LanguageSwitch'
 import { StyledMenuButton } from 'components/StyledMenu'
+import CurrencyLogo from 'components/CurrencyLogo'
 
 const ExtendedStyledMenuButton = styled(StyledMenuButton)`
     margin-left: 8px;
@@ -358,7 +359,12 @@ export default function Header() {
                     {/*<StyledNavLink id={`zap-nav-link`} to={'/zap'}>*/}
                     {/*    Zap*/}
                     {/*</StyledNavLink>*/}
-                    <StyledNavLink id={`zap-nav-link`} as="a" href="https://app.multichain.org/#/router" target="_blank" >
+                    <StyledNavLink
+                        id={`zap-nav-link`}
+                        as="a"
+                        href="https://app.multichain.org/#/router"
+                        target="_blank"
+                    >
                         Bridge
                     </StyledNavLink>
                 </HeaderLinks>
@@ -372,7 +378,13 @@ export default function Header() {
                     </HideSmall>
                     <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
                         {account && chainId && userEthBalance ? (
-                            <BalanceText style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
+                            <BalanceText
+                                style={{ flexShrink: 0, display: 'flex' }}
+                                pl="0.75rem"
+                                pr="0.5rem"
+                                fontWeight={500}
+                            >
+                                <CurrencyLogo chain={chainId} size={'24px'} style={{ marginRight: '10px' }} />
                                 {userEthBalance?.toSignificant(4)} {Currency.getNativeCurrencySymbol(chainId)}
                             </BalanceText>
                         ) : null}
