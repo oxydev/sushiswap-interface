@@ -75,6 +75,7 @@ export default function Swap() {
         })
 
     const { account, chainId } = useActiveWeb3React()
+    console.log(chainId)
     const theme = useContext(ThemeContext)
 
     // toggle wallet when disconnected
