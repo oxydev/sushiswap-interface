@@ -472,6 +472,14 @@ export default function Bridge() {
         [onCurrencySelection]
     )
 
+    //todo Saber
+    const [transferData, setTransferData] = useState({})
+
+    useEffect(() => {
+        console.log('Fetch new transfer data')
+        //todo Saber
+    }, [chainInput, chainOutput, currencyInput])
+
     const switchNetwork = (chainIDRequest: ChainId.MAINNET | ChainId.OASISETH_MAIN | ChainId.BSC) => {
         if (window.ethereum) {
             try {
@@ -590,11 +598,7 @@ export default function Bridge() {
                         />
                     </AutoColumn>
                     <BottomGrouping style={{ paddingBottom: '1rem' }}>
-                        {swapIsUnsupported ? (
-                            <ButtonPrimary disabled={true}>
-                                <TYPE.main mb="4px">Unsupported Asset</TYPE.main>
-                            </ButtonPrimary>
-                        ) : !account ? (
+                        {!account ? (
                             <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
                         ) : showWrap ? (
                             <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap}>
