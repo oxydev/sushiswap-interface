@@ -1,27 +1,22 @@
-import { CurrencyAmount, JSBI, Token, Trade } from '@sushiswap/sdk'
+import { ChainId, CurrencyAmount, JSBI, Trade } from '@sushiswap/sdk'
 
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import BridgeInputPart from '../../components/Bridge/BridgeInputPart'
-import {
-    useDefaultsFromURLSearch,
-    useDerivedSwapInfo,
-    useSwapActionHandlers,
-    useSwapState
-} from '../../state/swap/hooks'
+import { useDerivedSwapInfo, useSwapActionHandlers, useSwapState } from '../../state/swap/hooks'
 import { Text } from 'rebass'
 import { Field } from '../../state/swap/actions'
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
 import useToggledVersion, { DEFAULT_VERSION, Version } from '../../hooks/useToggledVersion'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
-import { useExpertModeManager, useUserSlippageTolerance, useUserSingleHopOnly } from '../../state/user/hooks'
+import { useExpertModeManager, useUserSingleHopOnly, useUserSlippageTolerance } from '../../state/user/hooks'
 import styled from 'styled-components'
 import ProgressSteps from '../../components/ProgressSteps'
 import BridgePageBody from 'components/Bridge/BridgePageBody'
-import { ButtonPrimary, ButtonLight, ButtonConfirmed, ButtonError } from 'components/Button'
+import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
 import { useIsTransactionUnsupported } from 'hooks/Trades'
-import { LinkStyledButton, TYPE } from '../../theme'
+import { TYPE } from '../../theme'
 import { useActiveWeb3React } from '../../hooks'
-import { useToggleSettingsMenu, useWalletModalToggle } from '../../state/application/hooks'
+import { useWalletModalToggle } from '../../state/application/hooks'
 import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
 import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import { AutoRow, RowBetween } from '../../components/Row'
@@ -29,11 +24,12 @@ import Loader from '../../components/Loader'
 import { transparentize } from 'polished'
 import { useSwapCallback } from '../../hooks/useSwapCallback'
 import { AlertTriangle } from 'react-feather'
-import Card, { GreyCard } from '../../components/Card'
+import { GreyCard } from '../../components/Card'
 import Column, { AutoColumn } from '../../components/Column'
 import BetterTradeLink, { DefaultVersionLink } from '../../components/swap/BetterTradeLink'
 import { isTradeBetter } from 'utils/trades'
 import chainData from '../../data/statics/bridgeChain.json'
+import { RPC } from '../../connectors'
 
 const BottomGrouping = styled.div`
     margin-top: 1rem;
@@ -224,21 +220,65 @@ export default function Bridge() {
     }, [])
 
     console.log(chainIndex)
+    const networkData = {
+        [ChainId.MAINNET]:{
+            chainName: 'Ethereum',
+            symbol: 'Ether',
+            blockExplorerUrls: 'https://etherscan.io',
+        },
+        [ChainId.OASISETH_MAIN]:{
+            chainName: 'Oasis Emerald',
+            symbol: 'Rose',
+            blockExplorerUrls: 'https://explorer.emerald.oasis.dev/',
+        },
+        [ChainId.BSC]:{
+            chainName: 'Binance Smart Chain Mainnet',
+            symbol: 'BNB',
+            blockExplorerUrls: 'https://bscscan.com',
+        }
+    }
+    const switchNetwork = (chainIDRequest:ChainId.MAINNET | ChainId.OASISETH_MAIN | ChainId.BSC) => {
+        if (window.ethereum) {
+            try {
+                const data = [
+                    {
+                        chainId: '0x' + chainIDRequest.toString(16),
+                        chainName: networkData[chainIDRequest].chainName,
+                        nativeCurrency: {
+                            symbol: networkData[chainIDRequest].symbol,
+                            decimals: 18
+                        },
+                        rpcUrls: [RPC[chainIDRequest]],
+                        blockExplorerUrls: [networkData[chainIDRequest].blockExplorerUrls]
+                    }
+                ]
 
+                try {
+                    window.ethereum.request({
+                        method: 'wallet_switchEthereumChain',
+                        params: [{ chainId: '0x' + chainIDRequest.toString(16), }]
+                    })
+                } catch (addError) {
+                    console.log(data)
+
+                    window.ethereum.request({
+                        method: 'wallet_addEthereumChain',
+                        params: data
+                    })
+                }
+
+            } catch (e) {
+
+            }
+        }
+    }
     useEffect(() => {
         if (chainIndex !== undefined) {
             const selectedChainId = chainData.bridgeChain[chainIndex].chainid
-            console.log(selectedChainId)
-            console.log(selectedChainId.toString(16))
-            console.log(chainId)
-            if (chainId !== selectedChainId) {
-                if (window.ethereum) {
-                    console.log('here')
-                    window.ethereum.request({
-                        method: 'wallet_switchEthereumChain',
-                        params: [{ chainId: '0x' + selectedChainId.toString(6) }]
-                    })
-                }
+            // console.log(chainId, selectedChainId)
+            if (selectedChainId !== undefined && chainId !== selectedChainId) {
+                // @ts-ignore
+                switchNetwork(selectedChainId)
             }
         } else {
             console.log(chainId)
