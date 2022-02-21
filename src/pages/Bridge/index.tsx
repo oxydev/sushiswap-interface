@@ -546,6 +546,8 @@ export default function Bridge() {
         }
     }, [chainId])
 
+    console.log(currencyListInput)
+
     return (
         <>
             <h1>Bridge Page</h1>

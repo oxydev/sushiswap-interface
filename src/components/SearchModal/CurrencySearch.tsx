@@ -200,7 +200,7 @@ export function CurrencySearch({
                         {({ height }) => (
                             <CurrencyList
                                 height={height}
-                                showETH={showETH}
+                                showETH={false}
                                 currencies={currencyList}
                                 breakIndex={
                                     inactiveTokens && filteredSortedTokens ? filteredSortedTokens.length : undefined
