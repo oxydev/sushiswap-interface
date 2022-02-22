@@ -28,6 +28,7 @@ interface bridgeInputProps {
     currencyList?: any
     disableCurrencySelect?: boolean
     disableChainSelect?: boolean
+    disableInput?: boolean
     hideBalance?: boolean
     pair?: Pair | null
     hideInput?: boolean
@@ -173,6 +174,7 @@ export default function BridgeInputPart({
     chain,
     disableCurrencySelect = false,
     disableChainSelect = false,
+    disableInput = false,
     hideBalance = false,
     pair = null, // used for double token logo
     hideInput = false,
@@ -232,6 +234,7 @@ export default function BridgeInputPart({
                                 <NumericalInput
                                     className="token-amount-input"
                                     value={value}
+                                    disabled={disableInput}
                                     onUserInput={(val: any) => {
                                         onUserInput(val)
                                     }}
