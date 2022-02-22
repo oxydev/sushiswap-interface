@@ -118,7 +118,6 @@ export default function CurrencyLogo({
     chain?: ChainId
 }) {
     const { chainId } = useActiveWeb3React()
-    console.log(currency)
     const uriLocations = useHttpLocations(currency instanceof WrappedTokenInfo ? currency.logoURI : undefined)
 
     const srcs: string[] = useMemo(() => {
@@ -134,7 +133,7 @@ export default function CurrencyLogo({
         return []
     }, [currency, uriLocations])
 
-    if ((currency === ETHER || currency === Currency.NATIVE[ChainId.BSC] ) && chainId) {
+    if ((currency === ETHER || currency === Currency.NATIVE[ChainId.BSC]) && chainId) {
         return <StyledNativeCurrencyLogo src={logo[chainId]} size={size} style={style} />
     }
     if (!currency && chain) {

@@ -29,6 +29,7 @@ import Column, { AutoColumn } from '../../components/Column'
 import BetterTradeLink, { DefaultVersionLink } from '../../components/swap/BetterTradeLink'
 import { isTradeBetter } from 'utils/trades'
 import { RPC } from '../../connectors'
+import { useCurrencyBalance } from '../../state/wallet/hooks'
 
 const BottomGrouping = styled.div`
     margin-top: 1rem;
@@ -335,7 +336,6 @@ export default function Bridge() {
     const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
     const [isExpertMode] = useExpertModeManager()
     const { account, chainId } = useActiveWeb3React()
-    console.log(chainId)
 
     const { independentField, typedValue, recipient } = useSwapState()
     const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
@@ -383,11 +383,14 @@ export default function Bridge() {
     }
     const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
 
+    const [transferData, setTransferData] = useState<tTransferData>({})
+
     const handleTypeInput = useCallback(
         (value: string) => {
             onUserInput(Field.INPUT, value)
+            checkTransactionStatus(parseFloat(value))
         },
-        [onUserInput]
+        [onUserInput, transferData]
     )
     const handleTypeOutput = useCallback(
         (value: string) => {
@@ -471,43 +474,94 @@ export default function Bridge() {
         [onCurrencySelection]
     )
 
-    //todo Saber
-    const [transferData, setTransferData] = useState({})
-    console.log('shit',transferData)
+    type tTransferData = {
+        [key: string]: any
+    }
+    // console.log('shit', transferData)
     useEffect(() => {
-        if(chainInput&& chainOutput && currencyInput && currencyOutput) {
+        if (chainInput && chainOutput && currencyInput && currencyOutput) {
             fetch('https://bridgeapi.anyswap.exchange/merge/tokenlist/42262')
-              .then(
-                function(response) {
+                .then(function(response) {
                     if (response.status !== 200) {
-                        console.log('Looks like there was a problem. Status Code: ' +
-                          response.status);
-                        return;
+                        console.log('Looks like there was a problem. Status Code: ' + response.status)
+                        return
                     }
 
                     // Examine the text in the response
-                    response.json().then(function(data) {
-                        // console.log(data);
-                        console.log('shit',currencyOutput.address, chainInput, currencyInput.address);
-                        if(chainOutput === ChainId.OASISETH_MAIN)
-                            data = data[currencyOutput.address.toLowerCase()]['destChains'][chainInput]
-                              [currencyInput.address ? currencyInput.address.toLowerCase() : chainInput === ChainId.MAINNET ? "ETH":"BNB"]
-                        else
-                            data = data[currencyInput.address.toLowerCase()]['destChains'][chainOutput]
-                              [currencyOutput.address ? currencyOutput.address.toLowerCase() : chainOutput === ChainId.MAINNET ? "ETH":"BNB"]
+                    response
+                        .json()
+                        .then(function(data) {
+                            // console.log(data)
+                            // console.log('shit', currencyOutput.address, chainInput, currencyInput.address, chainOutput)
+                            if (chainOutput === ChainId.OASISETH_MAIN)
+                                data =
+                                    data[currencyOutput.address.toLowerCase()]['destChains'][chainInput][
+                                        currencyInput.address
+                                            ? currencyInput.address.toLowerCase()
+                                            : chainInput === ChainId.MAINNET
+                                            ? 'ETH'
+                                            : 'BNB'
+                                    ]
+                            else
+                                data =
+                                    data[currencyInput.address.toLowerCase()]['destChains'][chainOutput][
+                                        currencyOutput.address
+                                            ? currencyOutput.address.toLowerCase()
+                                            : chainOutput === ChainId.MAINNET
+                                            ? 'ETH'
+                                            : 'BNB'
+                                    ]
 
-                        setTransferData(data)
-                    }).catch((err)=>{
-                        console.log(err,currencyOutput,currencyInput)
-                    });
-                }
-              )
-              .catch(function(err) {
-                  console.log('Fetch Error :-S', err);
-              });
+                            // console.log(data)
+                            setTransferData(data)
+                        })
+                        .catch(err => {
+                            console.log(err, currencyOutput, currencyInput)
+                        })
+                })
+                .catch(function(err) {
+                    console.log('Fetch Error :-S', err)
+                })
         }
         //todo Saber
     }, [chainInput, chainOutput, currencyInput, currencyOutput])
+
+    useEffect(() => {
+        console.log(transferData)
+    }, [transferData])
+
+    const [bridgeStatus, setBridgeStatus] = useState('ok')
+
+    const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currencyInput ?? undefined)
+    const [outPutValue, setOutPutValue] = useState<number>(0)
+
+    const checkTransactionStatus = (value: number) => {
+        //check the amount with balance
+
+        // if (selectedCurrencyBalance !== undefined && value > parseFloat(selectedCurrencyBalance.toSignificant(6))) {
+        //     setBridgeStatus('notBalance')
+        if (value > transferData.MaximumSwap) {
+            setBridgeStatus('maxLimit')
+        } else if (value < transferData.MinimumSwap) {
+            setBridgeStatus('minLimit')
+        } else {
+            setBridgeStatus('ok')
+            let fee = value * transferData.SwapFeeRatePerMillion * 0.01
+            if (fee > transferData.MaximumSwapFee) {
+                fee = transferData.MaximumSwapFee
+            } else if (fee < transferData.MinimumSwapFee) {
+                fee = transferData.MinimumSwapFee
+            }
+
+            const outPut = value - fee
+
+            console.log(outPut)
+            // onUserInput(Field.OUTPUT, outPutValue.toString())
+            setOutPutValue(outPut)
+        }
+    }
+
+    console.log(formattedAmounts[Field.INPUT])
 
     const switchNetwork = (chainIDRequest: ChainId.MAINNET | ChainId.OASISETH_MAIN | ChainId.BSC) => {
         if (window.ethereum) {
@@ -526,7 +580,7 @@ export default function Bridge() {
                 ]
 
                 try {
-                    console.log(data)
+                    // console.log(data)
 
                     window.ethereum.request({
                         method: 'wallet_addEthereumChain',
@@ -552,7 +606,7 @@ export default function Bridge() {
                 setCurrencyListInput(inputTokenList)
                 const tokenIndex = 0
                 const importData = networkData[chainInput].tokenList[tokenIndex]
-                console.log(importData)
+                // console.log(importData)
                 setChainOutput(importData.destChain)
                 setCurrencyOutput(importData.destToken)
             }
@@ -564,7 +618,7 @@ export default function Bridge() {
     useEffect(() => {
         const tokenIndex = currencyListInput.indexOf(currencyInput)
         const importData = networkData[chainInput].tokenList[tokenIndex]
-        console.log(importData)
+        // console.log(importData)
         setChainOutput(importData.destChain)
         setCurrencyOutput(importData.destToken)
     }, [currencyInput])
@@ -585,8 +639,6 @@ export default function Bridge() {
             console.log(chainId)
         }
     }, [chainId])
-
-    console.log(currencyListInput)
 
     return (
         <>
@@ -612,8 +664,10 @@ export default function Bridge() {
                             cornerRadiusBottomNone={isExpertMode ? false : true}
                         />
                         <BridgeInputPart
-                            value={formattedAmounts[Field.OUTPUT]}
-                            onUserInput={handleTypeOutput}
+                            value={outPutValue.toString()}
+                            onUserInput={() => {
+                                console.log('outPut')
+                            }}
                             label={independentField === Field.INPUT && !showWrap && trade ? 'To (estimated)' : 'To'}
                             showMaxButton={false}
                             chain={chainOutput}
@@ -624,25 +678,12 @@ export default function Bridge() {
                             cornerRadiusTopNone={isExpertMode ? false : true}
                             disableChainSelect={true}
                             disableCurrencySelect={true}
+                            disableInput={true}
                         />
                     </AutoColumn>
                     <BottomGrouping style={{ paddingBottom: '1rem' }}>
                         {!account ? (
                             <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
-                        ) : showWrap ? (
-                            <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap}>
-                                {wrapInputError ??
-                                    (wrapType === WrapType.WRAP
-                                        ? 'Wrap'
-                                        : wrapType === WrapType.UNWRAP
-                                        ? 'Unwrap'
-                                        : null)}
-                            </ButtonPrimary>
-                        ) : noRoute && userHasSpecifiedInputOutput ? (
-                            <GreyCard style={{ textAlign: 'center' }}>
-                                <TYPE.main mb="4px">Insufficient liquidity for this trade.</TYPE.main>
-                                {singleHopOnly && <TYPE.main mb="4px">Try enabling multi-hop trades.</TYPE.main>}
-                            </GreyCard>
                         ) : showApproveFlow ? (
                             <RowBetween>
                                 <ButtonConfirmed
@@ -692,6 +733,16 @@ export default function Bridge() {
                                     </Text>
                                 </ButtonError>
                             </RowBetween>
+                        ) : formattedAmounts[Field.INPUT] !== '' && bridgeStatus === 'ok' ? (
+                            <>
+                                <ButtonConfirmed
+                                    onClick={handleBridge}
+                                    width="100%"
+                                    confirmed={approval === ApprovalState.APPROVED}
+                                >
+                                    Transfer
+                                </ButtonConfirmed>
+                            </>
                         ) : (
                             <ButtonError
                                 onClick={() => {
@@ -712,11 +763,13 @@ export default function Bridge() {
                                 error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
                             >
                                 <Text fontSize={20} fontWeight={500}>
-                                    {swapInputError
-                                        ? swapInputError
-                                        : priceImpactSeverity > 3 && !isExpertMode
-                                        ? `Price Impact Too High`
-                                        : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
+                                    {bridgeStatus === 'notBalance'
+                                        ? 'Not Enough Balance'
+                                        : bridgeStatus === 'maxLimit'
+                                        ? 'Trnafer not supporting for amount more than ????'
+                                        : bridgeStatus === 'minLimit'
+                                        ? 'Trnafer not supporting for amount less than ????'
+                                        : 'Got an error'}
                                 </Text>
                             </ButtonError>
                         )}
