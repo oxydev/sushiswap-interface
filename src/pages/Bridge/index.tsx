@@ -538,6 +538,8 @@ export default function Bridge() {
     const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currencyInput ?? undefined)
     const [outPutValue, setOutPutValue] = useState<number>(0)
 
+    const [bridgeFee, setBridgeFee] = useState(0)
+
     const checkTransactionStatus = (value: number) => {
         //check the amount with balance
 
@@ -560,6 +562,7 @@ export default function Bridge() {
             }
 
             const outPut = value - fee
+            setBridgeFee(fee)
 
             console.log(outPut)
             // onUserInput(Field.OUTPUT, outPutValue.toString())
@@ -837,6 +840,30 @@ export default function Bridge() {
                             <DefaultVersionLink />
                         ) : null}
                     </BottomGrouping>
+                    {transferData && (
+                        <AutoColumn gap={'6px'}>
+                            <Text fontSize={20} fontWeight={500} style={{ marginBottom: '15px' }}>
+                                Reminder:
+                            </Text>
+                            <Text fontSize={16} fontWeight={400}>
+                                Maximun transaction amount is {transferData.MaximumSwap ? transferData.MaximumSwap : 0}
+                            </Text>
+                            <Text fontSize={16} fontWeight={400}>
+                                Minimum transaction amount is {transferData.MinimumSwap ? transferData.MinimumSwap : 0}
+                            </Text>
+                            <Text fontSize={16} fontWeight={400}>
+                                Transaction fee amount is {bridgeFee}
+                            </Text>
+                            <Text fontSize={16} fontWeight={400}>
+                                Minimum transaction fee amount is{' '}
+                                {transferData.MinimumSwapFee ? transferData.MinimumSwapFee : 0}
+                            </Text>
+                            <Text fontSize={16} fontWeight={400}>
+                                Maximun transaction fee amount is{' '}
+                                {transferData.MaximumSwapFee ? transferData.MaximumSwapFee : 0}
+                            </Text>
+                        </AutoColumn>
+                    )}
                 </Wrapper>
             </BridgePageBody>
         </>
