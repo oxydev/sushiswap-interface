@@ -1,4 +1,4 @@
-import { ChainId, CurrencyAmount, JSBI, Token, Trade, WETH, Currency } from '@sushiswap/sdk'
+import { ChainId, Currency, CurrencyAmount, JSBI, Token, Trade } from '@sushiswap/sdk'
 
 import React, { useCallback, useEffect, useState } from 'react'
 import BridgeInputPart from '../../components/Bridge/BridgeInputPart'
@@ -28,7 +28,6 @@ import { GreyCard } from '../../components/Card'
 import Column, { AutoColumn } from '../../components/Column'
 import BetterTradeLink, { DefaultVersionLink } from '../../components/swap/BetterTradeLink'
 import { isTradeBetter } from 'utils/trades'
-import chainData from '../../data/statics/bridgeChain.json'
 import { RPC } from '../../connectors'
 
 const BottomGrouping = styled.div`
@@ -474,11 +473,41 @@ export default function Bridge() {
 
     //todo Saber
     const [transferData, setTransferData] = useState({})
-
+    console.log('shit',transferData)
     useEffect(() => {
-        console.log('Fetch new transfer data')
+        if(chainInput&& chainOutput && currencyInput && currencyOutput) {
+            fetch('https://bridgeapi.anyswap.exchange/merge/tokenlist/42262')
+              .then(
+                function(response) {
+                    if (response.status !== 200) {
+                        console.log('Looks like there was a problem. Status Code: ' +
+                          response.status);
+                        return;
+                    }
+
+                    // Examine the text in the response
+                    response.json().then(function(data) {
+                        // console.log(data);
+                        console.log('shit',currencyOutput.address, chainInput, currencyInput.address);
+                        if(chainOutput === ChainId.OASISETH_MAIN)
+                            data = data[currencyOutput.address.toLowerCase()]['destChains'][chainInput]
+                              [currencyInput.address ? currencyInput.address.toLowerCase() : chainInput === ChainId.MAINNET ? "ETH":"BNB"]
+                        else
+                            data = data[currencyInput.address.toLowerCase()]['destChains'][chainOutput]
+                              [currencyOutput.address ? currencyOutput.address.toLowerCase() : chainOutput === ChainId.MAINNET ? "ETH":"BNB"]
+
+                        setTransferData(data)
+                    }).catch((err)=>{
+                        console.log(err,currencyOutput,currencyInput)
+                    });
+                }
+              )
+              .catch(function(err) {
+                  console.log('Fetch Error :-S', err);
+              });
+        }
         //todo Saber
-    }, [chainInput, chainOutput, currencyInput])
+    }, [chainInput, chainOutput, currencyInput, currencyOutput])
 
     const switchNetwork = (chainIDRequest: ChainId.MAINNET | ChainId.OASISETH_MAIN | ChainId.BSC) => {
         if (window.ethereum) {
