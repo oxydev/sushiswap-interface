@@ -522,6 +522,11 @@ export function getRouterContract(chainId: number, library: Web3Provider, accoun
     return getContract(getRouterAddress(chainId), IUniswapV2Router02ABI, library, account)
 }
 
+// account is optional
+export function getTokenSwapOutContract(address: string, library: Web3Provider, account?: string): Contract {
+    return getContract(address , IUniswapV2Router02ABI, library, account)
+}
+
 export function escapeRegExp(string: string): string {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // $& means the whole matched string
 }
