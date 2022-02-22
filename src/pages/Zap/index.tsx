@@ -29,6 +29,13 @@ import { TYPE } from 'theme'
 import { DoubleLogo } from '../Yield/components'
 import { LPMenuItem } from '../../components/SearchModal/styleds'
 
+type tLimitObject = {
+    [key: string]: number
+}
+const limitObject = {
+    saber: 100
+}
+
 export default function Zap(): JSX.Element {
     const ZapPage = styled.div`
         display: flex;
@@ -219,6 +226,14 @@ export default function Zap(): JSX.Element {
     const [input, setInput] = useState<string>('')
     const [output, setOutput] = useState<string>('0.0')
 
+    let limit = 100
+
+    useEffect(() => {
+        if (currency?.name && parseFloat(input) > limitObject[currency?.name]) {
+            setInput(limitObject[currency?.name])
+        }
+    }, [input])
+
     const onMax = useCallback(() => {
         setInput(relevantTokenBalances[0]?.toExact() ?? '0.0')
     }, [currency])
@@ -321,7 +336,11 @@ export default function Zap(): JSX.Element {
                     <TYPE.black fontWeight={500} color={'#ffd545'}>
                         ZAP
                     </TYPE.black>
-                    <TYPE.black fontWeight={400}>Convert single tokens to LP tokens directly.</TYPE.black>
+                    <TYPE.black fontWeight={400}>
+                        Convert single tokens to LP tokens directly.{' '}
+                        <QuestionHelper text="Estimated Number of GLP You Will Recieve" />
+                        {/* todo Saber */}
+                    </TYPE.black>
                 </StyledZapHeader>
                 <InputPanel>
                     <ZapTopInput>
