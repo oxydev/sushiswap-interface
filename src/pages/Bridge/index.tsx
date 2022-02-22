@@ -168,8 +168,8 @@ export const networkData: tNetworkData = {
                     'Binance-Peg BUSD Token'
                 ),
                 destToken: new Token(
-                    ChainId.OASISETH_MAIN,
-                    '0x639A647fbe20b6c8ac19E48E2de44ea792c62c5C',
+                    ChainId.BSC,
+                    '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56',
                     18,
                     'BUSD',
                     'Binance-Peg BUSD Token'
