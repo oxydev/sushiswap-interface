@@ -30,6 +30,9 @@ import BetterTradeLink, { DefaultVersionLink } from '../../components/swap/Bette
 import { isTradeBetter } from 'utils/trades'
 import { RPC } from '../../connectors'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
+import { ethers } from 'ethers'
+import { getSigner } from 'utils'
+import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
 
 const BottomGrouping = styled.div`
     margin-top: 1rem;
@@ -335,7 +338,7 @@ export default function Bridge() {
     })
     const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
     const [isExpertMode] = useExpertModeManager()
-    const { account, chainId } = useActiveWeb3React()
+    const { account, chainId, library } = useActiveWeb3React()
 
     const { independentField, typedValue, recipient } = useSwapState()
     const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
@@ -362,6 +365,10 @@ export default function Bridge() {
     }
 
     const trade = showWrap ? undefined : tradesByVersion[toggledVersion]
+
+    const handleAcceptChanges = useCallback(() => {
+        setBridgeState({ tradeToConfirm: trade, swapErrorMessage, txHash, attemptingTxn, showConfirm })
+    }, [attemptingTxn, showConfirm, swapErrorMessage, trade, txHash])
 
     const parsedAmounts = showWrap
         ? {
@@ -436,10 +443,6 @@ export default function Bridge() {
             approval === ApprovalState.PENDING ||
             (approvalSubmitted && approval === ApprovalState.APPROVED)) &&
         !(priceImpactSeverity > 3 && !isExpertMode)
-
-    const handleBridge = useCallback(() => {
-        console.log('bridge')
-    }, [])
 
     const isValid = !swapInputError
 
@@ -538,12 +541,15 @@ export default function Bridge() {
     const checkTransactionStatus = (value: number) => {
         //check the amount with balance
 
-        // if (selectedCurrencyBalance !== undefined && value > parseFloat(selectedCurrencyBalance.toSignificant(6))) {
-        //     setBridgeStatus('notBalance')
-        if (value > transferData.MaximumSwap) {
+        if (selectedCurrencyBalance !== undefined && value > parseFloat(selectedCurrencyBalance.toSignificant(6))) {
+            setBridgeStatus('notBalance')
+            setOutPutValue(0)
+        } else if (value > transferData.MaximumSwap) {
             setBridgeStatus('maxLimit')
+            setOutPutValue(0)
         } else if (value < transferData.MinimumSwap) {
             setBridgeStatus('minLimit')
+            setOutPutValue(0)
         } else {
             setBridgeStatus('ok')
             let fee = value * transferData.SwapFeeRatePerMillion * 0.01
@@ -616,6 +622,7 @@ export default function Bridge() {
     }, [chainInput])
 
     useEffect(() => {
+        console.log(currencyInput)
         const tokenIndex = currencyListInput.indexOf(currencyInput)
         const importData = networkData[chainInput].tokenList[tokenIndex]
         // console.log(importData)
@@ -640,11 +647,48 @@ export default function Bridge() {
         }
     }, [chainId])
 
+    const handleBridge = async () => {
+        console.log(currencyInput)
+
+        if (!currencyInput.address) {
+            //native token
+            // web3.sendTransaction({ to: receiver, from: sender, value: web3.toWei('0.5', 'ether') })
+
+            if (library && account) {
+                const signer = getSigner(library, account)
+                await signer.sendTransaction({
+                    to: transferData.DepositAddress,
+                    value: ethers.utils.parseEther(formattedAmounts[Field.INPUT]) // 1 ether
+                })
+            }
+        }
+    }
+    const handleConfirmDismiss = useCallback(() => {
+        setBridgeState({ showConfirm: false, tradeToConfirm, attemptingTxn, swapErrorMessage, txHash })
+        // if there was a tx hash, we want to clear the input
+        if (txHash) {
+            onUserInput(Field.INPUT, '')
+        }
+    }, [attemptingTxn, onUserInput, swapErrorMessage, tradeToConfirm, txHash])
+
     return (
         <>
             <h1>Bridge Page</h1>
             <BridgePageBody>
                 <Wrapper>
+                    <ConfirmSwapModal
+                        isOpen={showConfirm}
+                        trade={trade}
+                        originalTrade={tradeToConfirm}
+                        onAcceptChanges={handleAcceptChanges}
+                        attemptingTxn={attemptingTxn}
+                        txHash={txHash}
+                        recipient={recipient}
+                        allowedSlippage={allowedSlippage}
+                        onConfirm={handleBridge}
+                        swapErrorMessage={swapErrorMessage}
+                        onDismiss={handleConfirmDismiss}
+                    />
                     <AutoColumn gap={isExpertMode ? 'md' : '6px'}>
                         <BridgeInputPart
                             label={
@@ -736,7 +780,15 @@ export default function Bridge() {
                         ) : formattedAmounts[Field.INPUT] !== '' && bridgeStatus === 'ok' ? (
                             <>
                                 <ButtonConfirmed
-                                    onClick={handleBridge}
+                                    onClick={() => {
+                                        setBridgeState({
+                                            tradeToConfirm: trade,
+                                            attemptingTxn: false,
+                                            swapErrorMessage: undefined,
+                                            showConfirm: true,
+                                            txHash: undefined
+                                        })
+                                    }}
                                     width="100%"
                                     confirmed={approval === ApprovalState.APPROVED}
                                 >
@@ -766,9 +818,9 @@ export default function Bridge() {
                                     {bridgeStatus === 'notBalance'
                                         ? 'Not Enough Balance'
                                         : bridgeStatus === 'maxLimit'
-                                        ? 'Trnafer not supporting for amount more than ????'
+                                        ? `Trnafer not supporting for amount more than ${transferData.MaximumSwap}`
                                         : bridgeStatus === 'minLimit'
-                                        ? 'Trnafer not supporting for amount less than ????'
+                                        ? `Trnafer not supporting for amount less than ${transferData.MinimumSwap}`
                                         : 'Got an error'}
                                 </Text>
                             </ButtonError>
