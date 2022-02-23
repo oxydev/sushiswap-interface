@@ -32,36 +32,44 @@ import { LPMenuItem } from '../../components/SearchModal/styleds'
 type tLimitObject = {
     [key: string]: string
 }
-const limitObject:tLimitObject = {
-    "BNB": "13",
-    "ETH": "22000",
-    "BUSD": "5000",
-    "DAI": "0",
-    "weUSDT": "5000",
-    "DUNE": "0",
-    "ETH(MC)": "0",
-    "LINK": "70",
-    "OAPE": "0",
-    "PETAL": "0",
-    "TULIP": "0",
-    "USDC": "5000",
-    "WBTC": "0",
-    "wETH": "0",
-    "wROSE": "22000",
-    "YUZU": "10"
+const limitObject: tLimitObject = {
+    BNB: '13',
+    ETH: '22000',
+    BUSD: '5000',
+    DAI: '0',
+    weUSDT: '5000',
+    DUNE: '0',
+    'ETH(MC)': '0',
+    LINK: '70',
+    OAPE: '0',
+    PETAL: '0',
+    TULIP: '0',
+    USDC: '5000',
+    WBTC: '0',
+    wETH: '0',
+    wROSE: '22000',
+    YUZU: '10'
 }
 
 export default function Zap(): JSX.Element {
     const ZapPage = styled.div`
         display: flex;
         align-items: center;
+        justify-content: center;
+        width: 100%;
+        @media (max-width: 720px) {
+            flex-direction: column;
+        }
     `
 
     const ZapImage = styled.div`
         width: 420px;
         height: 420px;
         margin-left: 3rem;
-        diaplay: flex;
+        display: flex;
+        @media (max-width: 720px) {
+            margin-left: 0;
+        }
     `
     const BodyWrapper = styled.div`
     padding: 1rem;
@@ -241,9 +249,8 @@ export default function Zap(): JSX.Element {
     const [input, setInput] = useState<string>('')
     const [output, setOutput] = useState<string>('0.0')
 
-
     useEffect(() => {
-        console.log(input,currency)
+        console.log(input, currency)
         if (currency?.symbol && parseFloat(input) > parseFloat(limitObject[currency?.symbol])) {
             setInput(limitObject[currency?.symbol])
         }
