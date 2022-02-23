@@ -727,55 +727,6 @@ export default function Bridge() {
                     <BottomGrouping style={{ paddingBottom: '1rem' }}>
                         {!account ? (
                             <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
-                        ) : showApproveFlow ? (
-                            <RowBetween>
-                                <ButtonConfirmed
-                                    onClick={approveCallback}
-                                    disabled={approval !== ApprovalState.NOT_APPROVED || approvalSubmitted}
-                                    width="48%"
-                                    altDisabledStyle={approval === ApprovalState.PENDING} // show solid button while waiting
-                                    confirmed={approval === ApprovalState.APPROVED}
-                                >
-                                    {approval === ApprovalState.PENDING ? (
-                                        <AutoRow gap="6px" justify="center">
-                                            Approving <Loader stroke="white" />
-                                        </AutoRow>
-                                    ) : approvalSubmitted && approval === ApprovalState.APPROVED ? (
-                                        'Approved'
-                                    ) : (
-                                        'Approve ' + currencies[Field.INPUT]?.getSymbol(chainId)
-                                    )}
-                                </ButtonConfirmed>
-                                <ButtonError
-                                    onClick={() => {
-                                        if (isExpertMode) {
-                                            handleBridge()
-                                        } else {
-                                            setBridgeState({
-                                                tradeToConfirm: trade,
-                                                attemptingTxn: false,
-                                                swapErrorMessage: undefined,
-                                                showConfirm: true,
-                                                txHash: undefined
-                                            })
-                                        }
-                                    }}
-                                    width="48%"
-                                    id="swap-button"
-                                    disabled={
-                                        !isValid ||
-                                        approval !== ApprovalState.APPROVED ||
-                                        (priceImpactSeverity > 3 && !isExpertMode)
-                                    }
-                                    error={isValid && priceImpactSeverity > 2}
-                                >
-                                    <Text fontSize={16} fontWeight={500}>
-                                        {priceImpactSeverity > 3 && !isExpertMode
-                                            ? `Price Impact High`
-                                            : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
-                                    </Text>
-                                </ButtonError>
-                            </RowBetween>
                         ) : formattedAmounts[Field.INPUT] !== '' && bridgeStatus === 'ok' ? (
                             <>
                                 <ButtonConfirmed
@@ -789,9 +740,9 @@ export default function Bridge() {
                                         })
                                     }}
                                     width="100%"
-                                    confirmed={approval === ApprovalState.APPROVED}
+                                    confirmed={true}
                                 >
-                                    Transfer
+                                    Bridge
                                 </ButtonConfirmed>
                             </>
                         ) : (
@@ -810,8 +761,6 @@ export default function Bridge() {
                                     }
                                 }}
                                 id="swap-button"
-                                disabled={!isValid || (priceImpactSeverity > 3 && !isExpertMode) || !!swapCallbackError}
-                                error={isValid && priceImpactSeverity > 2 && !swapCallbackError}
                             >
                                 <Text fontSize={20} fontWeight={500}>
                                     {bridgeStatus === 'notBalance'
@@ -824,17 +773,9 @@ export default function Bridge() {
                                 </Text>
                             </ButtonError>
                         )}
-                        {showApproveFlow && (
-                            <Column style={{ marginTop: '1rem' }}>
-                                <ProgressSteps steps={[approval === ApprovalState.APPROVED]} />
-                            </Column>
-                        )}
+
                         {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
-                        {betterTradeLinkV2 && !swapIsUnsupported && toggledVersion === Version.v1 ? (
-                            <BetterTradeLink version={betterTradeLinkV2} />
-                        ) : toggledVersion !== DEFAULT_VERSION && defaultTrade ? (
-                            <DefaultVersionLink />
-                        ) : null}
+
                     </BottomGrouping>
                     {transferData && (
                         <AutoColumn gap={'6px'}>
