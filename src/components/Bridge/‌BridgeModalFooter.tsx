@@ -23,12 +23,11 @@ export default function BridgeModalFooter({
     trade,
     onConfirm,
     swapErrorMessage,
-    disabledConfirm
+
 }: {
     trade: any
     onConfirm: () => void
     swapErrorMessage: string | undefined
-    disabledConfirm: boolean
 }) {
     const { chainId } = useActiveWeb3React()
     const [showInverted, setShowInverted] = useState<boolean>(false)
@@ -108,7 +107,6 @@ export default function BridgeModalFooter({
             <AutoRow>
                 <ButtonError
                     onClick={onConfirm}
-                    disabled={disabledConfirm}
                     style={{ margin: '10px 0 0 0' }}
                     id="confirm-swap-or-send"
                 >

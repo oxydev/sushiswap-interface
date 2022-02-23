@@ -26,7 +26,6 @@ function tradeMeaningfullyDiffers(tradeA: Trade, tradeB: Trade): boolean {
 export default function ConfirmBridgeModal({
     trade,
     originalTrade,
-    onAcceptChanges,
     onConfirm,
     onDismiss,
     recipient,
@@ -41,39 +40,31 @@ export default function ConfirmBridgeModal({
     attemptingTxn: boolean
     txHash: string | undefined
     recipient: string | null
-    onAcceptChanges: () => void
     onConfirm: () => void
     swapErrorMessage: string | undefined
     onDismiss: () => void
 }) {
     const { chainId } = useActiveWeb3React()
 
-    const showAcceptChanges = useMemo(
-        () => Boolean(trade && originalTrade && tradeMeaningfullyDiffers(trade, originalTrade)),
-        [originalTrade, trade]
-    )
 
     const modalHeader = useCallback(() => {
         return trade ? (
             <BridgeModalHeader
                 trade={trade}
                 recipient={recipient}
-                showAcceptChanges={showAcceptChanges}
-                onAcceptChanges={onAcceptChanges}
             />
         ) : null
-    }, [ onAcceptChanges, recipient, showAcceptChanges, trade])
+    }, [  recipient, trade])
 
     const modalBottom = useCallback(() => {
         return trade ? (
             <BridgeModalFooter
                 onConfirm={onConfirm}
                 trade={trade}
-                disabledConfirm={showAcceptChanges}
                 swapErrorMessage={swapErrorMessage}
             />
         ) : null
-    }, [ onConfirm, showAcceptChanges, swapErrorMessage, trade])
+    }, [ onConfirm, swapErrorMessage, trade])
 
     const inputChain = trade.fromChainID
     const outputChain = trade.destChainID

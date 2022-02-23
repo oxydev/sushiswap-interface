@@ -17,13 +17,9 @@ import { useActiveWeb3React } from '../../hooks'
 export default function BridgeModalHeader({
     trade,
     recipient,
-    showAcceptChanges,
-    onAcceptChanges
 }: {
     trade: any
     recipient: string | null
-    showAcceptChanges: boolean
-    onAcceptChanges: () => void
 }) {
     const { chainId } = useActiveWeb3React()
 
