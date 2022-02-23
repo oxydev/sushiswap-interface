@@ -58,6 +58,31 @@ const InputRow = styled.div<{ selected: boolean }>`
     ${({ theme }) => theme.flexRowNoWrap}
     align-items: center;
     padding: ${({ selected }) => (selected ? '0.75rem 0.5rem 0.75rem 1rem' : '0.75rem 0.75rem 0.75rem 1rem')};
+    display: flex;
+
+    @media (max-width: 720px) {
+        flex-direction: column;
+        & > input {
+            width: 100%;
+        }
+    }
+`
+
+const InputButtonContainer = styled.div`
+
+    display: flex;
+
+    @media (max-width: 720px) {
+        margin-top: 20px;
+        width: 100%
+        flex-direction: column;
+        & > button {
+            margin-bottom: 10px;
+            & > span > span {
+                font-size: 15px;
+            }
+        }
+    }
 `
 
 const StyledBalanceMax = styled.button`
@@ -239,74 +264,83 @@ export default function BridgeInputPart({
                                         onUserInput(val)
                                     }}
                                 />
-                                {account && currency && showMaxButton && label !== 'To' && (
-                                    <StyledBalanceMax onClick={onMax}>MAX</StyledBalanceMax>
-                                )}
                             </>
                         )}
-                        <CurrencySelect
-                            selected={!!currency}
-                            className="open-currency-select-button"
-                            style={{ marginRight: '10px' }}
-                            onClick={() => {
-                                if (!disableCurrencySelect) {
-                                    setModalOpen(true)
-                                }
-                            }}
-                        >
-                            <Aligner>
-                                {pair ? (
-                                    <DoubleCurrencyLogo
-                                        currency0={pair.token0}
-                                        currency1={pair.token1}
-                                        size={24}
-                                        margin={true}
-                                    />
-                                ) : currency ? (
-                                    <CurrencyLogo currency={currency} chain={currency === ETHER ? 1 : 56} size={'24px'} />
-                                ) : null}
-                                {pair ? (
-                                    <StyledTokenName className="pair-name-container">
-                                        {pair?.token0.symbol}:{pair?.token1.symbol}
-                                    </StyledTokenName>
-                                ) : (
-                                    <StyledTokenName
-                                        className="token-symbol-container"
-                                        active={Boolean(currency && currency.symbol)}
-                                    >
-                                        {(currency && currency.symbol && currency.symbol.length > 20
-                                            ? currency.symbol.slice(0, 4) +
-                                              '...' +
-                                              currency.symbol.slice(currency.symbol.length - 5, currency.symbol.length)
-                                            : currency?.getSymbol(chainId)) || t('selectToken')}
-                                    </StyledTokenName>
-                                )}
-                                {!disableCurrencySelect && <StyledDropDown selected={!!currency} />}
-                            </Aligner>
-                        </CurrencySelect>
-                        <ChainSelect
-                            selected={!!currency}
-                            className="open-currency-select-button"
-                            onClick={() => {
-                                if (!disableChainSelect) {
-                                    setChainModalOpen(true)
-                                }
-                            }}
-                        >
-                            <Aligner>
-                                {chain !== undefined ? (
-                                    <>
-                                        <CurrencyLogo chain={chain} size={'24px'} />
-                                        <StyledTokenName className="token-symbol-container" active={Boolean(chain)}>
-                                            {networkData[chain].chainName}
+                        <InputButtonContainer>
+                            {account && currency && showMaxButton && label !== 'To' && (
+                                <StyledBalanceMax onClick={onMax}>MAX</StyledBalanceMax>
+                            )}
+                            <CurrencySelect
+                                selected={!!currency}
+                                className="open-currency-select-button"
+                                style={{ marginRight: '10px' }}
+                                onClick={() => {
+                                    if (!disableCurrencySelect) {
+                                        setModalOpen(true)
+                                    }
+                                }}
+                            >
+                                <Aligner>
+                                    {pair ? (
+                                        <DoubleCurrencyLogo
+                                            currency0={pair.token0}
+                                            currency1={pair.token1}
+                                            size={24}
+                                            margin={true}
+                                        />
+                                    ) : currency ? (
+                                        <CurrencyLogo
+                                            currency={currency}
+                                            chain={currency === ETHER ? 1 : 56}
+                                            size={'24px'}
+                                        />
+                                    ) : null}
+                                    {pair ? (
+                                        <StyledTokenName className="pair-name-container">
+                                            {pair?.token0.symbol}:{pair?.token1.symbol}
                                         </StyledTokenName>
-                                    </>
-                                ) : (
-                                    t('selectChain')
-                                )}
-                                {!disableCurrencySelect && <StyledDropDown selected={!!currency} />}
-                            </Aligner>
-                        </ChainSelect>
+                                    ) : (
+                                        <StyledTokenName
+                                            className="token-symbol-container"
+                                            active={Boolean(currency && currency.symbol)}
+                                        >
+                                            {(currency && currency.symbol && currency.symbol.length > 20
+                                                ? currency.symbol.slice(0, 4) +
+                                                  '...' +
+                                                  currency.symbol.slice(
+                                                      currency.symbol.length - 5,
+                                                      currency.symbol.length
+                                                  )
+                                                : currency?.getSymbol(chainId)) || t('selectToken')}
+                                        </StyledTokenName>
+                                    )}
+                                    {!disableCurrencySelect && <StyledDropDown selected={!!currency} />}
+                                </Aligner>
+                            </CurrencySelect>
+                            <ChainSelect
+                                selected={!!currency}
+                                className="open-currency-select-button"
+                                onClick={() => {
+                                    if (!disableChainSelect) {
+                                        setChainModalOpen(true)
+                                    }
+                                }}
+                            >
+                                <Aligner>
+                                    {chain !== undefined ? (
+                                        <>
+                                            <CurrencyLogo chain={chain} size={'24px'} />
+                                            <StyledTokenName className="token-symbol-container" active={Boolean(chain)}>
+                                                {networkData[chain].chainName}
+                                            </StyledTokenName>
+                                        </>
+                                    ) : (
+                                        t('selectChain')
+                                    )}
+                                    {!disableCurrencySelect && <StyledDropDown selected={!!currency} />}
+                                </Aligner>
+                            </ChainSelect>
+                        </InputButtonContainer>
                     </InputRow>
                 </Container>
 
