@@ -37,7 +37,7 @@ export default function ConfirmBridgeModal({
     txHash
 }: {
     isOpen: boolean
-    trade: any | undefined
+    trade: any
     originalTrade: Trade | undefined
     attemptingTxn: boolean
     txHash: string | undefined
