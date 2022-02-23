@@ -327,7 +327,7 @@ export default function Bridge() {
     const [bridgeType, setBridgeType] = useState<string>('swapOut')
     const [{ showConfirm, tradeToConfirm, swapErrorMessage, attemptingTxn, txHash }, setBridgeState] = useState<{
         showConfirm: boolean
-        tradeToConfirm: Trade | undefined
+        tradeToConfirm: any | undefined
         attemptingTxn: boolean
         swapErrorMessage: string | undefined
         txHash: string | undefined
@@ -338,7 +338,6 @@ export default function Bridge() {
         swapErrorMessage: undefined,
         txHash: undefined
     })
-    const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
     const [isExpertMode] = useExpertModeManager()
     const { account, chainId, library } = useActiveWeb3React()
 
@@ -372,36 +371,19 @@ export default function Bridge() {
         typedValue
     )
 
-    const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
-    const toggledVersion = useToggledVersion()
-    const tradesByVersion = {
-        [Version.v1]: v1Trade,
-        [Version.v2]: v2Trade
-    }
 
-    const trade = showWrap ? undefined : tradesByVersion[toggledVersion]
+    // const trade = showWrap ? undefined : tradesByVersion[toggledVersion]
 
-    const handleAcceptChanges = useCallback(() => {
-        setBridgeState({ tradeToConfirm: trade, swapErrorMessage, txHash, attemptingTxn, showConfirm })
-    }, [attemptingTxn, showConfirm, swapErrorMessage, trade, txHash])
-
-    const parsedAmounts = showWrap
-        ? {
+    const parsedAmounts = {
               [Field.INPUT]: parsedAmount,
               [Field.OUTPUT]: parsedAmount
-          }
-        : {
-              [Field.INPUT]: independentField === Field.INPUT ? parsedAmount : trade?.inputAmount,
-              [Field.OUTPUT]: independentField === Field.OUTPUT ? parsedAmount : trade?.outputAmount
           }
     const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(currencyBalances[Field.INPUT])
     const atMaxAmountInput = Boolean(maxAmountInput && parsedAmounts[Field.INPUT]?.equalTo(maxAmountInput))
 
     const formattedAmounts = {
         [independentField]: typedValue,
-        [dependentField]: showWrap
-            ? parsedAmounts[independentField]?.toExact() ?? ''
-            : parsedAmounts[dependentField]?.toSignificant(6) ?? ''
+        [dependentField]: parsedAmounts[dependentField]?.toSignificant(6) ?? ''
     }
     const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
 
@@ -422,7 +404,6 @@ export default function Bridge() {
         onCurrencySelection
     ])
 
-    const swapIsUnsupported = useIsTransactionUnsupported(currencies?.INPUT, currencies?.OUTPUT)
     const toggleWalletModal = useWalletModalToggle()
     const [outPutValue, setOutPutValue] = useState<number>(0)
 
@@ -444,7 +425,6 @@ export default function Bridge() {
 
     const { callback: swapCallback, error: swapCallbackError } = useBridgeCallback(bridgeTrade, bridgeRecipient)
 
-    const isValid = !swapInputError
 
     const handelChainSelect = useCallback(index => {
         setChainInput(index)
@@ -452,7 +432,6 @@ export default function Bridge() {
 
     const handleInputSelect = useCallback(
         inputCurrency => {
-            setApprovalSubmitted(false) // reset 2 step UI for approvals
             // onCurrencySelection(Field.INPUT, inputCurrency)
             setCurrencyInput(inputCurrency)
         },
@@ -519,8 +498,6 @@ export default function Bridge() {
 
     const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currencyInput ?? undefined)
 
-    const [bridgeFee, setBridgeFee] = useState(0)
-
     const checkTransactionStatus = (value: number) => {
         //check the amount with balance
 
@@ -543,8 +520,6 @@ export default function Bridge() {
             }
 
             const outPut = value - fee
-            setBridgeFee(fee)
-
             console.log(outPut)
             // onUserInput(Field.OUTPUT, outPutValue.toString())
             setOutPutValue(outPut)
@@ -679,9 +654,8 @@ export default function Bridge() {
                     </TYPE.black>
                     <ConfirmBridgeModal
                         isOpen={showConfirm}
-                        trade={trade}
+                        trade={bridgeTrade}
                         originalTrade={tradeToConfirm}
-                        onAcceptChanges={handleAcceptChanges}
                         attemptingTxn={attemptingTxn}
                         txHash={txHash}
                         recipient={recipient}
@@ -692,7 +666,7 @@ export default function Bridge() {
                     <AutoColumn gap={isExpertMode ? 'md' : '6px'}>
                         <BridgeInputPart
                             label={
-                                independentField === Field.OUTPUT && !showWrap && trade ? 'From (estimated)' : 'From'
+                                independentField === Field.OUTPUT && bridgeTrade ? 'From (estimated)' : 'From'
                             }
                             value={formattedAmounts[Field.INPUT]}
                             showMaxButton={!atMaxAmountInput}
@@ -712,7 +686,7 @@ export default function Bridge() {
                             onUserInput={() => {
                                 console.log('outPut')
                             }}
-                            label={independentField === Field.INPUT && !showWrap && trade ? 'To (estimated)' : 'To'}
+                            label={independentField === Field.INPUT && bridgeTrade ? 'To (estimated)' : 'To'}
                             showMaxButton={false}
                             chain={chainOutput}
                             currency={currencyOutput}
@@ -733,7 +707,7 @@ export default function Bridge() {
                                 <ButtonConfirmed
                                     onClick={() => {
                                         setBridgeState({
-                                            tradeToConfirm: trade,
+                                            tradeToConfirm: bridgeTrade,
                                             attemptingTxn: false,
                                             swapErrorMessage: undefined,
                                             showConfirm: true,
@@ -753,7 +727,7 @@ export default function Bridge() {
                                         handleBridge()
                                     } else {
                                         setBridgeState({
-                                            tradeToConfirm: trade,
+                                            tradeToConfirm: bridgeTrade,
                                             attemptingTxn: false,
                                             swapErrorMessage: undefined,
                                             showConfirm: true,
