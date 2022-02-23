@@ -1,4 +1,4 @@
-import { Trade, TradeType } from '@sushiswap/sdk'
+import { Trade, TradeType, ChainId } from '@sushiswap/sdk'
 import React, { useContext, useMemo } from 'react'
 import { ArrowDown, AlertTriangle } from 'react-feather'
 import { Text } from 'rebass'
@@ -30,7 +30,7 @@ export default function BridgeModalHeader({
         <AutoColumn gap={'md'} style={{ marginTop: '20px' }}>
             <RowBetween align="flex-end">
                 <RowFixed gap={'0px'}>
-                    <CurrencyLogo currency={trade.inputAmount.currency} size={'24px'} style={{ marginRight: '12px' }} />
+                    <CurrencyLogo currency={trade.inputAmount.currency} chain={trade.fromChain} size={'24px'} style={{ marginRight: '12px' }} />
                     <TruncatedText
                         fontSize={24}
                         fontWeight={500}
@@ -51,7 +51,8 @@ export default function BridgeModalHeader({
             <RowBetween align="flex-end">
                 <RowFixed gap={'0px'}>
                     <CurrencyLogo
-                        currency={trade.outputAmount.currency}
+                        currency={trade.outputAmount?.currency}
+                        chain={trade.destChain}
                         size={'24px'}
                         style={{ marginRight: '12px' }}
                     />
@@ -65,7 +66,7 @@ export default function BridgeModalHeader({
                 </RowFixed>
                 <RowFixed gap={'0px'}>
                     <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
-                        {trade.outputAmount.currency.getSymbol(chainId)}
+                        {trade.outputAmount.currency.getSymbol(trade.destChain)}
                     </Text>
                 </RowFixed>
             </RowBetween>

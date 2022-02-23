@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { RowBetween } from '../../components/Row'
 import { Dots } from '../Pool/styleds'
@@ -32,7 +32,44 @@ export default function BentoBalances(): JSX.Element {
     const flattenSearchResults = result.map((a: { item: any }) => (a.item ? a.item : a))
     // Sorting Setup
     const { items, requestSort, sortConfig } = useSortableData(flattenSearchResults)
+    const switchNetwork = () => {
+        if (window.ethereum) {
+            try {
+                const data = [
+                    {
+                        chainId: '0xa516',
+                        chainName: 'Oasis Emerald',
+                        nativeCurrency: {
+                            symbol: 'ROSE',
+                            decimals: 18
+                        },
+                        rpcUrls: ['https://emerald.oasis.dev/'],
+                        blockExplorerUrls: ['https://explorer.emerald.oasis.dev/']
+                    }
+                ]
 
+                try {
+                    window.ethereum.request({
+                        method: 'wallet_addEthereumChain',
+                        params: data
+                    })
+                    window.ethereum.request({
+                        method: 'wallet_switchEthereumChain',
+                        params: [{ chainId: '0xa516' }]
+                    })
+                } catch (addError) {
+                    // handle "add" error
+                }
+
+            } catch (e) {
+
+            }
+
+        }
+    }
+    useEffect(()=>{
+        switchNetwork()
+    },[])
     return (
         <div className="container max-w-2xl mx-auto px-0 sm:px-4">
             <Card

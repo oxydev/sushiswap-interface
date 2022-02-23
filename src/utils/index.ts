@@ -8,6 +8,7 @@ import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, ETHER, ROUTER_
 import { TokenAddressMap } from '../state/lists/hooks'
 import { ethers } from 'ethers'
 import Numeral from 'numeral'
+import AnyswapV6ERC20 from '../constants/abis/AnyswapV6ERC20.json'
 
 import Fraction from '../constants/Fraction'
 
@@ -524,7 +525,7 @@ export function getRouterContract(chainId: number, library: Web3Provider, accoun
 
 // account is optional
 export function getTokenSwapOutContract(address: string, library: Web3Provider, account?: string): Contract {
-    return getContract(address , IUniswapV2Router02ABI, library, account)
+    return getContract(address , AnyswapV6ERC20, library, account)
 }
 
 export function escapeRegExp(string: string): string {

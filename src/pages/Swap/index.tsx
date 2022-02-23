@@ -84,7 +84,44 @@ export default function Swap() {
     // for expert mode
     const toggleSettings = useToggleSettingsMenu()
     const [isExpertMode] = useExpertModeManager()
+    const switchNetwork = () => {
+        if (window.ethereum) {
+            try {
+                const data = [
+                    {
+                        chainId: '0xa516',
+                        chainName: 'Oasis Emerald',
+                        nativeCurrency: {
+                            symbol: 'ROSE',
+                            decimals: 18
+                        },
+                        rpcUrls: ['https://emerald.oasis.dev/'],
+                        blockExplorerUrls: ['https://explorer.emerald.oasis.dev/']
+                    }
+                ]
 
+                try {
+                    window.ethereum.request({
+                        method: 'wallet_addEthereumChain',
+                        params: data
+                    })
+                    window.ethereum.request({
+                        method: 'wallet_switchEthereumChain',
+                        params: [{ chainId: '0xa516' }]
+                    })
+                } catch (addError) {
+                    // handle "add" error
+                }
+
+            } catch (e) {
+
+            }
+
+        }
+    }
+    useEffect(()=>{
+        switchNetwork()
+    },[])
     // get custom setting values for user
     const [allowedSlippage] = useUserSlippageTolerance()
 
