@@ -323,6 +323,7 @@ export const networkData: tNetworkData = {
 }
 
 export default function Bridge() {
+    const [bridgeType, setBridgeType] = useState<string>('swapOut')
     const [{ showConfirm, tradeToConfirm, swapErrorMessage, attemptingTxn, txHash }, setBridgeState] = useState<{
         showConfirm: boolean
         tradeToConfirm: Trade | undefined
@@ -477,6 +478,20 @@ export default function Bridge() {
         [onCurrencySelection]
     )
 
+    const [bridgeTrade, setBridgeTrade] = useState<{
+        type: string
+        inputToken: Token
+        amountIn: string
+        fromChainID: ChainId
+        destChainID: ChainId | undefined
+    }>({
+        type: 'swapOut',
+        inputToken: currencyInput,
+        amountIn: formattedAmounts[Field.INPUT],
+        fromChainID: chainInput,
+        destChainID: chainOutput
+    })
+
     type tTransferData = {
         [key: string]: any
     }
@@ -623,6 +638,16 @@ export default function Bridge() {
             console.log(chainId)
         }
     }, [chainInput])
+
+    useEffect(() => {
+        if (chainInput === ChainId.OASISETH_MAIN) {
+            setBridgeType('swapOut')
+        } else if (!currencyInput.address) {
+            setBridgeType('transferNative')
+        } else {
+            setBridgeType('transferToken')
+        }
+    }, [chainInput, currencyInput])
 
     useEffect(() => {
         console.log(currencyInput)
