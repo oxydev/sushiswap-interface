@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react'
+import React, { useContext, useEffect, useMemo } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { ChainId, Pair, JSBI } from '@sushiswap/sdk'
 import { Link } from 'react-router-dom'
@@ -87,7 +87,44 @@ export default function Pool() {
         () => trackedTokenPairs.map(tokens => ({ liquidityToken: toV2LiquidityToken(tokens), tokens })),
         [trackedTokenPairs]
     )
+    const switchNetwork = () => {
+        if (window.ethereum) {
+            try {
+                const data = [
+                    {
+                        chainId: '0xa516',
+                        chainName: 'Oasis Emerald',
+                        nativeCurrency: {
+                            symbol: 'ROSE',
+                            decimals: 18
+                        },
+                        rpcUrls: ['https://emerald.oasis.dev/'],
+                        blockExplorerUrls: ['https://explorer.emerald.oasis.dev/']
+                    }
+                ]
 
+                try {
+                    window.ethereum.request({
+                        method: 'wallet_addEthereumChain',
+                        params: data
+                    })
+                    window.ethereum.request({
+                        method: 'wallet_switchEthereumChain',
+                        params: [{ chainId: '0xa516' }]
+                    })
+                } catch (addError) {
+                    // handle "add" error
+                }
+
+            } catch (e) {
+
+            }
+
+        }
+    }
+    useEffect(()=>{
+        switchNetwork()
+    },[])
     const liquidityTokens = useMemo(() => tokenPairsWithLiquidityTokens.map(tpwlt => tpwlt.liquidityToken), [
         tokenPairsWithLiquidityTokens
     ])

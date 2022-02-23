@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { RowBetween } from 'components/Row'
 import { useActiveWeb3React } from '../../hooks'
 import { TYPE } from '../../theme'
-import { Currency, Pair, ChainId } from '@sushiswap/sdk'
+import { Currency, Pair, ChainId, ETHER } from '@sushiswap/sdk'
 import { darken } from 'polished'
 import { Input as NumericalInput } from '../NumericalInput'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
@@ -187,6 +187,7 @@ export default function BridgeInputPart({
     containerBackground
 }: bridgeInputProps) {
     const { account, chainId } = useActiveWeb3React()
+    console.log('fuck',currency)
     const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
     const [modalOpen, setModalOpen] = useState(false)
     const [chainModalOpen, setChainModalOpen] = useState(false)
@@ -263,7 +264,7 @@ export default function BridgeInputPart({
                                         margin={true}
                                     />
                                 ) : currency ? (
-                                    <CurrencyLogo currency={currency} size={'24px'} />
+                                    <CurrencyLogo currency={currency} chain={currency === ETHER ? 1 : 56} size={'24px'} />
                                 ) : null}
                                 {pair ? (
                                     <StyledTokenName className="pair-name-container">

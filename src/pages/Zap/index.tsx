@@ -292,6 +292,45 @@ export default function Zap(): JSX.Element {
 
     const [approval, approveCallback] = useApproveCallback(inputToken || undefined, ZOO_ZAP_ADDRESS[DefaultChainId])
     const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
+    const switchNetwork = () => {
+        if (window.ethereum) {
+            try {
+                const data = [
+                    {
+                        chainId: '0xa516',
+                        chainName: 'Oasis Emerald',
+                        nativeCurrency: {
+                            symbol: 'ROSE',
+                            decimals: 18
+                        },
+                        rpcUrls: ['https://emerald.oasis.dev/'],
+                        blockExplorerUrls: ['https://explorer.emerald.oasis.dev/']
+                    }
+                ]
+
+                try {
+                    window.ethereum.request({
+                        method: 'wallet_addEthereumChain',
+                        params: data
+                    })
+                    window.ethereum.request({
+                        method: 'wallet_switchEthereumChain',
+                        params: [{ chainId: '0xa516' }]
+                    })
+                } catch (addError) {
+                    // handle "add" error
+                }
+
+            } catch (e) {
+
+            }
+
+        }
+    }
+    useEffect(()=>{
+        switchNetwork()
+    },[])
+
 
     // mark when a user has submitted an approval, reset onTokenSelection for input field
     useEffect(() => {

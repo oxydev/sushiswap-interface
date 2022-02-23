@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
-import { JSBI, Percent, Router, SwapParameters, Trade, TradeType } from '@sushiswap/sdk'
+import { CurrencyAmount, JSBI, Percent, Router, SwapParameters, Trade, TradeType } from '@sushiswap/sdk'
 import { useMemo } from 'react'
 import { BIPS_BASE, INITIAL_ALLOWED_SLIPPAGE } from '../constants'
 import { getTradeVersion, useV1TradeExchangeAddress } from '../data/V1'
@@ -43,7 +43,9 @@ interface FailedCall {
 }
 
 type EstimatedSwapCall = SuccessfulCall | FailedCall
-
+function toHex(currencyAmount: CurrencyAmount): string {
+  return `0x${currencyAmount.raw.toString(16)}`
+}
 /**
  * Returns the swap calls that can be used to make the trade
  * @param trade trade to execute
@@ -275,11 +277,10 @@ function useBridgeCallArguments(
 
 
   return useMemo(() => {
-    const tradeVersion = getTradeVersion(trade)
-    if (!trade || !recipient || !library || !account || !tradeVersion || !chainId ) return []
 
+    if (!trade || !trade.inputAmount || !recipient || !library || !account  || !chainId ) return []
     const contract: Contract | null =
-      trade.type === "swapOut" ? getTokenSwapOutContract(trade.inputToken.address, library, account) : trade.type === "transferNative" ? null : null
+      trade.type === "transferNative" ? null : getTokenSwapOutContract(trade.inputToken.address, library, account)
     if (trade.type !== "transferNative" && !contract) {
       return []
     }
@@ -290,7 +291,7 @@ function useBridgeCallArguments(
         swapMethods.push(
           {
             methodName: 'Swapout',
-            args: [trade.amountIn, recipient],
+            args: [toHex(trade.inputAmount), recipient],
             value: 0
           }
         )
@@ -299,7 +300,7 @@ function useBridgeCallArguments(
         swapMethods.push(
           {
             to: recipient,
-            value: trade.amountIn
+            value: toHex(trade.inputAmount)
           }
         )
         break
@@ -307,7 +308,7 @@ function useBridgeCallArguments(
         swapMethods.push(
           {
             methodName: 'transfer',
-            args: [recipient, trade.amountIn],
+            args: [recipient, toHex(trade.inputAmount)],
             value: 0
           }
         )
@@ -347,6 +348,7 @@ export function useBridgeCallback(
     return {
       state: SwapCallbackState.VALID,
       callback: async function onSwap(): Promise<string> {
+
         const estimatedCalls: EstimatedSwapCall[] = await Promise.all(
           swapCalls.map(call => {
             const {
@@ -397,12 +399,13 @@ export function useBridgeCallback(
               })
             }else {
               const signer = getSigner(library, account)
-
+              console.log(to,args,value)
               return signer.estimateGas({
                 to: to,
-                value : args.value
+                value : value
               })
                 .then((gasEstimate: any) => {
+
                   return {
                     call,
                     gasEstimate

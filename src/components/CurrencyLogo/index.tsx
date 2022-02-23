@@ -132,12 +132,15 @@ export default function CurrencyLogo({
         }
         return []
     }, [currency, uriLocations])
-
-    if ((currency === ETHER || currency === Currency.NATIVE[ChainId.BSC]) && chainId) {
-        return <StyledNativeCurrencyLogo src={logo[chainId]} size={size} style={style} />
+    if ( chain && (currency === ETHER || currency === Currency.NATIVE[ChainId.BSC]) && chainId) {
+        return <StyledNativeCurrencyLogo src={logo[chain]} size={size} style={style} />
     }
     if (!currency && chain) {
         return <StyledNativeCurrencyLogo src={logo[chain]} size={size} style={style} />
+    }
+    if(chainId && (currency === ETHER || currency === Currency.NATIVE[ChainId.BSC])){
+        return <StyledNativeCurrencyLogo src={logo[chainId]} size={size} style={style} />
+
     }
 
     return <StyledLogo size={size} srcs={srcs} alt={`${currency?.getSymbol(chainId) ?? 'token'} logo`} style={style} />

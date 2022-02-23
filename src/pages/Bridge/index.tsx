@@ -1,39 +1,28 @@
-import { ChainId, Currency, CurrencyAmount, JSBI, Token, Trade } from '@sushiswap/sdk'
-import { ArrowDown } from 'react-feather'
+import { ChainId, Currency, CurrencyAmount, Token } from '@sushiswap/sdk'
+import { AlertTriangle, ArrowDown } from 'react-feather'
 import React, { useCallback, useEffect, useState } from 'react'
 import BridgeInputPart from '../../components/Bridge/BridgeInputPart'
 import { tryParseAmount, useDerivedSwapInfo, useSwapActionHandlers, useSwapState } from '../../state/swap/hooks'
 import { Text } from 'rebass'
 import { Field } from '../../state/swap/actions'
-import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
-import useToggledVersion, { DEFAULT_VERSION, Version } from '../../hooks/useToggledVersion'
+import useWrapCallback from '../../hooks/useWrapCallback'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
-import { useExpertModeManager, useUserSingleHopOnly, useUserSlippageTolerance } from '../../state/user/hooks'
+import { useExpertModeManager } from '../../state/user/hooks'
 import styled from 'styled-components'
-import ProgressSteps from '../../components/ProgressSteps'
 import BridgePageBody from 'components/Bridge/BridgePageBody'
-import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
-import { useIsTransactionUnsupported } from 'hooks/Trades'
+import { ButtonConfirmed, ButtonError, ButtonLight } from 'components/Button'
 import { TYPE } from '../../theme'
 import { useActiveWeb3React } from '../../hooks'
 import { useWalletModalToggle } from '../../state/application/hooks'
-import { ApprovalState, useApproveCallbackFromTrade } from '../../hooks/useApproveCallback'
-import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
-import { AutoRow, RowBetween } from '../../components/Row'
-import Loader from '../../components/Loader'
+import { AutoRow } from '../../components/Row'
 import { transparentize } from 'polished'
-import { useBridgeCallback, useSwapCallback } from '../../hooks/useSwapCallback'
-import { AlertTriangle } from 'react-feather'
-import { GreyCard } from '../../components/Card'
-import Column, { AutoColumn } from '../../components/Column'
-import BetterTradeLink, { DefaultVersionLink } from '../../components/swap/BetterTradeLink'
-import { isTradeBetter } from 'utils/trades'
+import { useBridgeCallback } from '../../hooks/useSwapCallback'
+import { AutoColumn } from '../../components/Column'
 import { RPC } from '../../connectors'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
-import { ethers } from 'ethers'
-import { getSigner } from 'utils'
-import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
 import ConfirmBridgeModal from '../../components/Bridge/Confirm‌BridgeModal'
+import ReactGA from 'react-ga'
+import { getTradeVersion } from '../../data/V1'
 
 const ArrowWrapper = styled.div<{ clickable: boolean }>`
     padding: 2px;
@@ -193,13 +182,7 @@ export const networkData: tNetworkData = {
                     'BNB',
                     'Binance'
                 ),
-                destToken: new Token(
-                    ChainId.OASISETH_MAIN,
-                    '0xE3F5a90F9cb311505cd691a46596599aA1A0AD7D',
-                    18,
-                    'BNB',
-                    'Binance'
-                ),
+                destToken: Currency.NATIVE[ChainId.BSC],
                 destChain: ChainId.BSC
             },
             {
@@ -211,8 +194,8 @@ export const networkData: tNetworkData = {
                     'DAI Stablecoin'
                 ),
                 destToken: new Token(
-                    ChainId.OASISETH_MAIN,
-                    '0x2bF9b864cdc97b08B6D79ad4663e71B8aB65c45c',
+                    ChainId.MAINNET,
+                    '0x6B175474E89094C44Da98b954EedeAC495271d0F',
                     18,
                     'DAI',
                     'DAI Stablecoin'
@@ -227,13 +210,7 @@ export const networkData: tNetworkData = {
                     'ETH(MULTI)',
                     'Ethereum'
                 ),
-                destToken: new Token(
-                    ChainId.OASISETH_MAIN,
-                    '0xB44a9B6905aF7c801311e8F4E76932ee959c663C',
-                    18,
-                    'ETH(MULTI)',
-                    'Ethereum'
-                ),
+                destToken: Currency.NATIVE[ChainId.MAINNET],
                 destChain: ChainId.MAINNET
             },
             {
@@ -245,8 +222,8 @@ export const networkData: tNetworkData = {
                     'USD Coin'
                 ),
                 destToken: new Token(
-                    ChainId.OASISETH_MAIN,
-                    '0x80A16016cC4A2E6a2CACA8a4a498b1699fF0f844',
+                    ChainId.MAINNET,
+                    '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
                     6,
                     'USDC',
                     'USD Coin'
@@ -262,8 +239,8 @@ export const networkData: tNetworkData = {
                     'Wrapped BTC'
                 ),
                 destToken: new Token(
-                    ChainId.OASISETH_MAIN,
-                    '0x5D9ab5522c64E1F6ef5e3627ECCc093f56167818',
+                    ChainId.MAINNET,
+                    '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599',
                     8,
                     'WBTC',
                     'Wrapped BTC'
@@ -279,8 +256,8 @@ export const networkData: tNetworkData = {
                     'Tether USD'
                 ),
                 destToken: new Token(
-                    ChainId.OASISETH_MAIN,
-                    '0x6aB6d61428fde76768D7b45D8BFeec19c6eF91A8',
+                    ChainId.MAINNET,
+                    '0xdAC17F958D2ee523a2206206994597C13D831ec7',
                     6,
                     'USDT',
                     'Tether USD'
@@ -367,7 +344,7 @@ export default function Bridge() {
     const [chainOutput, setChainOutput] = useState<ChainId.MAINNET | ChainId.OASISETH_MAIN | ChainId.BSC>()
     const [currencyInput, setCurrencyInput] = useState<Token>(currencyListInput[0])
     const [currencyOutput, setCurrencyOutput] = useState<Token>()
-    const [bridgeRecipient, setBridgeRecipient] = useState('saber')
+    const [bridgeRecipient, setBridgeRecipient] = useState('')
 
     const { wrapType, execute: onWrap, inputError: wrapInputError } = useWrapCallback(
         currencies[Field.INPUT],
@@ -381,7 +358,9 @@ export default function Bridge() {
         [Field.INPUT]: parsedAmount,
         [Field.OUTPUT]: parsedAmount
     }
-    const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(currencyBalances[Field.INPUT])
+    const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currencyInput ?? undefined)
+
+    const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(selectedCurrencyBalance)
     const atMaxAmountInput = Boolean(maxAmountInput && parsedAmounts[Field.INPUT]?.equalTo(maxAmountInput))
 
     const formattedAmounts = {
@@ -397,10 +376,11 @@ export default function Bridge() {
             onUserInput(Field.INPUT, value)
             checkTransactionStatus(parseFloat(value))
         },
-        [onUserInput, transferData]
+        [onUserInput, chainInput, transferData, selectedCurrencyBalance]
     )
     const handleMaxInput = useCallback(() => {
-        maxAmountInput && onUserInput(Field.INPUT, maxAmountInput.toExact())
+        if(maxAmountInput)
+            handleTypeInput(maxAmountInput?.toExact().toString())
     }, [maxAmountInput, onUserInput])
 
     const handleOutputSelect = useCallback(outputCurrency => onCurrencySelection(Field.OUTPUT, outputCurrency), [
@@ -415,15 +395,19 @@ export default function Bridge() {
         inputToken: Token
         inputAmount: CurrencyAmount | undefined
         outputAmount: CurrencyAmount | undefined
-        fromChainID: ChainId
-        destChainID: ChainId | undefined
+        fromChainID: string
+        destChainID: string | undefined
+        destChain: ChainId | undefined
+        fromChain: ChainId
     } = {
         type: bridgeType,
         inputToken: currencyInput,
         inputAmount: tryParseAmount(formattedAmounts[Field.INPUT], currencyInput),
         outputAmount: tryParseAmount(outPutValue.toString(), currencyOutput),
-        fromChainID: chainInput,
-        destChainID: chainOutput
+        fromChainID: (chainInput === 1 ? "Ethereum": chainInput === ChainId.BSC ? "Binance Smart Chain" : "Oasis"),
+        destChainID: (chainOutput === 1 ? "Ethereum": chainOutput === ChainId.BSC ? "Binance Smart Chain" : "Oasis"),
+        destChain: chainOutput,
+        fromChain: chainInput,
     }
 
     const { callback: swapCallback, error: swapCallbackError } = useBridgeCallback(bridgeTrade, bridgeRecipient)
@@ -446,6 +430,7 @@ export default function Bridge() {
     // console.log('shit', transferData)
     useEffect(() => {
         if (chainInput && chainOutput && currencyInput && currencyOutput) {
+            // console.log(chainInput , chainOutput , currencyInput , currencyOutput)
             fetch('https://bridgeapi.anyswap.exchange/merge/tokenlist/42262')
                 .then(function(response) {
                     if (response.status !== 200) {
@@ -478,7 +463,6 @@ export default function Bridge() {
                                             : 'BNB'
                                     ]
 
-                            // console.log(data)
                             setTransferData(data)
                         })
                         .catch(err => {
@@ -489,31 +473,29 @@ export default function Bridge() {
                     console.log('Fetch Error :-S', err)
                 })
         }
-        //todo Saber
     }, [chainInput, chainOutput, currencyInput, currencyOutput])
 
     useEffect(() => {
-        console.log(transferData)
+        // console.log(transferData)
     }, [transferData])
 
     const [bridgeStatus, setBridgeStatus] = useState('ok')
-
-    const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currencyInput ?? undefined)
-
     const checkTransactionStatus = (value: number) => {
-        //check the amount with balance
-
-        if (selectedCurrencyBalance !== undefined && value > parseFloat(selectedCurrencyBalance.toSignificant(6))) {
-            setBridgeStatus('notBalance')
-            setOutPutValue(0)
-        } else if (value > transferData.MaximumSwap) {
-            setBridgeStatus('maxLimit')
-            setOutPutValue(0)
-        } else if (value < transferData.MinimumSwap) {
-            setBridgeStatus('minLimit')
-            setOutPutValue(0)
-        } else {
-            setBridgeStatus('ok')
+        if(transferData) {
+            //check the amount with balance
+            console.log(value, selectedCurrencyBalance, maxAmountInput, selectedCurrencyBalance ? parseFloat(selectedCurrencyBalance?.toSignificant(6)) : 0)
+            if (selectedCurrencyBalance !== undefined && value > parseFloat(selectedCurrencyBalance.toExact())) {
+                setBridgeStatus('notBalance')
+                // setOutPutValue(0)
+            } else if (value > transferData.MaximumSwap) {
+                setBridgeStatus('maxLimit')
+                // setOutPutValue(0)
+            } else if (value < transferData.MinimumSwap) {
+                setBridgeStatus('minLimit')
+                // setOutPutValue(0)
+            } else if (selectedCurrencyBalance) {
+                setBridgeStatus('ok')
+            }
             let fee = value * transferData.SwapFeeRatePerMillion * 0.01
             if (fee > transferData.MaximumSwapFee) {
                 fee = transferData.MaximumSwapFee
@@ -522,9 +504,9 @@ export default function Bridge() {
             }
 
             const outPut = value - fee
-            console.log(outPut)
+            // console.log(outPut)
             // onUserInput(Field.OUTPUT, outPutValue.toString())
-            setOutPutValue(outPut)
+            setOutPutValue(outPut >= 0 ? outPut : 0)
         }
     }
 
@@ -546,7 +528,7 @@ export default function Bridge() {
 
                 try {
                     // console.log(data)
-
+                    handleTypeInput("")
                     window.ethereum.request({
                         method: 'wallet_addEthereumChain',
                         params: data
@@ -576,27 +558,29 @@ export default function Bridge() {
                 setCurrencyOutput(importData.destToken)
             }
         } else {
-            console.log(chainId)
+            // console.log(chainId)
         }
     }, [chainInput])
 
     useEffect(() => {
-        if (chainInput === ChainId.OASISETH_MAIN) {
-            setBridgeType('swapOut')
-            if (account) {
-                setBridgeRecipient(account)
+        if(transferData){
+            if (chainInput === ChainId.OASISETH_MAIN) {
+                setBridgeType('swapOut')
+                if (account) {
+                    setBridgeRecipient(account)
+                }
+            } else if (!currencyInput.address) {
+                setBridgeType('transferNative')
+                setBridgeRecipient(transferData.DepositAddress)
+            } else {
+                setBridgeType('transferToken')
+                setBridgeRecipient(transferData.DepositAddress)
             }
-        } else if (!currencyInput.address) {
-            setBridgeType('transferNative')
-            setBridgeRecipient(transferData.DepositAddress)
-        } else {
-            setBridgeType('transferToken')
-            setBridgeRecipient(transferData.DepositAddress)
         }
-    }, [chainInput, currencyInput, account])
+    }, [chainInput, currencyInput, account, transferData])
 
     useEffect(() => {
-        console.log(currencyInput)
+        // console.log(currencyInput)
         const tokenIndex = currencyListInput.indexOf(currencyInput)
         const importData = networkData[chainInput].tokenList[tokenIndex]
         // console.log(importData)
@@ -617,25 +601,46 @@ export default function Bridge() {
                 }
             }
         } else {
-            console.log(chainId)
+            // console.log(chainId)
         }
     }, [chainId])
 
     const handleBridge = async () => {
-        console.log(currencyInput)
+        // console.log(currencyInput)
+        if (swapCallback) {
+            swapCallback()
+              .then(hash => {
+                  setBridgeState({
+                      attemptingTxn: false,
+                      tradeToConfirm,
+                      showConfirm,
+                      swapErrorMessage: undefined,
+                      txHash: hash
+                  })
+              })
+              .catch(error => {
+                  setBridgeState({
+                      attemptingTxn: false,
+                      tradeToConfirm,
+                      showConfirm,
+                      swapErrorMessage: error.message,
+                      txHash: undefined
+                  })
+              })
 
-        if (!currencyInput.address) {
-            //native token
-            // web3.sendTransaction({ to: receiver, from: sender, value: web3.toWei('0.5', 'ether') })
-
-            if (library && account) {
-                const signer = getSigner(library, account)
-                await signer.sendTransaction({
-                    to: transferData.DepositAddress,
-                    value: ethers.utils.parseEther(formattedAmounts[Field.INPUT]) // 1 ether
-                })
-            }
         }
+        // if (!currencyInput.address) {
+        //     //native token
+        //     // web3.sendTransaction({ to: receiver, from: sender, value: web3.toWei('0.5', 'ether') })
+        //
+        //     if (library && account) {
+        //         const signer = getSigner(library, account)
+        //         await signer.sendTransaction({
+        //             to: transferData.DepositAddress,
+        //             value: ethers.utils.parseEther(formattedAmounts[Field.INPUT]) // 1 ether
+        //         })
+        //     }
+        // }
     }
     const handleConfirmDismiss = useCallback(() => {
         setBridgeState({ showConfirm: false, tradeToConfirm, attemptingTxn, swapErrorMessage, txHash })
@@ -695,9 +700,9 @@ export default function Bridge() {
                             </AutoRow>
                         </AutoColumn>
                         <BridgeInputPart
-                            value={outPutValue.toString()}
+                            value={outPutValue ? outPutValue.toString() : "0"}
                             onUserInput={() => {
-                                console.log('outPut')
+                                // console.log('outPut')
                             }}
                             label={independentField === Field.INPUT && bridgeTrade ? 'To (estimated)' : 'To'}
                             showMaxButton={false}
@@ -710,6 +715,7 @@ export default function Bridge() {
                             disableChainSelect={true}
                             disableCurrencySelect={true}
                             disableInput={true}
+                            hideBalance={true}
                         />
                     </AutoColumn>
                     <BottomGrouping style={{ paddingBottom: '1rem' }}>
@@ -728,7 +734,6 @@ export default function Bridge() {
                                         })
                                     }}
                                     width="100%"
-                                    confirmed={true}
                                 >
                                     Bridge
                                 </ButtonConfirmed>
@@ -736,28 +741,29 @@ export default function Bridge() {
                         ) : (
                             <ButtonError
                                 onClick={() => {
-                                    if (isExpertMode) {
-                                        handleBridge()
-                                    } else {
-                                        setBridgeState({
-                                            tradeToConfirm: bridgeTrade,
-                                            attemptingTxn: false,
-                                            swapErrorMessage: undefined,
-                                            showConfirm: true,
-                                            txHash: undefined
-                                        })
-                                    }
+                                    // if (isExpertMode) {
+                                    //     handleBridge()
+                                    // } else {
+                                    //     setBridgeState({
+                                    //         tradeToConfirm: bridgeTrade,
+                                    //         attemptingTxn: false,
+                                    //         swapErrorMessage: undefined,
+                                    //         showConfirm: true,
+                                    //         txHash: undefined
+                                    //     })
+                                    // }
                                 }}
                                 id="swap-button"
                             >
                                 <Text fontSize={20} fontWeight={500}>
-                                    {bridgeStatus === 'notBalance'
+                                    {!transferData ? "Loading" :
+                                      bridgeStatus === 'notBalance'
                                         ? 'Not Enough Balance'
                                         : bridgeStatus === 'maxLimit'
-                                        ? `Trnafer not supporting for amount more than ${transferData.MaximumSwap}`
+                                        ? `Transfer is not supported for amount more than ${transferData.MaximumSwap}`
                                         : bridgeStatus === 'minLimit'
-                                        ? `Trnafer not supporting for amount less than ${transferData.MinimumSwap}`
-                                        : 'Got an error'}
+                                        ? `Transfer is not supported for amount less than ${transferData.MinimumSwap}`
+                                        : 'Enter an amount'}
                                 </Text>
                             </ButtonError>
                         )}
@@ -781,7 +787,7 @@ export default function Bridge() {
                                 {transferData.symbol}
                             </Text>
                             <Text fontSize={16} fontWeight={400}>
-                                Minimum Crosschain Amount is {transferData.MaximumSwap ? transferData.MaximumSwap : 0}{' '}
+                                Maximum Crosschain Amount is {transferData.MaximumSwap ? transferData.MaximumSwap : 0}{' '}
                                 {transferData.symbol}
                             </Text>
                             <Text fontSize={16} fontWeight={400}>

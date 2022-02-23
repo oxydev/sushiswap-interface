@@ -1,5 +1,5 @@
 import { SUSHI } from './../../constants/index'
-import { Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount } from '@sushiswap/sdk'
+import { ChainId, Currency, CurrencyAmount, ETHER, JSBI, Token, TokenAmount } from '@sushiswap/sdk'
 import { useMemo } from 'react'
 import ERC20_INTERFACE from '../../constants/abis/erc20'
 import { useAllTokens } from '../../hooks/Tokens'
@@ -32,7 +32,6 @@ export function useETHBalances(
         'getEthBalance',
         addresses.map(address => [address])
     )
-
     return useMemo(
         () =>
             addresses.reduce<{ [address: string]: CurrencyAmount }>((memo, address, i) => {
@@ -103,7 +102,10 @@ export function useCurrencyBalances(
     ])
 
     const tokenBalances = useTokenBalances(account, tokens)
-    const containsETH: boolean = useMemo(() => currencies?.some(currency => currency === ETHER) ?? false, [currencies])
+  if (currencies) {
+    console.log(currencies, currencies[0] === Currency.NATIVE[ChainId.BSC])
+  }
+    const containsETH: boolean = useMemo(() => currencies?.some(currency => currency === ETHER || currency === Currency.NATIVE[ChainId.BSC]) ?? false, [currencies])
     const ethBalance = useETHBalances(containsETH ? [account] : [])
 
     return useMemo(
@@ -111,7 +113,7 @@ export function useCurrencyBalances(
             currencies?.map(currency => {
                 if (!account || !currency) return undefined
                 if (currency instanceof Token) return tokenBalances[currency.address]
-                if (currency === ETHER) return ethBalance[account]
+                if (currency === ETHER || currency === Currency.NATIVE[ChainId.BSC]) return ethBalance[account]
                 return undefined
             }) ?? [],
         [account, currencies, ethBalance, tokenBalances]
