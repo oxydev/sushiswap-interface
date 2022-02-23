@@ -353,7 +353,7 @@ export default function Bridge() {
         inputError: swapInputError
     } = useDerivedSwapInfo()
     const [chainInput, setChainInput] = useState<ChainId.MAINNET | ChainId.OASISETH_MAIN | ChainId.BSC>(
-      ChainId.OASISETH_MAIN
+        ChainId.OASISETH_MAIN
     )
     const initialImportList: Token[] = []
     networkData[ChainId.OASISETH_MAIN].tokenList.forEach((item: any) => {
@@ -364,6 +364,8 @@ export default function Bridge() {
     const [chainOutput, setChainOutput] = useState<ChainId.MAINNET | ChainId.OASISETH_MAIN | ChainId.BSC>()
     const [currencyInput, setCurrencyInput] = useState<Token>(currencyListInput[0])
     const [currencyOutput, setCurrencyOutput] = useState<Token>()
+    const [bridgeRecipient, setBridgeRecipient] = useState('saber')
+
     const { wrapType, execute: onWrap, inputError: wrapInputError } = useWrapCallback(
         currencies[Field.INPUT],
         currencies[Field.OUTPUT],
@@ -424,8 +426,7 @@ export default function Bridge() {
     const toggleWalletModal = useWalletModalToggle()
     const [outPutValue, setOutPutValue] = useState<number>(0)
 
-
-    const bridgeTrade : {
+    const bridgeTrade: {
         type: string
         inputToken: Token
         inputAmount: CurrencyAmount | undefined
@@ -441,12 +442,9 @@ export default function Bridge() {
         destChainID: chainOutput
     }
 
-    const { callback: swapCallback, error: swapCallbackError } = useBridgeCallback(bridgeTrade, recipient)
-
+    const { callback: swapCallback, error: swapCallbackError } = useBridgeCallback(bridgeTrade, bridgeRecipient)
 
     const isValid = !swapInputError
-
-
 
     const handelChainSelect = useCallback(index => {
         setChainInput(index)
@@ -460,8 +458,6 @@ export default function Bridge() {
         },
         [onCurrencySelection]
     )
-
-
 
     type tTransferData = {
         [key: string]: any
@@ -610,12 +606,17 @@ export default function Bridge() {
     useEffect(() => {
         if (chainInput === ChainId.OASISETH_MAIN) {
             setBridgeType('swapOut')
+            if (account) {
+                setBridgeRecipient(account)
+            }
         } else if (!currencyInput.address) {
             setBridgeType('transferNative')
+            setBridgeRecipient(transferData.DepositAddress)
         } else {
             setBridgeType('transferToken')
+            setBridgeRecipient(transferData.DepositAddress)
         }
-    }, [chainInput, currencyInput])
+    }, [chainInput, currencyInput, account])
 
     useEffect(() => {
         console.log(currencyInput)
@@ -775,7 +776,6 @@ export default function Bridge() {
                         )}
 
                         {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
-
                     </BottomGrouping>
                     {transferData && (
                         <AutoColumn gap={'6px'}>
@@ -783,19 +783,27 @@ export default function Bridge() {
                                 Reminder:
                             </Text>
                             <Text fontSize={16} fontWeight={400}>
-                                Crosschain Fee is {transferData.SwapFeeRatePerMillion ? transferData.SwapFeeRatePerMillion : 0} %, Minimum Crosschain Fee is {transferData.MinimumSwapFee ? transferData.MinimumSwapFee : 0} {transferData.symbol}, Maximum Crosschain Fee is {transferData.MaximumSwapFee ? transferData.MaximumSwapFee : 0} {transferData.symbol}
+                                Crosschain Fee is{' '}
+                                {transferData.SwapFeeRatePerMillion ? transferData.SwapFeeRatePerMillion : 0} %, Minimum
+                                Crosschain Fee is {transferData.MinimumSwapFee ? transferData.MinimumSwapFee : 0}{' '}
+                                {transferData.symbol}, Maximum Crosschain Fee is{' '}
+                                {transferData.MaximumSwapFee ? transferData.MaximumSwapFee : 0} {transferData.symbol}
                             </Text>
                             <Text fontSize={16} fontWeight={400}>
-                                Minimum Crosschain Amount is {transferData.MinimumSwap ? transferData.MinimumSwap : 0} {transferData.symbol}
+                                Minimum Crosschain Amount is {transferData.MinimumSwap ? transferData.MinimumSwap : 0}{' '}
+                                {transferData.symbol}
                             </Text>
                             <Text fontSize={16} fontWeight={400}>
-                                Minimum Crosschain Amount is {transferData.MaximumSwap ? transferData.MaximumSwap : 0} {transferData.symbol}
+                                Minimum Crosschain Amount is {transferData.MaximumSwap ? transferData.MaximumSwap : 0}{' '}
+                                {transferData.symbol}
                             </Text>
                             <Text fontSize={16} fontWeight={400}>
                                 Estimated Time of Crosschain Arrival is 10-30 min
                             </Text>
                             <Text fontSize={16} fontWeight={400}>
-                                Crosschain amount larger than {transferData.BigValueThreshold ? transferData.BigValueThreshold : 0} {transferData.symbol} could take up to 12 hours
+                                Crosschain amount larger than{' '}
+                                {transferData.BigValueThreshold ? transferData.BigValueThreshold : 0}{' '}
+                                {transferData.symbol} could take up to 12 hours
                             </Text>
                         </AutoColumn>
                     )}
