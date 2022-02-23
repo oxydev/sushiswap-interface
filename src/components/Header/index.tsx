@@ -4,6 +4,7 @@ import { Text } from 'rebass'
 import { NavLink } from 'react-router-dom'
 import { darken } from 'polished'
 import { useTranslation } from 'react-i18next'
+import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
 
 import styled from 'styled-components'
 
@@ -35,7 +36,10 @@ import { StyledMenuButton } from 'components/StyledMenu'
 import CurrencyLogo from 'components/CurrencyLogo'
 
 const ExtendedStyledMenuButton = styled(StyledMenuButton)`
-    margin-left: 8px;
+    margin-left: auto;
+    width: 40px;
+    margin-right: 0;
+    position: relative;
 `
 
 const HeaderFrame = styled.div`
@@ -89,6 +93,11 @@ const HeaderControls = styled.div`
     padding: 5px;
   `}
 `
+const StyledMenuIcon = styled(MenuIcon)`
+    path {
+        stroke: ${({ theme }) => theme.text1};
+    }
+`
 
 const HeaderElement = styled.div`
     display: flex;
@@ -118,6 +127,10 @@ const HeaderRow = styled(RowFixed)`
     ${({ theme }) => theme.mediaWidth.upToMedium`
    width: 100%;
   `};
+
+    @media (max-width: 720px) {
+        padding: 0.5rem 0;
+    }
 `
 
 const HeaderLinks = styled(Row)`
@@ -125,6 +138,10 @@ const HeaderLinks = styled(Row)`
     ${({ theme }) => theme.mediaWidth.upToMedium`
     padding: 1rem 0 1rem 1rem;
     justify-content: flex-end;
+
+    @media (max-width: 720px) {
+        display: none;
+    }
 `};
 `
 
@@ -249,7 +266,25 @@ const StyledNavLink = styled(NavLink).attrs({
         color: ${({ theme }) => darken(0.1, theme.text1)};
     }
 `
+const ResponsiveHeaderLinks = styled.div`
+    min-width: 8.125rem;
+    background-color: ${({ theme }) => theme.bg3};
+    box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
+        0px 24px 32px rgba(0, 0, 0, 0.01);
+    border-radius: ${({ theme }) => theme.borderRadius};
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    font-size: 1rem;
+    position: absolute;
+    top: 3rem;
+    right: 0rem;
+    z-index: 100;
 
+    & > a {
+        padding: 0.5rem 0;
+    }
+`
 const StyledExternalLink = styled(ExternalLink).attrs({
     activeClassName
 })<{ isActive?: boolean }>`
@@ -318,6 +353,8 @@ export default function Header() {
     const countUpValue = aggregateBalance?.toFixed(0) ?? '0'
     const countUpValuePrevious = usePrevious(countUpValue) ?? '0'
 
+    const [showLinks, setShowLinks] = useState(false)
+
     // console.log(chainId)
 
     return (
@@ -359,10 +396,63 @@ export default function Header() {
                     <StyledNavLink id={`zap-nav-link`} to={'/zap'}>
                         Zap
                     </StyledNavLink>
-                    <StyledNavLink id={`zap-nav-link`} as="a" href="https://app.multichain.org/#/router" target="_blank" >
+                    <StyledNavLink
+                        id={`zap-nav-link`}
+                        as="a"
+                        href="https://app.multichain.org/#/router"
+                        target="_blank"
+                    >
                         Bridge
                     </StyledNavLink>
                 </HeaderLinks>
+
+                <ExtendedStyledMenuButton
+                    onClick={() => {
+                        if (showLinks) {
+                            setShowLinks(false)
+                        } else {
+                            setShowLinks(true)
+                        }
+                    }}
+                >
+                    <StyledMenuIcon />
+                    {showLinks && (
+                        <ResponsiveHeaderLinks>
+                            <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
+                                {t('swap')}
+                            </StyledNavLink>
+                            <StyledNavLink
+                                id={`pool-nav-link`}
+                                to={'/pool'}
+                                isActive={(match, { pathname }) =>
+                                    Boolean(match) ||
+                                    pathname.startsWith('/add') ||
+                                    pathname.startsWith('/remove') ||
+                                    pathname.startsWith('/create') ||
+                                    pathname.startsWith('/find')
+                                }
+                            >
+                                Liquidity
+                            </StyledNavLink>
+
+                            <StyledNavLink id={`yield-nav-link`} to={'/yield'}>
+                                Gem Mine
+                            </StyledNavLink>
+
+                            <StyledNavLink id={`zap-nav-link`} to={'/zap'}>
+                                Zap
+                            </StyledNavLink>
+                            <StyledNavLink
+                                id={`zap-nav-link`}
+                                as="a"
+                                href="https://app.multichain.org/#/router"
+                                target="_blank"
+                            >
+                                Bridge
+                            </StyledNavLink>
+                        </ResponsiveHeaderLinks>
+                    )}
+                </ExtendedStyledMenuButton>
             </HeaderRow>
             <HeaderControls>
                 <HeaderElement>
