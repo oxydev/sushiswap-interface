@@ -1,5 +1,5 @@
 import { ChainId, Currency, CurrencyAmount, JSBI, Token, Trade } from '@sushiswap/sdk'
-
+import { ArrowDown } from 'react-feather'
 import React, { useCallback, useEffect, useState } from 'react'
 import BridgeInputPart from '../../components/Bridge/BridgeInputPart'
 import { tryParseAmount, useDerivedSwapInfo, useSwapActionHandlers, useSwapState } from '../../state/swap/hooks'
@@ -34,6 +34,10 @@ import { ethers } from 'ethers'
 import { getSigner } from 'utils'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
 import ConfirmBridgeModal from '../../components/Bridge/Confirm‌BridgeModal'
+
+const ArrowWrapper = styled.div<{ clickable: boolean }>`
+    padding: 2px;
+`
 
 const BottomGrouping = styled.div`
     margin-top: 1rem;
@@ -371,13 +375,12 @@ export default function Bridge() {
         typedValue
     )
 
-
     // const trade = showWrap ? undefined : tradesByVersion[toggledVersion]
 
     const parsedAmounts = {
-              [Field.INPUT]: parsedAmount,
-              [Field.OUTPUT]: parsedAmount
-          }
+        [Field.INPUT]: parsedAmount,
+        [Field.OUTPUT]: parsedAmount
+    }
     const maxAmountInput: CurrencyAmount | undefined = maxAmountSpend(currencyBalances[Field.INPUT])
     const atMaxAmountInput = Boolean(maxAmountInput && parsedAmounts[Field.INPUT]?.equalTo(maxAmountInput))
 
@@ -424,7 +427,6 @@ export default function Bridge() {
     }
 
     const { callback: swapCallback, error: swapCallbackError } = useBridgeCallback(bridgeTrade, bridgeRecipient)
-
 
     const handelChainSelect = useCallback(index => {
         setChainInput(index)
@@ -649,7 +651,7 @@ export default function Bridge() {
                 {/*<h1></h1>*/}
 
                 <Wrapper>
-                    <TYPE.black fontWeight={500} color={'#ffd545'}>
+                    <TYPE.black fontWeight={500} color={'#ffd545'} style={{ marginBottom: '15px' }}>
                         Bridge Page
                     </TYPE.black>
                     <ConfirmBridgeModal
@@ -665,9 +667,7 @@ export default function Bridge() {
                     />
                     <AutoColumn gap={isExpertMode ? 'md' : '6px'}>
                         <BridgeInputPart
-                            label={
-                                independentField === Field.OUTPUT && bridgeTrade ? 'From (estimated)' : 'From'
-                            }
+                            label={independentField === Field.OUTPUT && bridgeTrade ? 'From (estimated)' : 'From'}
                             value={formattedAmounts[Field.INPUT]}
                             showMaxButton={!atMaxAmountInput}
                             currency={currencyInput}
@@ -681,6 +681,19 @@ export default function Bridge() {
                             id="swap-currency-input"
                             cornerRadiusBottomNone={isExpertMode ? false : true}
                         />
+                        <AutoColumn justify="space-between">
+                            <AutoRow justify={isExpertMode ? 'space-between' : 'center'} style={{ padding: '0 1rem' }}>
+                                <ArrowWrapper clickable>
+                                    <ArrowDown
+                                        size="16"
+                                        onClick={() => {
+                                            console.log('here')
+                                        }}
+                                        color={'#fff'}
+                                    />
+                                </ArrowWrapper>
+                            </AutoRow>
+                        </AutoColumn>
                         <BridgeInputPart
                             value={outPutValue.toString()}
                             onUserInput={() => {
@@ -783,6 +796,9 @@ export default function Bridge() {
                     )}
                 </Wrapper>
             </BridgePageBody>
+            <TYPE.black fontWeight={500} color={'#ffd545'} style={{ marginTop: '15px' }}>
+                Powered by MultiChain
+            </TYPE.black>
         </>
     )
 }
