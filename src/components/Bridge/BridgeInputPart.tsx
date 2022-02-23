@@ -187,7 +187,6 @@ export default function BridgeInputPart({
     containerBackground
 }: bridgeInputProps) {
     const { account, chainId } = useActiveWeb3React()
-    console.log('fuck',currency)
     const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
     const [modalOpen, setModalOpen] = useState(false)
     const [chainModalOpen, setChainModalOpen] = useState(false)
