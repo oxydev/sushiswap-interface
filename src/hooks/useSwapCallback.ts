@@ -279,7 +279,7 @@ function useBridgeCallArguments(
     if (!trade || !recipient || !library || !account || !tradeVersion || !chainId ) return []
 
     const contract: Contract | null =
-      trade.type === "swapOut" ? getTokenSwapOutContract(trade.tokenAddress, library, account) : trade.type === "transferNative" ? null : null
+      trade.type === "swapOut" ? getTokenSwapOutContract(trade.inputToken.address, library, account) : trade.type === "transferNative" ? null : null
     if (trade.type !== "transferNative" && !contract) {
       return []
     }

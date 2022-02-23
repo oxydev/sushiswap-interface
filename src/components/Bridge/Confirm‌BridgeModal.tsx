@@ -27,7 +27,6 @@ export default function ConfirmBridgeModal({
     trade,
     originalTrade,
     onAcceptChanges,
-    allowedSlippage,
     onConfirm,
     onDismiss,
     recipient,
@@ -42,7 +41,6 @@ export default function ConfirmBridgeModal({
     attemptingTxn: boolean
     txHash: string | undefined
     recipient: string | null
-    allowedSlippage: number
     onAcceptChanges: () => void
     onConfirm: () => void
     swapErrorMessage: string | undefined
@@ -59,13 +57,12 @@ export default function ConfirmBridgeModal({
         return trade ? (
             <BridgeModalHeader
                 trade={trade}
-                allowedSlippage={allowedSlippage}
                 recipient={recipient}
                 showAcceptChanges={showAcceptChanges}
                 onAcceptChanges={onAcceptChanges}
             />
         ) : null
-    }, [allowedSlippage, onAcceptChanges, recipient, showAcceptChanges, trade])
+    }, [ onAcceptChanges, recipient, showAcceptChanges, trade])
 
     const modalBottom = useCallback(() => {
         return trade ? (
@@ -74,15 +71,16 @@ export default function ConfirmBridgeModal({
                 trade={trade}
                 disabledConfirm={showAcceptChanges}
                 swapErrorMessage={swapErrorMessage}
-                allowedSlippage={allowedSlippage}
             />
         ) : null
-    }, [allowedSlippage, onConfirm, showAcceptChanges, swapErrorMessage, trade])
+    }, [ onConfirm, showAcceptChanges, swapErrorMessage, trade])
 
-    // text to show while loading
-    const pendingText = `Swapping ${trade?.inputAmount?.toSignificant(6)} ${trade?.inputAmount?.currency?.getSymbol(
-        chainId
-    )} for ${trade?.outputAmount?.toSignificant(6)} ${trade?.outputAmount?.currency?.getSymbol(chainId)}`
+    const inputChain = trade.fromChainID
+    const outputChain = trade.destChainID
+    const inputToken = trade.inputToken.name
+
+    const pendingText = `Bridged ${inputToken} from  ${inputChain} to ${outputChain}`
+
 
     const confirmationContent = useCallback(
         () =>

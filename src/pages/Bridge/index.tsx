@@ -2,7 +2,7 @@ import { ChainId, Currency, CurrencyAmount, JSBI, Token, Trade } from '@sushiswa
 
 import React, { useCallback, useEffect, useState } from 'react'
 import BridgeInputPart from '../../components/Bridge/BridgeInputPart'
-import { useDerivedSwapInfo, useSwapActionHandlers, useSwapState } from '../../state/swap/hooks'
+import { tryParseAmount, useDerivedSwapInfo, useSwapActionHandlers, useSwapState } from '../../state/swap/hooks'
 import { Text } from 'rebass'
 import { Field } from '../../state/swap/actions'
 import useWrapCallback, { WrapType } from '../../hooks/useWrapCallback'
@@ -22,7 +22,7 @@ import { computeTradePriceBreakdown, warningSeverity } from '../../utils/prices'
 import { AutoRow, RowBetween } from '../../components/Row'
 import Loader from '../../components/Loader'
 import { transparentize } from 'polished'
-import { useSwapCallback } from '../../hooks/useSwapCallback'
+import { useBridgeCallback, useSwapCallback } from '../../hooks/useSwapCallback'
 import { AlertTriangle } from 'react-feather'
 import { GreyCard } from '../../components/Card'
 import Column, { AutoColumn } from '../../components/Column'
@@ -33,6 +33,7 @@ import { useCurrencyBalance } from '../../state/wallet/hooks'
 import { ethers } from 'ethers'
 import { getSigner } from 'utils'
 import ConfirmSwapModal from '../../components/swap/ConfirmSwapModal'
+import ConfirmBridgeModal from '../../components/Bridge/Confirm‌BridgeModal'
 
 const BottomGrouping = styled.div`
     margin-top: 1rem;
@@ -351,7 +352,18 @@ export default function Bridge() {
         currencies,
         inputError: swapInputError
     } = useDerivedSwapInfo()
+    const [chainInput, setChainInput] = useState<ChainId.MAINNET | ChainId.OASISETH_MAIN | ChainId.BSC>(
+      ChainId.OASISETH_MAIN
+    )
+    const initialImportList: Token[] = []
+    networkData[ChainId.OASISETH_MAIN].tokenList.forEach((item: any) => {
+        initialImportList.push(item.src)
+    })
+    const [currencyListInput, setCurrencyListInput] = useState<Token[]>([...initialImportList])
 
+    const [chainOutput, setChainOutput] = useState<ChainId.MAINNET | ChainId.OASISETH_MAIN | ChainId.BSC>()
+    const [currencyInput, setCurrencyInput] = useState<Token>(currencyListInput[0])
+    const [currencyOutput, setCurrencyOutput] = useState<Token>()
     const { wrapType, execute: onWrap, inputError: wrapInputError } = useWrapCallback(
         currencies[Field.INPUT],
         currencies[Field.OUTPUT],
@@ -400,13 +412,6 @@ export default function Bridge() {
         },
         [onUserInput, transferData]
     )
-    const handleTypeOutput = useCallback(
-        (value: string) => {
-            onUserInput(Field.OUTPUT, value)
-        },
-        [onUserInput]
-    )
-
     const handleMaxInput = useCallback(() => {
         maxAmountInput && onUserInput(Field.INPUT, maxAmountInput.toExact())
     }, [maxAmountInput, onUserInput])
@@ -417,53 +422,31 @@ export default function Bridge() {
 
     const swapIsUnsupported = useIsTransactionUnsupported(currencies?.INPUT, currencies?.OUTPUT)
     const toggleWalletModal = useWalletModalToggle()
+    const [outPutValue, setOutPutValue] = useState<number>(0)
 
-    const route = trade?.route
-    const userHasSpecifiedInputOutput = Boolean(
-        currencies[Field.INPUT] &&
-            currencies[Field.OUTPUT] &&
-            parsedAmounts[independentField]?.greaterThan(JSBI.BigInt(0))
-    )
-    const noRoute = !route
 
-    const [singleHopOnly] = useUserSingleHopOnly()
+    const bridgeTrade : {
+        type: string
+        inputToken: Token
+        inputAmount: CurrencyAmount | undefined
+        outputAmount: CurrencyAmount | undefined
+        fromChainID: ChainId
+        destChainID: ChainId | undefined
+    } = {
+        type: bridgeType,
+        inputToken: currencyInput,
+        inputAmount: tryParseAmount(formattedAmounts[Field.INPUT], currencyInput),
+        outputAmount: tryParseAmount(outPutValue.toString(), currencyOutput),
+        fromChainID: chainInput,
+        destChainID: chainOutput
+    }
 
-    const [allowedSlippage] = useUserSlippageTolerance()
+    const { callback: swapCallback, error: swapCallbackError } = useBridgeCallback(bridgeTrade, recipient)
 
-    const [approval, approveCallback] = useApproveCallbackFromTrade(trade, allowedSlippage)
-
-    const { priceImpactWithoutFee } = computeTradePriceBreakdown(trade)
-
-    const priceImpactSeverity = warningSeverity(priceImpactWithoutFee)
-
-    const { callback: swapCallback, error: swapCallbackError } = useSwapCallback(trade, allowedSlippage, recipient)
-
-    const showApproveFlow =
-        !swapInputError &&
-        (approval === ApprovalState.NOT_APPROVED ||
-            approval === ApprovalState.PENDING ||
-            (approvalSubmitted && approval === ApprovalState.APPROVED)) &&
-        !(priceImpactSeverity > 3 && !isExpertMode)
 
     const isValid = !swapInputError
 
-    const betterTradeLinkV2: Version | undefined =
-        toggledVersion === Version.v1 && isTradeBetter(v1Trade, v2Trade) ? Version.v2 : undefined
 
-    const defaultTrade = showWrap ? undefined : tradesByVersion[DEFAULT_VERSION]
-
-    const [chainInput, setChainInput] = useState<ChainId.MAINNET | ChainId.OASISETH_MAIN | ChainId.BSC>(
-        ChainId.OASISETH_MAIN
-    )
-    const initialImportList: Token[] = []
-    networkData[ChainId.OASISETH_MAIN].tokenList.forEach((item: any) => {
-        initialImportList.push(item.src)
-    })
-    const [currencyListInput, setCurrencyListInput] = useState<Token[]>([...initialImportList])
-
-    const [chainOutput, setChainOutput] = useState<ChainId.MAINNET | ChainId.OASISETH_MAIN | ChainId.BSC>()
-    const [currencyInput, setCurrencyInput] = useState<Token>(currencyListInput[0])
-    const [currencyOutput, setCurrencyOutput] = useState<Token>()
 
     const handelChainSelect = useCallback(index => {
         setChainInput(index)
@@ -478,19 +461,7 @@ export default function Bridge() {
         [onCurrencySelection]
     )
 
-    const [bridgeTrade, setBridgeTrade] = useState<{
-        type: string
-        inputToken: Token
-        amountIn: string
-        fromChainID: ChainId
-        destChainID: ChainId | undefined
-    }>({
-        type: 'swapOut',
-        inputToken: currencyInput,
-        amountIn: formattedAmounts[Field.INPUT],
-        fromChainID: chainInput,
-        destChainID: chainOutput
-    })
+
 
     type tTransferData = {
         [key: string]: any
@@ -551,7 +522,6 @@ export default function Bridge() {
     const [bridgeStatus, setBridgeStatus] = useState('ok')
 
     const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currencyInput ?? undefined)
-    const [outPutValue, setOutPutValue] = useState<number>(0)
 
     const [bridgeFee, setBridgeFee] = useState(0)
 
@@ -584,8 +554,6 @@ export default function Bridge() {
             setOutPutValue(outPut)
         }
     }
-
-    console.log(formattedAmounts[Field.INPUT])
 
     const switchNetwork = (chainIDRequest: ChainId.MAINNET | ChainId.OASISETH_MAIN | ChainId.BSC) => {
         if (window.ethereum) {
@@ -701,10 +669,14 @@ export default function Bridge() {
 
     return (
         <>
-            <h1>Bridge Page</h1>
             <BridgePageBody>
+                {/*<h1></h1>*/}
+
                 <Wrapper>
-                    <ConfirmSwapModal
+                    <TYPE.black fontWeight={500} color={'#ffd545'}>
+                        Bridge Page
+                    </TYPE.black>
+                    <ConfirmBridgeModal
                         isOpen={showConfirm}
                         trade={trade}
                         originalTrade={tradeToConfirm}
@@ -712,7 +684,6 @@ export default function Bridge() {
                         attemptingTxn={attemptingTxn}
                         txHash={txHash}
                         recipient={recipient}
-                        allowedSlippage={allowedSlippage}
                         onConfirm={handleBridge}
                         swapErrorMessage={swapErrorMessage}
                         onDismiss={handleConfirmDismiss}
@@ -871,21 +842,19 @@ export default function Bridge() {
                                 Reminder:
                             </Text>
                             <Text fontSize={16} fontWeight={400}>
-                                Maximun transaction amount is {transferData.MaximumSwap ? transferData.MaximumSwap : 0}
+                                Crosschain Fee is {transferData.SwapFeeRatePerMillion ? transferData.SwapFeeRatePerMillion : 0} %, Minimum Crosschain Fee is {transferData.MinimumSwapFee ? transferData.MinimumSwapFee : 0} {transferData.symbol}, Maximum Crosschain Fee is {transferData.MaximumSwapFee ? transferData.MaximumSwapFee : 0} {transferData.symbol}
                             </Text>
                             <Text fontSize={16} fontWeight={400}>
-                                Minimum transaction amount is {transferData.MinimumSwap ? transferData.MinimumSwap : 0}
+                                Minimum Crosschain Amount is {transferData.MinimumSwap ? transferData.MinimumSwap : 0} {transferData.symbol}
                             </Text>
                             <Text fontSize={16} fontWeight={400}>
-                                Transaction fee amount is {bridgeFee}
+                                Minimum Crosschain Amount is {transferData.MaximumSwap ? transferData.MaximumSwap : 0} {transferData.symbol}
                             </Text>
                             <Text fontSize={16} fontWeight={400}>
-                                Minimum transaction fee amount is{' '}
-                                {transferData.MinimumSwapFee ? transferData.MinimumSwapFee : 0}
+                                Estimated Time of Crosschain Arrival is 10-30 min
                             </Text>
                             <Text fontSize={16} fontWeight={400}>
-                                Maximun transaction fee amount is{' '}
-                                {transferData.MaximumSwapFee ? transferData.MaximumSwapFee : 0}
+                                Crosschain amount larger than {transferData.BigValueThreshold ? transferData.BigValueThreshold : 0} {transferData.symbol} could take up to 12 hours
                             </Text>
                         </AutoColumn>
                     )}
