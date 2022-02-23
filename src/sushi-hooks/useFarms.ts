@@ -16,7 +16,7 @@ const useFarms = () => {
         let chainPrice
         let bnbPrice
         [bnbPrice, chainPrice] = prices
-        console.log(bnbPrice,chainPrice)
+        // console.log(bnbPrice,chainPrice)
         const pools = [{
             balance:1,
             allocPoint:150,

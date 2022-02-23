@@ -30,10 +30,25 @@ import { DoubleLogo } from '../Yield/components'
 import { LPMenuItem } from '../../components/SearchModal/styleds'
 
 type tLimitObject = {
-    [key: string]: number
+    [key: string]: string
 }
-const limitObject = {
-    saber: 100
+const limitObject:tLimitObject = {
+    "BNB": "13",
+    "ETH": "22000",
+    "BUSD": "5000",
+    "DAI": "0",
+    "weUSDT": "5000",
+    "DUNE": "0",
+    "ETH(MC)": "0",
+    "LINK": "70",
+    "OAPE": "0",
+    "PETAL": "0",
+    "TULIP": "0",
+    "USDC": "5000",
+    "WBTC": "0",
+    "wETH": "0",
+    "wROSE": "22000",
+    "YUZU": "10"
 }
 
 export default function Zap(): JSX.Element {
@@ -226,11 +241,11 @@ export default function Zap(): JSX.Element {
     const [input, setInput] = useState<string>('')
     const [output, setOutput] = useState<string>('0.0')
 
-    let limit = 100
 
     useEffect(() => {
-        if (currency?.name && parseFloat(input) > limitObject[currency?.name]) {
-            setInput(limitObject[currency?.name])
+        console.log(input,currency)
+        if (currency?.symbol && parseFloat(input) > parseFloat(limitObject[currency?.symbol])) {
+            setInput(limitObject[currency?.symbol])
         }
     }, [input])
 
@@ -338,8 +353,7 @@ export default function Zap(): JSX.Element {
                     </TYPE.black>
                     <TYPE.black fontWeight={400}>
                         Convert single tokens to LP tokens directly.{' '}
-                        <QuestionHelper text="Estimated Number of GLP You Will Recieve" />
-                        {/* todo Saber */}
+                        <QuestionHelper text=" WARNING: Zap can cause slippage. Please do not Zap large amounts. All slippages will be used to buy Back $BLING" />
                     </TYPE.black>
                 </StyledZapHeader>
                 <InputPanel>
@@ -453,7 +467,7 @@ export default function Zap(): JSX.Element {
                                 </ButtonPrimary>*/}
 
                     {!account ? (
-                        <ButtonLight onClick={toggleWalletModal}>{t('connectwallet')}</ButtonLight>
+                        <ButtonLight onClick={toggleWalletModal}>{t('Connect to a Wallet')}</ButtonLight>
                     ) : !currency || !pool ? (
                         // eslint-disable-next-line @typescript-eslint/no-empty-function
                         <ButtonPrimary disabled={true} onClick={() => {}}>

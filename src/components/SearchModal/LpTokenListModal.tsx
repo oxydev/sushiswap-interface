@@ -34,7 +34,6 @@ function useMyLpBalanceListInPark(address: any, lpaddrs:string[]): JSBI[] {
 
     return balances.map((p, i) => {
         const amount = balances[i]?.result?.[0] ?? "0"
-        console.log(amount)
         return JSBI.BigInt(amount)
     })
 }
