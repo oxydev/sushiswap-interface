@@ -40,6 +40,9 @@ const ExtendedStyledMenuButton = styled(StyledMenuButton)`
     width: 40px;
     margin-right: 0;
     position: relative;
+    @media (min-width: 720px) {
+        display: none;
+    }
 `
 
 const HeaderFrame = styled.div`

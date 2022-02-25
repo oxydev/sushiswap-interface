@@ -53,6 +53,8 @@ const tokenLogos: Record<string, string> = {
         'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/binance/assets/USDC-CD2/logo.png',
     '0xf4dEAd672d2E3e16A3dCAeF4C2bA7Cb1b4D304Ff': OasisApe,
     '0xc9BAA8cfdDe8E328787E29b4B078abf2DaDc2055': "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x514910771AF9Ca656af840dff83E8264EcF986CA/logo.png",
+    '0x514910771AF9Ca656af840dff83E8264EcF986CA': "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x514910771AF9Ca656af840dff83E8264EcF986CA/logo.png",
+    '0xF8A0BF9cF54Bb92F17374d9e9A321E6a111a51bD': "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x514910771AF9Ca656af840dff83E8264EcF986CA/logo.png",
     '0x6aB6d61428fde76768D7b45D8BFeec19c6eF91A8': Tether,
     '0x5D9ab5522c64E1F6ef5e3627ECCc093f56167818': Bitcoin,
     '0x21C718C22D52d0F3a789b752D4c2fD5908a8A733':

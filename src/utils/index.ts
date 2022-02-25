@@ -9,6 +9,7 @@ import { TokenAddressMap } from '../state/lists/hooks'
 import { ethers } from 'ethers'
 import Numeral from 'numeral'
 import AnyswapV6ERC20 from '../constants/abis/AnyswapV6ERC20.json'
+import AnyswapRouter from '../constants/abis/AnyswapRouter.json'
 
 import Fraction from '../constants/Fraction'
 
@@ -526,6 +527,12 @@ export function getRouterContract(chainId: number, library: Web3Provider, accoun
 // account is optional
 export function getTokenSwapOutContract(address: string, library: Web3Provider, account?: string): Contract {
     return getContract(address , AnyswapV6ERC20, library, account)
+}
+
+// account is optional
+export function getAnySwapRouterContract(chainId: ChainId, library: Web3Provider, account?: string): Contract {
+    return getContract(chainId === ChainId.BSC ? "0xabd380327fe66724ffda91a87c772fb8d00be488"
+      : chainId === ChainId.MAINNET ? "0x765277eebeca2e31912c9946eae1021199b39c61" : "0xc1be9a4d5d45beeacae296a7bd5fadbfc14602c4" , AnyswapRouter, library, account)
 }
 
 export function escapeRegExp(string: string): string {

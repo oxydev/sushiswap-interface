@@ -1,6 +1,6 @@
 import { MaxUint256 } from '@ethersproject/constants'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Trade, TokenAmount, CurrencyAmount, ETHER } from '@sushiswap/sdk'
+import { Trade, TokenAmount, CurrencyAmount, ETHER, ChainId } from '@sushiswap/sdk'
 import { useCallback, useMemo } from 'react'
 import { useTokenAllowance } from '../data/Allowances'
 import { getTradeVersion, useV1TradeExchangeAddress } from '../data/V1'
@@ -110,4 +110,11 @@ export function useApproveCallbackFromTrade(trade?: Trade, allowedSlippage = 0) 
     const v1ExchangeAddress = useV1TradeExchangeAddress(trade)
     const { chainId } = useActiveWeb3React()
     return useApproveCallback(amountToApprove, tradeIsV1 ? v1ExchangeAddress : getRouterAddress(chainId))
+}
+
+// wraps useApproveCallback in the context of a swap
+export function useApproveCallbackFromBridge(trade?: any) {
+    const { chainId } = useActiveWeb3React()
+    return useApproveCallback(trade.inputAmount, chainId === ChainId.BSC ? "0xabd380327fe66724ffda91a87c772fb8d00be488"
+      : chainId === ChainId.MAINNET ? "0x765277eebeca2e31912c9946eae1021199b39c61" : "0xc1be9a4d5d45beeacae296a7bd5fadbfc14602c4")
 }

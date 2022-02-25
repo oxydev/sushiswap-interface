@@ -12,7 +12,7 @@ interface Window {
         on?: (...args: any[]) => void
         removeListener?: (...args: any[]) => void
         autoRefreshOnNetworkChange?: boolean
-        request(param: { method: string; params: { chainId: string }[] }): void
+        request(...args: any[]): any
     }
     web3?: {}
 }

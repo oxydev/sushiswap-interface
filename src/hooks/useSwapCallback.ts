@@ -1,12 +1,13 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
-import { CurrencyAmount, JSBI, Percent, Router, SwapParameters, Trade, TradeType } from '@sushiswap/sdk'
+import { ChainId, CurrencyAmount, JSBI, Percent, Router, SwapParameters, Trade, TradeType } from '@sushiswap/sdk'
 import { useMemo } from 'react'
 import { BIPS_BASE, INITIAL_ALLOWED_SLIPPAGE } from '../constants'
 import { getTradeVersion, useV1TradeExchangeAddress } from '../data/V1'
 import { useTransactionAdder } from '../state/transactions/hooks'
 import {
   calculateGasMargin,
+  getAnySwapRouterContract,
   getRouterContract,
   getSigner,
   getTokenSwapOutContract,
@@ -44,7 +45,12 @@ interface FailedCall {
 
 type EstimatedSwapCall = SuccessfulCall | FailedCall
 function toHex(currencyAmount: CurrencyAmount): string {
-  return `0x${currencyAmount.raw.toString(16)}`
+  try {
+    return `0x${currencyAmount.raw.toString(16)}`
+  }catch (e) {
+    return `0x0`
+
+  }
 }
 /**
  * Returns the swap calls that can be used to make the trade
@@ -280,10 +286,11 @@ function useBridgeCallArguments(
 
     if (!trade || !trade.inputAmount || !recipient || !library || !account  || !chainId ) return []
     const contract: Contract | null =
-      trade.type === "transferNative" ? null : getTokenSwapOutContract(trade.inputToken.address, library, account)
+      trade.type === "transferNative" ? null : trade.type === "UNDERLYINGV2" ? getAnySwapRouterContract(trade.fromChain, library, account) : getTokenSwapOutContract(trade.inputToken.address, library, account)
     if (trade.type !== "transferNative" && !contract) {
       return []
     }
+    // console.log(contract , getAnySwapRouterContract(trade.fromChain, library, account))
 
     const swapMethods = []
     switch (trade.type) {
@@ -312,6 +319,26 @@ function useBridgeCallArguments(
             value: 0
           }
         )
+        break
+      case "UNDERLYINGV2": {
+        if (trade.fromChain === ChainId.MAINNET)
+          swapMethods.push(
+            {
+              methodName: 'anySwapOutUnderlying',
+              args: ["0x8dFDC61c7c7551D0DEec950A2822eB59cddb8f59", recipient, toHex(trade.inputAmount), "0x"+trade.destChain.toString(16)],
+              value: 0
+            }
+          )
+        else
+          swapMethods.push(
+            {
+              methodName: 'anySwapOut',
+              args: [trade.inputToken.address, recipient, toHex(trade.inputAmount),trade.destChain],
+              value: 0
+            }
+          )
+      }
+
     }
 
     return swapMethods.map(parameters => ({ parameters, contract }))
@@ -356,15 +383,19 @@ export function useBridgeCallback(
               contract
             } = call
             const options = !value || isZero(value) ? {} : { value }
-            if(contract){
+            if (contract) {
+              // console.log(methodName, args, options)
+
               return contract.estimateGas[methodName](...args, options)
               .then((gasEstimate: any) => {
+                // console.log(gasEstimate)
                 return {
                   call,
                   gasEstimate
                 }
               })
               .catch((gasError: any) => {
+                // console.log(gasError)
                 console.debug('Gas estimate failed, trying eth_call to extract error', call)
 
                 return contract.callStatic[methodName](...args, options)
@@ -397,9 +428,9 @@ export function useBridgeCallback(
                     return { call, error: new Error(errorMessage) }
                   })
               })
-            }else {
+            } else {
               const signer = getSigner(library, account)
-              console.log(to,args,value)
+              // console.log(to,args,value)
               return signer.estimateGas({
                 to: to,
                 value : value
