@@ -39,7 +39,7 @@ export default function BridgeModalHeader({ trade, recipient }: { trade: any; re
                         {trade.inputAmount.currency.getSymbol(chainId)}
                     </Text>
                     <Text fontSize={16} fontWeight={500} style={{ marginLeft: '10px', textOverflow: 'ellipsis' }}>
-                        {trade.fromChainID}
+                        {trade.fromChainID === 'Binance Smart Chain' ? 'BSC' : trade.fromChainID}
                     </Text>
                 </RowFixed>
             </RowBetween>
@@ -63,7 +63,7 @@ export default function BridgeModalHeader({ trade, recipient }: { trade: any; re
                         {trade.outputAmount.currency.getSymbol(trade.destChain)}
                     </Text>
                     <Text fontSize={16} fontWeight={500} style={{ marginLeft: '10px', textOverflow: 'ellipsis' }}>
-                        {trade.destChainID}
+                        {trade.destChainID === 'Binance Smart Chain' ? 'BSC' : trade.destChainID}
                     </Text>
                 </RowFixed>
             </RowBetween>

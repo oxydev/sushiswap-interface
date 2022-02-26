@@ -28,7 +28,7 @@ import {
 } from '../../hooks/useApproveCallback'
 import Loader from '../../components/Loader'
 import ProgressSteps from '../../components/ProgressSteps'
-import DownArrow from '../../assets/images/downArrow.png'
+import DownArrow from '../../assets/images/downArrow.svg'
 
 const ArrowWrapper = styled.div<{ clickable: boolean }>`
     padding: 2px;
@@ -82,6 +82,7 @@ const ReplaceBridgeSide = styled.img`
     z-index: 5;
     width: 30px;
     height: 30px;
+    cursor: pointer;
 `
 
 function SwapCallbackError({ error }: { error: string }) {
@@ -319,7 +320,7 @@ export const networkData: tNetworkData = {
         ]
     },
     [ChainId.BSC]: {
-        chainName: 'Binance Smart Chain Mainnet',
+        chainName: 'Binance Smart Chain',
         symbol: 'BNB',
         chainHex: '0x38',
         blockExplorerUrls: 'https://bscscan.com',
@@ -567,10 +568,10 @@ export default function Bridge() {
         if (transferData) {
             //check the amount with balance
             // console.log(value, selectedCurrencyBalance, maxAmountInput, selectedCurrencyBalance ? parseFloat(selectedCurrencyBalance?.toSignificant(6)) : 0)
-            // if (selectedCurrencyBalance !== undefined && value > parseFloat(selectedCurrencyBalance.toExact())) {
-            //     setBridgeStatus('notBalance')
-            //     // setOutPutValue(0)
-            if (value > transferData.MaximumSwap) {
+            if (selectedCurrencyBalance !== undefined && value > parseFloat(selectedCurrencyBalance.toExact())) {
+                setBridgeStatus('notBalance')
+                // setOutPutValue(0)
+            } else if (value > transferData.MaximumSwap) {
                 setBridgeStatus('maxLimit')
                 // setOutPutValue(0)
             } else if (value < transferData.MinimumSwap) {
@@ -760,9 +761,7 @@ export default function Bridge() {
 
     const replaceBridgeSides = () => {
         const newInputChain = chainOutput
-        const newOutputChain = chainInput
         const newCurrencyInpput = currencyOutput
-        const newCurrencyOutput = currencyOutput
 
         if (newInputChain) {
             setChainInput(newInputChain)
@@ -879,6 +878,7 @@ export default function Bridge() {
                                         }}
                                         width={showApproveFlow ? '48%' : '100%'}
                                         style={{ maxWidth: showApproveFlow ? '48%' : '100%', flexShrink: 0 }}
+                                        disabled={showApproveFlow && approval !== ApprovalState.APPROVED ? true : false}
                                     >
                                         Bridge
                                     </ButtonConfirmed>
@@ -898,6 +898,7 @@ export default function Bridge() {
                                         //     })
                                         // }
                                     }}
+                                    disabled={true}
                                     id="swap-button"
                                 >
                                     <Text fontSize={20} fontWeight={500}>
