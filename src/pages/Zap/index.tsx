@@ -68,9 +68,21 @@ export default function Zap(): JSX.Element {
         margin-left: 3rem;
         display: flex;
         @media (max-width: 720px) {
-            margin-left: 0;
+            display: none;
         }
     `
+
+    const ZapImageMobile = styled(ZapImage)`
+        width: 30vw;
+        height: 30vw;
+        margin: 10px auto;
+        display: none;
+        text-align: center;
+        @media (max-width: 720px) {
+            display: block;
+        }
+    `
+
     const BodyWrapper = styled.div`
     padding: 1rem;
     padding-bottom: 3rem;
@@ -83,6 +95,7 @@ export default function Zap(): JSX.Element {
         0px 24px 32px rgba(0, 0, 0, 0.33);
     border-radius: 0 20px 0 40px;
     border: 1px solid #75818f;
+    
     `
 
     const StyledZapHeader = styled.div`
@@ -320,17 +333,12 @@ export default function Zap(): JSX.Element {
                 } catch (addError) {
                     // handle "add" error
                 }
-
-            } catch (e) {
-
-            }
-
+            } catch (e) {}
         }
     }
-    useEffect(()=>{
+    useEffect(() => {
         switchNetwork()
-    },[])
-
+    }, [])
 
     // mark when a user has submitted an approval, reset onTokenSelection for input field
     useEffect(() => {
@@ -402,6 +410,14 @@ export default function Zap(): JSX.Element {
                         <QuestionHelper text=" WARNING: Zap can cause slippage. Please do not Zap large amounts. All slippages will be used to buy Back $BLING" />
                     </TYPE.black>
                 </StyledZapHeader>
+                <ZapImageMobile>
+                    <img
+                        style={{ width: '100%', height: '100%', objectFit: 'contain', margin: 'auto' }}
+                        src={ZapImg}
+                        alt="ZapLogo"
+                    />
+                </ZapImageMobile>
+
                 <InputPanel>
                     <ZapTopInput>
                         <Line style={{ marginBottom: '15px' }}>
