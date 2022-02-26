@@ -22,8 +22,7 @@ import { useActiveWeb3React } from '../../hooks'
 export default function BridgeModalFooter({
     trade,
     onConfirm,
-    swapErrorMessage,
-
+    swapErrorMessage
 }: {
     trade: any
     onConfirm: () => void
@@ -32,7 +31,6 @@ export default function BridgeModalFooter({
     const { chainId } = useActiveWeb3React()
     const [showInverted, setShowInverted] = useState<boolean>(false)
     const theme = useContext(ThemeContext)
-
 
     return (
         <>
@@ -105,13 +103,9 @@ export default function BridgeModalFooter({
             </AutoColumn>
 
             <AutoRow>
-                <ButtonError
-                    onClick={onConfirm}
-                    style={{ margin: '10px 0 0 0' }}
-                    id="confirm-swap-or-send"
-                >
+                <ButtonError onClick={onConfirm} style={{ margin: '10px 0 0 0' }} id="confirm-swap-or-send">
                     <Text fontSize={20} fontWeight={500}>
-                        Confirm Swap
+                        Confirm Bridge
                     </Text>
                 </ButtonError>
 

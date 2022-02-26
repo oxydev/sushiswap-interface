@@ -13,16 +13,10 @@ import CurrencyLogo from '../CurrencyLogo'
 import { RowBetween, RowFixed } from '../Row'
 import { TruncatedText, SwapShowAcceptChanges } from '../swap/styleds'
 import { useActiveWeb3React } from '../../hooks'
+import { networkData } from 'pages/Bridge'
 
-export default function BridgeModalHeader({
-    trade,
-    recipient,
-}: {
-    trade: any
-    recipient: string | null
-}) {
+export default function BridgeModalHeader({ trade, recipient }: { trade: any; recipient: string | null }) {
     const { chainId } = useActiveWeb3React()
-
 
     const theme = useContext(ThemeContext)
 
@@ -30,18 +24,22 @@ export default function BridgeModalHeader({
         <AutoColumn gap={'md'} style={{ marginTop: '20px' }}>
             <RowBetween align="flex-end">
                 <RowFixed gap={'0px'}>
-                    <CurrencyLogo currency={trade.inputAmount.currency} chain={trade.fromChain} size={'24px'} style={{ marginRight: '12px' }} />
-                    <TruncatedText
-                        fontSize={24}
-                        fontWeight={500}
-                        color={theme.primary1}
-                    >
+                    <CurrencyLogo
+                        currency={trade.inputAmount.currency}
+                        chain={trade.fromChain}
+                        size={'24px'}
+                        style={{ marginRight: '12px' }}
+                    />
+                    <TruncatedText fontSize={24} fontWeight={500} color={theme.primary1}>
                         {trade.inputAmount.toSignificant(6)}
                     </TruncatedText>
                 </RowFixed>
                 <RowFixed gap={'0px'}>
-                    <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
+                    <Text fontSize={16} fontWeight={500} style={{ marginLeft: '10px' }}>
                         {trade.inputAmount.currency.getSymbol(chainId)}
+                    </Text>
+                    <Text fontSize={16} fontWeight={500} style={{ marginLeft: '10px', textOverflow: 'ellipsis' }}>
+                        {trade.fromChainID}
                     </Text>
                 </RowFixed>
             </RowBetween>
@@ -56,17 +54,16 @@ export default function BridgeModalHeader({
                         size={'24px'}
                         style={{ marginRight: '12px' }}
                     />
-                    <TruncatedText
-                        fontSize={24}
-                        fontWeight={500}
-                        color={theme.primary1}
-                    >
+                    <TruncatedText fontSize={24} fontWeight={500} color={theme.primary1}>
                         {trade.outputAmount.toSignificant(6)}
                     </TruncatedText>
                 </RowFixed>
                 <RowFixed gap={'0px'}>
-                    <Text fontSize={24} fontWeight={500} style={{ marginLeft: '10px' }}>
+                    <Text fontSize={16} fontWeight={500} style={{ marginLeft: '10px' }}>
                         {trade.outputAmount.currency.getSymbol(trade.destChain)}
+                    </Text>
+                    <Text fontSize={16} fontWeight={500} style={{ marginLeft: '10px', textOverflow: 'ellipsis' }}>
+                        {trade.destChainID}
                     </Text>
                 </RowFixed>
             </RowBetween>

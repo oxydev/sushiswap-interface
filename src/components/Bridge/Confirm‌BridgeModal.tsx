@@ -7,6 +7,7 @@ import TransactionConfirmationModal, {
 import BridgeModalFooter from './‌BridgeModalFooter'
 import BridgeModalHeader from './BridgeModalHeader'
 import { useActiveWeb3React } from '../../hooks'
+import { networkData } from 'pages/Bridge'
 
 /**
  * Returns true if the trade requires a confirmation of details before we can submit it
@@ -46,25 +47,15 @@ export default function ConfirmBridgeModal({
 }) {
     const { chainId } = useActiveWeb3React()
 
-
     const modalHeader = useCallback(() => {
-        return trade ? (
-            <BridgeModalHeader
-                trade={trade}
-                recipient={recipient}
-            />
-        ) : null
-    }, [  recipient, trade])
+        return trade ? <BridgeModalHeader trade={trade} recipient={recipient} /> : null
+    }, [recipient, trade])
 
     const modalBottom = useCallback(() => {
         return trade ? (
-            <BridgeModalFooter
-                onConfirm={onConfirm}
-                trade={trade}
-                swapErrorMessage={swapErrorMessage}
-            />
+            <BridgeModalFooter onConfirm={onConfirm} trade={trade} swapErrorMessage={swapErrorMessage} />
         ) : null
-    }, [ onConfirm, swapErrorMessage, trade])
+    }, [onConfirm, swapErrorMessage, trade])
 
     const inputChain = trade.fromChainID
     const outputChain = trade.destChainID
@@ -72,14 +63,13 @@ export default function ConfirmBridgeModal({
 
     const pendingText = `Bridged ${inputToken} from  ${inputChain} to ${outputChain}`
 
-
     const confirmationContent = useCallback(
         () =>
             swapErrorMessage ? (
                 <TransactionErrorContent onDismiss={onDismiss} message={swapErrorMessage} />
             ) : (
                 <ConfirmationModalContent
-                    title="Confirm Swap"
+                    title="Confirm ‌Bridge"
                     onDismiss={onDismiss}
                     topContent={modalHeader}
                     bottomContent={modalBottom}

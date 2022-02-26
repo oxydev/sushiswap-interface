@@ -14,7 +14,7 @@ import { ButtonConfirmed, ButtonError, ButtonLight } from 'components/Button'
 import { TYPE } from '../../theme'
 import { useActiveWeb3React } from '../../hooks'
 import { useWalletModalToggle } from '../../state/application/hooks'
-import { AutoRow } from '../../components/Row'
+import { AutoRow, RowBetween } from '../../components/Row'
 import { transparentize } from 'polished'
 import { useBridgeCallback } from '../../hooks/useSwapCallback'
 import Column, { AutoColumn } from '../../components/Column'
@@ -28,6 +28,7 @@ import {
 } from '../../hooks/useApproveCallback'
 import Loader from '../../components/Loader'
 import ProgressSteps from '../../components/ProgressSteps'
+import DownArrow from '../../assets/images/downArrow.png'
 
 const ArrowWrapper = styled.div<{ clickable: boolean }>`
     padding: 2px;
@@ -71,6 +72,18 @@ const SwapCallbackErrorInnerAlertTriangle = styled.div`
     height: 48px;
 `
 
+const ReplaceBridgeSide = styled.img`
+    position: absolute;
+    margin: auto;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 5;
+    width: 30px;
+    height: 30px;
+`
+
 function SwapCallbackError({ error }: { error: string }) {
     return (
         <SwapCallbackErrorInner>
@@ -95,18 +108,18 @@ export const networkData: tNetworkData = {
         tokenList: [
             {
                 src: new Token(
-                  ChainId.MAINNET,
-                  '0x514910771AF9Ca656af840dff83E8264EcF986CA',
-                  18,
-                  'LINK',
-                  'ChainLink Token'
+                    ChainId.MAINNET,
+                    '0x514910771AF9Ca656af840dff83E8264EcF986CA',
+                    18,
+                    'LINK',
+                    'ChainLink Token'
                 ),
                 destToken: new Token(
-                  ChainId.OASISETH_MAIN,
-                  '0xc9BAA8cfdDe8E328787E29b4B078abf2DaDc2055',
-                  18,
-                  'LINK',
-                  'ChainLink Token'
+                    ChainId.OASISETH_MAIN,
+                    '0xc9BAA8cfdDe8E328787E29b4B078abf2DaDc2055',
+                    18,
+                    'LINK',
+                    'ChainLink Token'
                 ),
                 destChain: ChainId.OASISETH_MAIN
             },
@@ -181,18 +194,18 @@ export const networkData: tNetworkData = {
         tokenList: [
             {
                 src: new Token(
-                  ChainId.OASISETH_MAIN,
-                  '0xc9BAA8cfdDe8E328787E29b4B078abf2DaDc2055',
-                  18,
-                  'LINK',
-                  'ChainLink Token'
+                    ChainId.OASISETH_MAIN,
+                    '0xc9BAA8cfdDe8E328787E29b4B078abf2DaDc2055',
+                    18,
+                    'LINK',
+                    'ChainLink Token'
                 ),
                 destToken: new Token(
-                  ChainId.MAINNET,
-                  '0x514910771AF9Ca656af840dff83E8264EcF986CA',
-                  18,
-                  'LINK',
-                  'ChainLink Token'
+                    ChainId.MAINNET,
+                    '0x514910771AF9Ca656af840dff83E8264EcF986CA',
+                    18,
+                    'LINK',
+                    'ChainLink Token'
                 ),
                 destChain: ChainId.MAINNET
             },
@@ -313,18 +326,18 @@ export const networkData: tNetworkData = {
         tokenList: [
             {
                 src: new Token(
-                  ChainId.BSC,
-                  '0xF8A0BF9cF54Bb92F17374d9e9A321E6a111a51bD',
-                  18,
-                  'LINK',
-                  'Binance-Peg ChainLink Token'
+                    ChainId.BSC,
+                    '0xF8A0BF9cF54Bb92F17374d9e9A321E6a111a51bD',
+                    18,
+                    'LINK',
+                    'Binance-Peg ChainLink Token'
                 ),
                 destToken: new Token(
-                  ChainId.OASISETH_MAIN,
-                  '0xc9BAA8cfdDe8E328787E29b4B078abf2DaDc2055',
-                  18,
-                  'LINK',
-                  'ChainLink Token'
+                    ChainId.OASISETH_MAIN,
+                    '0xc9BAA8cfdDe8E328787E29b4B078abf2DaDc2055',
+                    18,
+                    'LINK',
+                    'ChainLink Token'
                 ),
                 destChain: ChainId.OASISETH_MAIN
             },
@@ -388,16 +401,14 @@ export default function Bridge() {
         currencies,
         inputError: swapInputError
     } = useDerivedSwapInfo()
-    const [chainInput, setChainInput] = useState<ChainId>(
-        ChainId.OASISETH_MAIN
-    )
+    const [chainInput, setChainInput] = useState<ChainId>(chainId ? chainId : 1)
     const initialImportList: Token[] = []
-    networkData[ChainId.OASISETH_MAIN].tokenList.forEach((item: any) => {
+    networkData[chainId ? chainId : 1].tokenList.forEach((item: any) => {
         initialImportList.push(item.src)
     })
     const [currencyListInput, setCurrencyListInput] = useState<Token[]>([...initialImportList])
 
-    const [chainOutput, setChainOutput] = useState<ChainId.MAINNET | ChainId.OASISETH_MAIN | ChainId.BSC>()
+    const [chainOutput, setChainOutput] = useState<ChainId>()
     const [currencyInput, setCurrencyInput] = useState<Token>(currencyListInput[0])
     const [currencyOutput, setCurrencyOutput] = useState<Token>()
     const [bridgeRecipient, setBridgeRecipient] = useState('')
@@ -435,8 +446,7 @@ export default function Bridge() {
         [onUserInput, chainInput, transferData, selectedCurrencyBalance]
     )
     const handleMaxInput = useCallback(() => {
-        if(maxAmountInput)
-            handleTypeInput(maxAmountInput?.toExact().toString())
+        if (maxAmountInput) handleTypeInput(maxAmountInput?.toExact().toString())
     }, [maxAmountInput, onUserInput])
 
     const handleOutputSelect = useCallback(outputCurrency => onCurrencySelection(Field.OUTPUT, outputCurrency), [
@@ -460,10 +470,10 @@ export default function Bridge() {
         inputToken: currencyInput,
         inputAmount: tryParseAmount(formattedAmounts[Field.INPUT], currencyInput),
         outputAmount: tryParseAmount(outPutValue.toString(), currencyOutput),
-        fromChainID: (chainInput === 1 ? "Ethereum": chainInput === ChainId.BSC ? "Binance Smart Chain" : "Oasis"),
-        destChainID: (chainOutput === 1 ? "Ethereum": chainOutput === ChainId.BSC ? "Binance Smart Chain" : "Oasis"),
+        fromChainID: chainInput === 1 ? 'Ethereum' : chainInput === ChainId.BSC ? 'Binance Smart Chain' : 'Oasis',
+        destChainID: chainOutput === 1 ? 'Ethereum' : chainOutput === ChainId.BSC ? 'Binance Smart Chain' : 'Oasis',
         destChain: chainOutput,
-        fromChain: chainInput,
+        fromChain: chainInput
     }
     const [approval, approveCallback] = useApproveCallbackFromBridge(bridgeTrade)
     const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
@@ -473,9 +483,9 @@ export default function Bridge() {
         }
     }, [approval, approvalSubmitted])
     const showApproveFlow =
-      (approval === ApprovalState.NOT_APPROVED ||
+        approval === ApprovalState.NOT_APPROVED ||
         approval === ApprovalState.PENDING ||
-        (approvalSubmitted && approval === ApprovalState.APPROVED))
+        (approvalSubmitted && approval === ApprovalState.APPROVED)
 
     const { callback: swapCallback, error: swapCallbackError } = useBridgeCallback(bridgeTrade, bridgeRecipient)
 
@@ -511,8 +521,11 @@ export default function Bridge() {
                     response
                         .json()
                         .then(function(data) {
+                            console.log(currencyInput)
+                            console.log(chainInput)
+                            console.log(data)
                             // console.log(data)
-                            // console.log('shit', currencyOutput.address, chainInput, currencyInput.address, chainOutput)
+                            console.log('shit', currencyOutput.address, chainInput, currencyInput.address, chainOutput)
                             if (chainOutput === ChainId.OASISETH_MAIN)
                                 data =
                                     data[currencyOutput.address.toLowerCase()]['destChains'][chainInput][
@@ -532,6 +545,7 @@ export default function Bridge() {
                                             : 'BNB'
                                     ]
 
+                            console.log(data)
                             setTransferData(data)
                         })
                         .catch(err => {
@@ -550,13 +564,13 @@ export default function Bridge() {
 
     const [bridgeStatus, setBridgeStatus] = useState('ok')
     const checkTransactionStatus = (value: number) => {
-        if(transferData) {
+        if (transferData) {
             //check the amount with balance
             // console.log(value, selectedCurrencyBalance, maxAmountInput, selectedCurrencyBalance ? parseFloat(selectedCurrencyBalance?.toSignificant(6)) : 0)
-            if (selectedCurrencyBalance !== undefined && value > parseFloat(selectedCurrencyBalance.toExact())) {
-                setBridgeStatus('notBalance')
-                // setOutPutValue(0)
-            } else if (value > transferData.MaximumSwap) {
+            // if (selectedCurrencyBalance !== undefined && value > parseFloat(selectedCurrencyBalance.toExact())) {
+            //     setBridgeStatus('notBalance')
+            //     // setOutPutValue(0)
+            if (value > transferData.MaximumSwap) {
                 setBridgeStatus('maxLimit')
                 // setOutPutValue(0)
             } else if (value < transferData.MinimumSwap) {
@@ -579,7 +593,7 @@ export default function Bridge() {
         }
     }
 
-    const switchNetwork = (chainIDRequest: ChainId.MAINNET | ChainId.OASISETH_MAIN | ChainId.BSC) => {
+    const switchNetwork = (chainIDRequest: ChainId) => {
         if (window.ethereum) {
             try {
                 const data = [
@@ -597,58 +611,59 @@ export default function Bridge() {
 
                 try {
                     // console.log(data)
-                    handleTypeInput("")
-                    window.ethereum.request({
-                        method: 'wallet_addEthereumChain',
-                        params: data
-                    }).catch(()=>{
-                        // console.log('shit')
-
-                    })
-                    window.ethereum.request({
-                        method: 'wallet_switchEthereumChain',
-                        params: [{ chainId: networkData[chainIDRequest].chainHex }]
-                    }).catch(()=>{
-                        // console.log('shit')
-
-                    })
-                } catch (addError) {
-                }
+                    handleTypeInput('')
+                    window.ethereum
+                        .request({
+                            method: 'wallet_addEthereumChain',
+                            params: data
+                        })
+                        .catch(() => {
+                            // console.log('shit')
+                        })
+                    window.ethereum
+                        .request({
+                            method: 'wallet_switchEthereumChain',
+                            params: [{ chainId: networkData[chainIDRequest].chainHex }]
+                        })
+                        .catch(() => {
+                            // console.log('shit')
+                        })
+                } catch (addError) {}
             } catch (e) {
                 // console.log('shit')
-
             }
         }
     }
     useEffect(() => {
-        if (chainInput !== undefined ) {
-            // console.log(chainId, selectedChainId)
-            if (chainInput !== undefined && chainId !== chainInput) {
-                if(typeof chainInput === 'string')
-                    switchNetwork(chainInput)
-                else if(chainId){
-                    setChainInput(chainId)
-                }
+        // console.log(chainId, selectedChainId)
+        console.log(chainId)
+        if (chainInput !== undefined && chainId !== chainInput) {
+            // if (typeof chainInput === 'string') switchNetwork(chainInput)
+            // else if (chainId) {
+            //     console.log('here')
 
-                let inputTokenList: Token[] = []
-                for (const item of networkData[chainId && typeof chainInput !== 'string' ? chainId:chainInput].tokenList) {
-                    inputTokenList.push(item.src)
-                }
-                setCurrencyListInput(inputTokenList)
-                const tokenIndex = 0
-                const importData = networkData[chainId && typeof chainInput !== 'string' ? chainId :chainInput].tokenList[tokenIndex]
-                // console.log(importData)
-                setChainOutput(importData.destChain)
-                setCurrencyOutput(importData.destToken)
-                // console.log(chainId, chainInput,chainOutput,inputTokenList,importData)
+            //     setChainInput(chainId)
+            // }
+            switchNetwork(chainInput)
+
+            let inputTokenList: Token[] = []
+            for (const item of networkData[chainInput].tokenList) {
+                inputTokenList.push(item.src)
             }
+            setCurrencyListInput(inputTokenList)
+            const tokenIndex = 0
+            const importData =
+                networkData[chainId && typeof chainInput !== 'string' ? chainId : chainInput].tokenList[tokenIndex]
+            // console.log(importData)
+            setChainOutput(importData.destChain)
+            setCurrencyOutput(importData.destToken)
+            // console.log(chainId, chainInput,chainOutput,inputTokenList,importData)
         }
-
     }, [chainInput])
 
     useEffect(() => {
-        if(transferData){
-            if(transferData.type === "UNDERLYINGV2"){
+        if (transferData) {
+            if (transferData.type === 'UNDERLYINGV2') {
                 setBridgeType('UNDERLYINGV2')
                 if (account) {
                     setBridgeRecipient(account)
@@ -667,18 +682,20 @@ export default function Bridge() {
                     setBridgeRecipient(transferData.DepositAddress)
                 }
             }
-
         }
     }, [chainInput, currencyInput, account, transferData])
 
     useEffect(() => {
-        // console.log(currencyInput)
         const tokenIndex = currencyListInput.indexOf(currencyInput)
+
+        // console.log(currencyListInput, currencyInput, networkData, chainInput, tokenIndex)
         const importData = networkData[chainInput].tokenList[tokenIndex]
         // console.log(importData)
-        setChainOutput(importData.destChain)
-        setCurrencyOutput(importData.destToken)
-    }, [currencyInput])
+        if (importData) {
+            setChainOutput(importData.destChain)
+            setCurrencyOutput(importData.destToken)
+        }
+    }, [currencyInput, currencyListInput])
 
     useEffect(() => {
         setCurrencyInput(currencyListInput[0])
@@ -701,25 +718,24 @@ export default function Bridge() {
         // console.log(currencyInput)
         if (swapCallback) {
             swapCallback()
-              .then(hash => {
-                  setBridgeState({
-                      attemptingTxn: false,
-                      tradeToConfirm,
-                      showConfirm,
-                      swapErrorMessage: undefined,
-                      txHash: hash
-                  })
-              })
-              .catch(error => {
-                  setBridgeState({
-                      attemptingTxn: false,
-                      tradeToConfirm,
-                      showConfirm,
-                      swapErrorMessage: error.message,
-                      txHash: undefined
-                  })
-              })
-
+                .then(hash => {
+                    setBridgeState({
+                        attemptingTxn: false,
+                        tradeToConfirm,
+                        showConfirm,
+                        swapErrorMessage: undefined,
+                        txHash: hash
+                    })
+                })
+                .catch(error => {
+                    setBridgeState({
+                        attemptingTxn: false,
+                        tradeToConfirm,
+                        showConfirm,
+                        swapErrorMessage: error.message,
+                        txHash: undefined
+                    })
+                })
         }
         // if (!currencyInput.address) {
         //     //native token
@@ -741,6 +757,21 @@ export default function Bridge() {
             onUserInput(Field.INPUT, '')
         }
     }, [attemptingTxn, onUserInput, swapErrorMessage, tradeToConfirm, txHash])
+
+    const replaceBridgeSides = () => {
+        const newInputChain = chainOutput
+        const newOutputChain = chainInput
+        const newCurrencyInpput = currencyOutput
+        const newCurrencyOutput = currencyOutput
+
+        if (newInputChain) {
+            setChainInput(newInputChain)
+        }
+
+        if (newCurrencyInpput) {
+            setCurrencyInput(newCurrencyInpput)
+        }
+    }
 
     return (
         <>
@@ -779,20 +810,19 @@ export default function Bridge() {
                             cornerRadiusBottomNone={isExpertMode ? false : true}
                         />
                         <AutoColumn justify="space-between">
-                            <AutoRow justify={isExpertMode ? 'space-between' : 'center'} style={{ padding: '0 1rem' }}>
-                                <ArrowWrapper clickable>
-                                    <ArrowDown
-                                        size="16"
-                                        onClick={() => {
-                                            console.log('here')
-                                        }}
-                                        color={'#fff'}
-                                    />
-                                </ArrowWrapper>
+                            <AutoRow
+                                justify={isExpertMode ? 'space-between' : 'center'}
+                                style={{ padding: '0 1rem', position: 'relative' }}
+                            >
+                                <ReplaceBridgeSide
+                                    src={DownArrow}
+                                    alt="replace"
+                                    onClick={replaceBridgeSides}
+                                ></ReplaceBridgeSide>
                             </AutoRow>
                         </AutoColumn>
                         <BridgeInputPart
-                            value={outPutValue ? outPutValue.toString() : "0"}
+                            value={outPutValue ? outPutValue.toString() : '0'}
                             onUserInput={() => {
                                 // console.log('outPut')
                             }}
@@ -811,75 +841,84 @@ export default function Bridge() {
                         />
                     </AutoColumn>
                     <BottomGrouping style={{ paddingBottom: '1rem' }}>
-                        {account && showApproveFlow? <ButtonConfirmed
-                          onClick={approveCallback}
-                          disabled={approval !== ApprovalState.NOT_APPROVED || approvalSubmitted}
-                          width="48%"
-                          altDisabledStyle={approval === ApprovalState.PENDING} // show solid button while waiting
-                          confirmed={approval === ApprovalState.APPROVED}
-                        >
-                            {approval === ApprovalState.PENDING ? (
-                              <AutoRow gap="6px" justify="center">
-                                  Approving <Loader stroke="white" />
-                              </AutoRow>
-                            ) : approvalSubmitted && approval === ApprovalState.APPROVED ? (
-                              'Approved'
-                            ) : (
-                              'Approve ' + currencyInput.getSymbol(chainId)
-                            )}
-                        </ButtonConfirmed>: null}
-                        {showApproveFlow && (
-                          <Column style={{ marginTop: '1rem' }}>
-                              <ProgressSteps steps={[approval === ApprovalState.APPROVED]} />
-                          </Column>
-                        )}
-                        {!account ? (
-                            <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
-                        ) : formattedAmounts[Field.INPUT] !== '' && bridgeStatus === 'ok' ? (
-                            <>
+                        <RowBetween>
+                            {account && showApproveFlow ? (
                                 <ButtonConfirmed
-                                    onClick={() => {
-                                        setBridgeState({
-                                            tradeToConfirm: bridgeTrade,
-                                            attemptingTxn: false,
-                                            swapErrorMessage: undefined,
-                                            showConfirm: true,
-                                            txHash: undefined
-                                        })
-                                    }}
-                                    width="100%"
+                                    onClick={approveCallback}
+                                    disabled={approval !== ApprovalState.NOT_APPROVED || approvalSubmitted}
+                                    width="48%"
+                                    altDisabledStyle={approval === ApprovalState.PENDING} // show solid button while waiting
+                                    confirmed={approval === ApprovalState.APPROVED}
+                                    style={{ flexShrink: 0 }}
                                 >
-                                    Bridge
+                                    {approval === ApprovalState.PENDING ? (
+                                        <AutoRow gap="6px" justify="center">
+                                            Approving <Loader stroke="white" />
+                                        </AutoRow>
+                                    ) : approvalSubmitted && approval === ApprovalState.APPROVED ? (
+                                        'Approved'
+                                    ) : (
+                                        'Approve ' + currencyInput.getSymbol(chainId)
+                                    )}
                                 </ButtonConfirmed>
-                            </>
-                        ) : (
-                            <ButtonError
-                                onClick={() => {
-                                    // if (isExpertMode) {
-                                    //     handleBridge()
-                                    // } else {
-                                    //     setBridgeState({
-                                    //         tradeToConfirm: bridgeTrade,
-                                    //         attemptingTxn: false,
-                                    //         swapErrorMessage: undefined,
-                                    //         showConfirm: true,
-                                    //         txHash: undefined
-                                    //     })
-                                    // }
-                                }}
-                                id="swap-button"
-                            >
-                                <Text fontSize={20} fontWeight={500}>
-                                    {!transferData ? "Loading" :
-                                      bridgeStatus === 'notBalance'
-                                        ? 'Not Enough Balance'
-                                        : bridgeStatus === 'maxLimit'
-                                        ? `Transfer is not supported for amount more than ${transferData.MaximumSwap}`
-                                        : bridgeStatus === 'minLimit'
-                                        ? `Transfer is not supported for amount less than ${transferData.MinimumSwap}`
-                                        : 'Enter an amount'}
-                                </Text>
-                            </ButtonError>
+                            ) : null}
+
+                            {!account ? (
+                                <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
+                            ) : formattedAmounts[Field.INPUT] !== '' && bridgeStatus === 'ok' ? (
+                                <>
+                                    <ButtonConfirmed
+                                        onClick={() => {
+                                            setBridgeState({
+                                                tradeToConfirm: bridgeTrade,
+                                                attemptingTxn: false,
+                                                swapErrorMessage: undefined,
+                                                showConfirm: true,
+                                                txHash: undefined
+                                            })
+                                        }}
+                                        width={showApproveFlow ? '48%' : '100%'}
+                                        style={{ maxWidth: showApproveFlow ? '48%' : '100%', flexShrink: 0 }}
+                                    >
+                                        Bridge
+                                    </ButtonConfirmed>
+                                </>
+                            ) : (
+                                <ButtonError
+                                    onClick={() => {
+                                        // if (isExpertMode) {
+                                        //     handleBridge()
+                                        // } else {
+                                        //     setBridgeState({
+                                        //         tradeToConfirm: bridgeTrade,
+                                        //         attemptingTxn: false,
+                                        //         swapErrorMessage: undefined,
+                                        //         showConfirm: true,
+                                        //         txHash: undefined
+                                        //     })
+                                        // }
+                                    }}
+                                    id="swap-button"
+                                >
+                                    <Text fontSize={20} fontWeight={500}>
+                                        {!transferData
+                                            ? 'Loading'
+                                            : bridgeStatus === 'notBalance'
+                                            ? 'Not Enough Balance'
+                                            : bridgeStatus === 'maxLimit'
+                                            ? `Transfer is not supported for amount more than ${transferData.MaximumSwap}`
+                                            : bridgeStatus === 'minLimit'
+                                            ? `Transfer is not supported for amount less than ${transferData.MinimumSwap}`
+                                            : 'Enter an amount'}
+                                    </Text>
+                                </ButtonError>
+                            )}
+                        </RowBetween>
+
+                        {showApproveFlow && (
+                            <Column style={{ marginTop: '1rem' }}>
+                                <ProgressSteps steps={[approval === ApprovalState.APPROVED]} />
+                            </Column>
                         )}
 
                         {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
