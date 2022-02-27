@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { darken } from 'polished'
 
 export const StyledMenuButton = styled.button`
   position: relative;
@@ -15,8 +16,8 @@ export const StyledMenuButton = styled.button`
   :hover,
   :focus {
     cursor: pointer;
-    outline: 1px solid #b0fff2;;
-    background-color: ${({ theme }) => theme.bg6};
+    // outline: 1px solid #b0fff2;;
+    background-color: ${({ theme }) => darken(0.1, theme.bg6)};
     // border: 1px solid #b0fff2;
   }
   /*
