@@ -58,13 +58,13 @@ import { KashiProvider } from 'kashi/context'
 import Earn from './Earn'
 import Zap from './Zap'
 import Bridge from './Bridge'
+import Footer from 'components/Footer'
 
 const AppWrapper = styled.div`
     display: flex;
     flex-flow: column;
     align-items: flex-start;
     overflow-x: hidden;
-    height: 100vh;
 `
 
 const HeaderWrapper = styled.div`
@@ -72,6 +72,7 @@ const HeaderWrapper = styled.div`
     width: 100%;
     justify-content: space-between;
 `
+const FooterWrapper = styled(HeaderWrapper)``
 
 const BodyWrapper = styled.div`
     display: flex;
@@ -215,6 +216,9 @@ function App() {
                     </Web3ReactManager>
                     <Marginer />
                 </BodyWrapper>
+                <FooterWrapper>
+                    <Footer />
+                </FooterWrapper>
             </AppWrapper>
         </Suspense>
     )

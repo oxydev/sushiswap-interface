@@ -1,0 +1,88 @@
+{
+    "footerMenu": [
+        {
+            "title": "Community",
+            "items": [
+                {
+                    "name": "Discord",
+                    "link": "gemkeeper.com"
+                },
+                {
+                    "name": "Twitter",
+                    "link": "gemkeeper.com"
+                },
+                {
+                    "name": "Telegram",
+                    "link": "gemkeeper.com"
+                },
+                {
+                    "name": "Reddit",
+                    "link": "gemkeeper.com"
+                }
+            ]
+        },
+        {
+            "title": "Tools",
+            "items": [
+                {
+                    "name": "Analytics",
+                    "link": "gemkeeper.com"
+                },
+                {
+                    "name": "Github",
+                    "link": "gemkeeper.com"
+                },
+                {
+                    "name": "Coingecko",
+                    "link": "gemkeeper.com"
+                },
+                {
+                    "name": "CoinMarketCap",
+                    "link": "gemkeeper.com"
+                }
+            ]
+        },
+        {
+            "title": "Info",
+            "items": [
+                {
+                    "name": "News",
+                    "link": "gemkeeper.com"
+                },
+                {
+                    "name": "Medium",
+                    "link": "gemkeeper.com"
+                },
+                {
+                    "name": "Docs",
+                    "link": "gemkeeper.com"
+                },
+                {
+                    "name": "FAQs",
+                    "link": "gemkeeper.com"
+                }
+            ]
+        },
+        {
+            "title": "Participate",
+            "items": [
+                {
+                    "name": "Vote",
+                    "link": "gemkeeper.com"
+                },
+                {
+                    "name": "Forum",
+                    "link": "gemkeeper.com"
+                },
+                {
+                    "name": "Apply for collab",
+                    "link": "gemkeeper.com"
+                },
+                {
+                    "name": "Apply for token",
+                    "link": "gemkeeper.com"
+                }
+            ]
+        }
+    ]
+}
