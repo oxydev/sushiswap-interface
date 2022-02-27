@@ -13,7 +13,7 @@ import { Colors } from './styled'
 
 //import BentoBackground from '../assets/kashi/bento-background.jpg'
 import BrickWallBackground from '../assets/kashi/brickwall.png'
-import MainBackground from '../assets/images/website_background.png'
+import MainBackground from '../assets/images/website_background_extended.webp'
 
 export * from './components'
 
@@ -248,16 +248,28 @@ export const ThemedGlobalStyle = createGlobalStyle`
 html {
   color: ${({ theme }) => theme.text1};
   /*background-color: ${({ theme }) => theme.bg2};*/
-  background: linear-gradient(to top, #3c74a6 10% , #161459);
-  background-image: url(${MainBackground});
-  background-size: cover;
-  background-repeat: no-repeat;
+  position: relative;
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background: linear-gradient(to top, #3c74a6 10% , #161459);
+        background-image: url(${MainBackground});
+        z-index: -10;
+        background-size: cover;
+        background-repeat: no-repeat;
+    }
+   
 }
 
 body {
   min-height: 100vh;
   background-position: 0 -30vh;
   background-repeat: no-repeat;
+  background-color: #1C383E;
   background-image: ${({ theme }) =>
       `radial-gradient(50% 50% at 50% 50%, ${transparentize(0.9, '#27b0e6')} 0%, ${transparentize(
           1,

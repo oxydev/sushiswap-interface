@@ -8,13 +8,25 @@ import Twitter from '../../assets/images/twitter.svg'
 import Facebook from '../../assets/images/facebook.svg'
 import Instagram from '../../assets/images/instagram.svg'
 import Linkedin from '../../assets/images/linkedin.svg'
+import { transparentize } from 'polished'
 
 const FooterFrame = styled.div`
     width: 100%;
-    background: linear-gradient(180deg, #1d4941 0%, #1c383e 100%);
-    opcacity: 0.7;
     padding: 52px 6vw 28px;
     margin-top: 182px;
+    position: relative;
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background: linear-gradient(180deg, #1d4941 0%, #1c383e 100%);
+        opacity: 0.7;
+        z-index: -1;
+    }
 `
 
 const FooterContent = styled.div`
