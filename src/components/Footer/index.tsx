@@ -27,6 +27,11 @@ const FooterFrame = styled.div`
         opacity: 0.7;
         z-index: -1;
     }
+
+    ${({ theme }) => theme.mediaWidth.upToSmall`
+        padding: 52px 7vw 28px;
+        padding-bottom: 120px;
+    `};
 `
 
 const FooterContent = styled.div`
@@ -35,12 +40,37 @@ const FooterContent = styled.div`
     padding-bottom: 51px;
     border-bottom: 1px solid #305a5d;
     justify-content: space-between;
+    ${({ theme }) => theme.mediaWidth.upToLarge`
+        flex-direction: column;
+    `};
 `
 const FooterLogoPart = styled.div`
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
     justify-content: center;
+
+    ${({ theme }) => theme.mediaWidth.upToSmall`
+            align-items: flex-start;
+        `};
+
+    & > .CopyRight {
+        text-align: center;
+        ${({ theme }) => theme.mediaWidth.upToLarge`
+            display: none;
+        `};
+    }
+`
+const FooterLogoPartMobile = styled(FooterLogoPart)`
+    ${({ theme }) => theme.mediaWidth.upToSmall`
+    align-items: center;
+        `};
+    & > .CopyRight {
+        display: none;
+        ${({ theme }) => theme.mediaWidth.upToLarge`
+            display: block;
+    `};
+    }
 `
 
 const FooterLogo = styled.div`
@@ -63,6 +93,19 @@ const FooterSocial = styled.div`
     padding-bottom: 12px;
     border-bottom: 1px solid #62ba89;
     margin-bottom: 16px;
+
+    ${({ theme }) => theme.mediaWidth.upToLarge`
+        display: none;
+        width: fit-content;
+        margin: 0 auto 16px;
+    `};
+`
+
+const FooterSocialMobile = styled(FooterSocial)`
+    display: none;
+    ${({ theme }) => theme.mediaWidth.upToLarge`
+        display: flex;
+    `};
 `
 
 const FooterSocialLink = styled.a<{ icon: any }>`
@@ -80,10 +123,27 @@ const FooterSocialLink = styled.a<{ icon: any }>`
 const FooterMenuPart = styled.div`
     display: flex;
     justify-content: center;
+    ${({ theme }) => theme.mediaWidth.upToMedium`
+        flex-wrap: wrap;
+        justify-content: center;;
+        border-bottom:1px solid #305A5D;
+        margin-bottom:24px;
+    `}
+
+    ${({ theme }) => theme.mediaWidth.upToSmall`
+        justify-content: flex-start;
+    `}
 `
 
 const FooterMenu = styled.div`
     margin: 0 60px;
+
+    ${({ theme }) => theme.mediaWidth.upToMedium`
+        margin: 0 30px 0 0;
+        & > .MenuTitle {
+            font-size: 16px;
+        }
+    `}
 `
 
 const FooterList = styled.div`
@@ -97,6 +157,13 @@ const FooterList = styled.div`
         margin: 8px 0;
         font-weight: 400;
     }
+
+    ${({ theme }) => theme.mediaWidth.upToMedium`
+    margin-bottom: 35px;
+    & > a {
+        font-size: 14px;
+    }
+    `}
 `
 
 const Audited = styled.div`
@@ -112,7 +179,7 @@ const Audited = styled.div`
 export default function Footer() {
     const menuElements = MenuData.footerMenu.map(item => (
         <FooterMenu key={item.title}>
-            <Text fontSize={20} style={{ marginBottom: '24px' }}>
+            <Text className="MenuTitle" fontSize={20} style={{ marginBottom: '24px' }}>
                 {item.title}
             </Text>
             <FooterList>
@@ -140,11 +207,22 @@ export default function Footer() {
                         <FooterSocialLink icon={Instagram}></FooterSocialLink>
                         <FooterSocialLink icon={Linkedin}></FooterSocialLink>
                     </FooterSocial>
-                    <Text fontSize={14} fontWeight={400} color={'#40787C'}>
+                    <Text className="CopyRight" fontSize={14} fontWeight={400} color={'#40787C'}>
                         Copyright © 2022 SpookySwap
                     </Text>
                 </FooterLogoPart>
                 <FooterMenuPart>{menuElements}</FooterMenuPart>
+                <FooterLogoPartMobile>
+                    <FooterSocialMobile>
+                        <FooterSocialLink icon={Twitter}></FooterSocialLink>
+                        <FooterSocialLink icon={Facebook}></FooterSocialLink>
+                        <FooterSocialLink icon={Instagram}></FooterSocialLink>
+                        <FooterSocialLink icon={Linkedin}></FooterSocialLink>
+                    </FooterSocialMobile>
+                    <Text className="CopyRight" fontSize={14} fontWeight={400} color={'#40787C'}>
+                        Copyright © 2022 SpookySwap
+                    </Text>
+                </FooterLogoPartMobile>
             </FooterContent>
             <Audited>
                 <Text fontSize={20} fontWeight={400} color={'#fff'}>
