@@ -9,6 +9,7 @@ import Facebook from '../../assets/images/facebook.svg'
 import Instagram from '../../assets/images/instagram.svg'
 import Linkedin from '../../assets/images/linkedin.svg'
 import { transparentize } from 'polished'
+import PeckShieldLogo from '../../assets/images/PeckShieldLogo.svg'
 
 const FooterFrame = styled.div`
     width: 100%;
@@ -174,6 +175,11 @@ const Audited = styled.div`
     background-color: #305a5d;
     width: fit-content;
     margin: 25px auto 0;
+
+    & img {
+        height: 30px;
+        display: inline;
+    }
 `
 
 export default function Footer() {
@@ -226,7 +232,7 @@ export default function Footer() {
             </FooterContent>
             <Audited>
                 <Text fontSize={20} fontWeight={400} color={'#fff'}>
-                    Audited by Gemkeeper
+                    Audited by <img src={PeckShieldLogo} alt="PeckShieldLogo" />
                 </Text>
             </Audited>
         </FooterFrame>
