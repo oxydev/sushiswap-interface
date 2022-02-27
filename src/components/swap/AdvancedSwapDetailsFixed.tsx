@@ -34,7 +34,7 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade | undefined; al
             <AutoColumn style={{ padding: '0 16px' }}>
                 <RowBetween>
                     <RowFixed>
-                        <TYPE.black fontSize={14} fontWeight={400} color={'#7b76a0'}>
+                        <TYPE.black fontSize={14} fontWeight={400} color={theme.text6}>
                             {isExactIn ? 'Min Received' : 'Max Sold'}
                         </TYPE.black>
                     </RowFixed>
@@ -55,7 +55,7 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade | undefined; al
                 </RowBetween>
                 <RowBetween>
                     <RowFixed>
-                        <TYPE.black fontSize={14} fontWeight={400} color={'#7b76a0'}>
+                        <TYPE.black fontSize={14} fontWeight={400} color={theme.text6}>
                             Price Impact
                         </TYPE.black>
                     </RowFixed>
@@ -67,12 +67,12 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade | undefined; al
 
                 <RowBetween>
                     <RowFixed>
-                        <TYPE.black fontSize={14} fontWeight={400} color={'#7b76a0'}>
+                        <TYPE.black fontSize={14} fontWeight={400} color={theme.text6}>
                             Fee
                         </TYPE.black>
                     </RowFixed>
                     <RowFixed>
-                        <TYPE.black fontSize={14} color={'#7b76a0'}>
+                        <TYPE.black fontSize={14} color={theme.text6}>
                             {realizedLPFee
                                 ? realizedLPFee
                                     ? `${realizedLPFee.toSignificant(4)} ${trade?.inputAmount.currency.getSymbol(

@@ -60,28 +60,32 @@ const Web3StatusError = styled(Web3StatusGeneric)`
 `
 
 const Web3StatusConnect = styled(Web3StatusGeneric)<{ faded?: boolean }>`
-    background-color: ${({ theme }) => theme.primary4};
+    background-color: ${({ theme }) => theme.primary7};
     border: none;
-    color: ${({ theme }) => theme.primaryText1};
+    // color: ${({ theme }) => theme.primaryText1};
+    color: #fff;
     font-weight: 500;
 
     :hover,
     :focus {
-        border: 1px solid ${({ theme }) => darken(0.05, theme.primary4)};
-        color: ${({ theme }) => theme.primaryText1};
+        border: 1px solid ${({ theme }) => darken(0.05, theme.primary7)};
+        // color: ${({ theme }) => theme.primaryText1};
+        color: #fff;
     }
 
     ${({ faded }) =>
         faded &&
         css`
-            background-color: ${({ theme }) => theme.primary5};
-            border: 1px solid ${({ theme }) => theme.primary5};
-            color: ${({ theme }) => theme.primaryText1};
+            background-color: ${({ theme }) => theme.primary7};
+            border: 1px solid ${({ theme }) => theme.primary7};
+            // color: ${({ theme }) => theme.primaryText1};
+            color: #fff;
 
             :hover,
             :focus {
-                border: 1px solid ${({ theme }) => darken(0.05, theme.primary4)};
-                color: ${({ theme }) => darken(0.05, theme.primaryText1)};
+                border: 1px solid ${({ theme }) => darken(0.05, theme.primary7)};
+                // color: ${({ theme }) => darken(0.05, theme.primaryText1)};
+                color: #fff;
             }
         `}
 `
@@ -219,7 +223,7 @@ function Web3StatusInner() {
     } else {
         return (
             <Web3StatusConnect id="connect-wallet" onClick={toggleWalletModal} faded={!account}>
-                <Text>{t('Connect to a wallet')}</Text>
+                <Text color={'#fff'}>{t('Connect to a wallet')}</Text>
             </Web3StatusConnect>
         )
     }
