@@ -47,7 +47,7 @@ const LabelRow = styled.div`
     color: ${({ theme }) => theme.text1};
     font-size: 0.75rem;
     line-height: 1rem;
-    padding: 0.75rem 1rem 0 1rem;
+    padding: 1.5rem 1.5rem 0;
     span:hover {
         cursor: pointer;
         color: ${({ theme }) => darken(0.2, theme.text2)};
@@ -57,7 +57,7 @@ const LabelRow = styled.div`
 const InputRow = styled.div<{ selected: boolean }>`
     ${({ theme }) => theme.flexRowNoWrap}
     align-items: center;
-    padding: ${({ selected }) => (selected ? '0.75rem 0.5rem 0.75rem 1rem' : '0.75rem 0.75rem 0.75rem 1rem')};
+    padding: 1.5rem;
     display: flex;
 
     @media (max-width: 720px) {
@@ -71,6 +71,7 @@ const InputRow = styled.div<{ selected: boolean }>`
 const InputButtonContainer = styled.div`
 
     display: flex;
+    align-items: flex-start;
 
     @media (max-width: 720px) {
         margin-top: 20px;
@@ -93,10 +94,11 @@ const StyledBalanceMax = styled.button`
     border: 1px solid ${({ theme }) => theme.primary5};
     border-radius: ${({ theme }) => theme.borderRadius};
     font-size: 0.875rem;
+    margin-top: 0.5rem;
 
     font-weight: 500;
     cursor: pointer;
-    margin-right: 0.5rem;
+    margin-right: 2.5rem;
     color: ${({ theme }) => theme.primaryText1};
     :hover {
         border: 1px solid ${({ theme }) => theme.primary1};
@@ -113,7 +115,7 @@ const StyledBalanceMax = styled.button`
 
 const CurrencySelect = styled.button<{ selected: boolean }>`
     align-items: center;
-    height: 2.2rem;
+    min-height: 2.7rem;
     font-size: 20px;
     font-weight: 500;
     background-color: ${({ selected, theme }) => (selected ? theme.bg1 : '#3da555')};
@@ -124,7 +126,7 @@ const CurrencySelect = styled.button<{ selected: boolean }>`
     cursor: pointer;
     user-select: none;
     border: none;
-    padding: 0 0.5rem;
+    padding: 0.5rem;
 
     :focus,
     :hover {
@@ -137,8 +139,8 @@ const ChainSelect = styled(CurrencySelect)<{ selected: boolean }>``
 
 const Aligner = styled.span`
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    align-items: flex-start;
+    justify-content: flex-start;
 `
 
 const StyledTokenName = styled.span<{ active?: boolean }>`
@@ -149,7 +151,7 @@ const StyledTokenName = styled.span<{ active?: boolean }>`
 
 const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
     margin: 0 0.25rem 0 0.5rem;
-    height: 35%;
+    height: 24px;
 
     path {
         stroke: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
@@ -232,7 +234,7 @@ export default function BridgeInputPart({
                 >
                     <LabelRow>
                         <RowBetween>
-                            <TYPE.body color={'#fff'} fontWeight={500} fontSize={14}>
+                            <TYPE.body color={'#fff'} fontWeight={500} fontSize={16}>
                                 {label}
                             </TYPE.body>
                             {account && (
@@ -240,7 +242,7 @@ export default function BridgeInputPart({
                                     onClick={onMax}
                                     color={'#fff'}
                                     fontWeight={500}
-                                    fontSize={14}
+                                    fontSize={16}
                                     style={{ display: 'inline', cursor: 'pointer' }}
                                 >
                                     {!hideBalance && !!currency && selectedCurrencyBalance
@@ -257,6 +259,7 @@ export default function BridgeInputPart({
                         {!hideInput && (
                             <>
                                 <NumericalInput
+                                    fontSize="20px"
                                     className="token-amount-input"
                                     value={value}
                                     disabled={disableInput}
@@ -273,7 +276,7 @@ export default function BridgeInputPart({
                             <CurrencySelect
                                 selected={!!currency}
                                 className="open-currency-select-button"
-                                style={{ marginRight: '10px' }}
+                                style={{ marginRight: '50px', width: '130px' }}
                                 onClick={() => {
                                     if (!disableCurrencySelect) {
                                         setModalOpen(true)
@@ -303,6 +306,7 @@ export default function BridgeInputPart({
                                         <StyledTokenName
                                             className="token-symbol-container"
                                             active={Boolean(currency && currency.symbol)}
+                                            style={{ fontSize: '16px', textAlign: 'left' }}
                                         >
                                             {(currency && currency.symbol && currency.symbol.length > 20
                                                 ? currency.symbol.slice(0, 4) +
@@ -325,12 +329,17 @@ export default function BridgeInputPart({
                                         setChainModalOpen(true)
                                     }
                                 }}
+                                style={{ width: '150px' }}
                             >
                                 <Aligner>
                                     {chain !== undefined ? (
                                         <>
                                             <CurrencyLogo chain={chain} size={'24px'} />
-                                            <StyledTokenName className="token-symbol-container" active={Boolean(chain)}>
+                                            <StyledTokenName
+                                                style={{ fontSize: '16px', textAlign: 'left' }}
+                                                className="token-symbol-container"
+                                                active={Boolean(chain)}
+                                            >
                                                 {networkData[chain].chainName}
                                             </StyledTokenName>
                                         </>
