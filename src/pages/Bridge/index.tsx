@@ -483,10 +483,10 @@ export default function Bridge() {
             setApprovalSubmitted(true)
         }
     }, [approval, approvalSubmitted])
-    const showApproveFlow =
+    const showApproveFlow = bridgeTrade.type === "UNDERLYINGV2" && (
         approval === ApprovalState.NOT_APPROVED ||
         approval === ApprovalState.PENDING ||
-        (approvalSubmitted && approval === ApprovalState.APPROVED)
+        (approvalSubmitted && approval === ApprovalState.APPROVED))
 
     const { callback: swapCallback, error: swapCallbackError } = useBridgeCallback(bridgeTrade, bridgeRecipient)
 
@@ -522,11 +522,11 @@ export default function Bridge() {
                     response
                         .json()
                         .then(function(data) {
-                            console.log(currencyInput)
-                            console.log(chainInput)
-                            console.log(data)
+                            // console.log(currencyInput)
+                            // console.log(chainInput)
                             // console.log(data)
-                            console.log('shit', currencyOutput.address, chainInput, currencyInput.address, chainOutput)
+                            // // console.log(data)
+                            // console.log('shit', currencyOutput.address, chainInput, currencyInput.address, chainOutput)
                             if (chainOutput === ChainId.OASISETH_MAIN)
                                 data =
                                     data[currencyOutput.address.toLowerCase()]['destChains'][chainInput][
@@ -546,7 +546,7 @@ export default function Bridge() {
                                             : 'BNB'
                                     ]
 
-                            console.log(data)
+                            // console.log(data)
                             setTransferData(data)
                         })
                         .catch(err => {
@@ -637,7 +637,7 @@ export default function Bridge() {
     }
     useEffect(() => {
         // console.log(chainId, selectedChainId)
-        console.log(chainId)
+        // console.log(chainId)
         if (chainInput !== undefined && chainId !== chainInput) {
             // if (typeof chainInput === 'string') switchNetwork(chainInput)
             // else if (chainId) {
@@ -907,9 +907,9 @@ export default function Bridge() {
                                             : bridgeStatus === 'notBalance'
                                             ? 'Not Enough Balance'
                                             : bridgeStatus === 'maxLimit'
-                                            ? `Transfer is not supported for amount more than ${transferData.MaximumSwap}`
+                                            ? `Exceeds Max Limit`
                                             : bridgeStatus === 'minLimit'
-                                            ? `Transfer is not supported for amount less than ${transferData.MinimumSwap}`
+                                            ? `Exceeds Min Limit`
                                             : 'Enter an amount'}
                                     </Text>
                                 </ButtonError>
