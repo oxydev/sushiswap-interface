@@ -204,7 +204,7 @@ export default function Footer() {
                     <FooterLogo>
                         <img src={Logo} alt="GemKeeper" />
                         <Text fontSize={24} fontWeight={700} color={'#fff'}>
-                            gemkeeper
+                            GemKeeper
                         </Text>
                     </FooterLogo>
                     <FooterSocial>
@@ -214,7 +214,7 @@ export default function Footer() {
                         <FooterSocialLink icon={Linkedin}></FooterSocialLink>
                     </FooterSocial>
                     <Text className="CopyRight" fontSize={14} fontWeight={400} color={'#40787C'}>
-                        Copyright © 2022 SpookySwap
+                        Copyright © 2022 GemKeeper Finance
                     </Text>
                 </FooterLogoPart>
                 <FooterMenuPart>{menuElements}</FooterMenuPart>
@@ -226,7 +226,7 @@ export default function Footer() {
                         <FooterSocialLink icon={Linkedin}></FooterSocialLink>
                     </FooterSocialMobile>
                     <Text className="CopyRight" fontSize={14} fontWeight={400} color={'#40787C'}>
-                        Copyright © 2022 SpookySwap
+                        Copyright © 2022 GemKeeper Finance
                     </Text>
                 </FooterLogoPartMobile>
             </FooterContent>
