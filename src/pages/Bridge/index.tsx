@@ -855,7 +855,7 @@ export default function Bridge() {
                                     width="48%"
                                     altDisabledStyle={approval === ApprovalState.PENDING} // show solid button while waiting
                                     confirmed={approval === ApprovalState.APPROVED}
-                                    style={{ flexShrink: 0 }}
+                                    style={{ flexShrink: 0, alignSelf: 'stretch' }}
                                 >
                                     {approval === ApprovalState.PENDING ? (
                                         <AutoRow gap="6px" justify="center">
@@ -907,6 +907,7 @@ export default function Bridge() {
                                     }}
                                     disabled={true}
                                     id="swap-button"
+                                    width={showApproveFlow ? '48%' : '100%'}
                                 >
                                     <Text fontSize={20} fontWeight={500}>
                                         {!transferData
