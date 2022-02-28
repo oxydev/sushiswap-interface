@@ -69,7 +69,10 @@ export const MenuItem = styled(RowBetween)`
     cursor: ${({ disabled }) => !disabled && 'pointer'};
     pointer-events: ${({ disabled }) => disabled && 'none'};
     :hover {
-        background-color: ${({ theme, disabled }) => !disabled && theme.bg2};
+        background-color: ${({ theme, disabled }) => !disabled && theme.bg8};
+        & .CurrencySubtitle {
+            color: #010326;
+        }
     }
     opacity: ${({ disabled, selected }) => (disabled || selected ? 0.5 : 1)};
 `
@@ -121,7 +124,7 @@ export const LPMenuItem = styled(RowBetween)`
     cursor: ${({ disabled }) => !disabled && 'pointer'};
     pointer-events: ${({ disabled }) => disabled && 'none'};
     :hover {
-        background-color: ${({ theme, disabled }) => !disabled && theme.bg2};
+        background-color: ${({ theme, disabled }) => !disabled && theme.bg8};
     }
     opacity: ${({ disabled, selected }) => (disabled || selected ? 0.5 : 1)};
 `
