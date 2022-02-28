@@ -10,6 +10,7 @@ import Instagram from '../../assets/images/instagram.svg'
 import Linkedin from '../../assets/images/linkedin.svg'
 import { transparentize } from 'polished'
 import PeckShieldLogo from '../../assets/images/PeckShieldLogo.svg'
+import { ExternalLink } from 'theme'
 
 const FooterFrame = styled.div`
     width: 100%;
@@ -230,11 +231,16 @@ export default function Footer() {
                     </Text>
                 </FooterLogoPartMobile>
             </FooterContent>
-            <Audited>
-                <Text fontSize={20} fontWeight={400} color={'#fff'}>
-                    Audited by <img src={PeckShieldLogo} alt="PeckShieldLogo" />
-                </Text>
-            </Audited>
+            <ExternalLink
+                style={{ textDecoration: 'none' }}
+                href="https://github.com/GemKeeperDEV/GemKeeperFinance/blob/main/PeckShield-Audit-Report-GemKeeper-v1.0.pdf"
+            >
+                <Audited>
+                    <Text fontSize={20} fontWeight={400} color={'#fff'}>
+                        Audited by <img src={PeckShieldLogo} alt="PeckShieldLogo" />
+                    </Text>
+                </Audited>
+            </ExternalLink>
         </FooterFrame>
     )
 }

@@ -29,18 +29,16 @@ import {
 import Loader from '../../components/Loader'
 import ProgressSteps from '../../components/ProgressSteps'
 import DownArrow from '../../assets/images/downArrow.svg'
-
-const ArrowWrapper = styled.div<{ clickable: boolean }>`
-    padding: 2px;
-`
+import ReminderIcon from '../../assets/images/reminderIcon.svg'
 
 const BottomGrouping = styled.div`
     margin-top: 1rem;
+    margin-bottom: 2rem;
 `
 
 const Wrapper = styled.div`
     position: relative;
-    padding: 1rem;
+    padding: 2rem;
 `
 
 const SwapCallbackErrorInner = styled.div`
@@ -83,6 +81,15 @@ const ReplaceBridgeSide = styled.img`
     width: 30px;
     height: 30px;
     cursor: pointer;
+`
+
+const ReminderTitle = styled.div`
+    background-image: url(${ReminderIcon});
+    background-repeat: no-repeat;
+    background-size: 20px;
+    background-position: left;
+    padding-left: 30px;
+    margin-bottom: 15px;
 `
 
 function SwapCallbackError({ error }: { error: string }) {
@@ -778,8 +785,8 @@ export default function Bridge() {
                 {/*<h1></h1>*/}
 
                 <Wrapper>
-                    <TYPE.black fontWeight={500} color={'#ffd545'} style={{ marginBottom: '15px' }}>
-                        Bridge Page
+                    <TYPE.black fontSize={24} fontWeight={500} color={'#ffd545'} style={{ marginBottom: '29px' }}>
+                        Bridge
                     </TYPE.black>
                     <ConfirmBridgeModal
                         isOpen={showConfirm}
@@ -848,7 +855,7 @@ export default function Bridge() {
                                     width="48%"
                                     altDisabledStyle={approval === ApprovalState.PENDING} // show solid button while waiting
                                     confirmed={approval === ApprovalState.APPROVED}
-                                    style={{ flexShrink: 0 }}
+                                    style={{ flexShrink: 0, alignSelf: 'stretch' }}
                                 >
                                     {approval === ApprovalState.PENDING ? (
                                         <AutoRow gap="6px" justify="center">
@@ -900,6 +907,7 @@ export default function Bridge() {
                                     }}
                                     disabled={true}
                                     id="swap-button"
+                                    width={showApproveFlow ? '48%' : '100%'}
                                 >
                                     <Text fontSize={20} fontWeight={500}>
                                         {!transferData
@@ -925,38 +933,54 @@ export default function Bridge() {
                         {isExpertMode && swapErrorMessage ? <SwapCallbackError error={swapErrorMessage} /> : null}
                     </BottomGrouping>
                     {transferData && (
-                        <AutoColumn gap={'6px'}>
-                            <Text fontSize={20} fontWeight={500} style={{ marginBottom: '15px' }}>
-                                Reminder:
-                            </Text>
-                            <Text fontSize={16} fontWeight={400}>
-                                Crosschain Fee is{' '}
-                                {transferData.SwapFeeRatePerMillion ? transferData.SwapFeeRatePerMillion : 0} %, Minimum
-                                Crosschain Fee is {transferData.MinimumSwapFee ? transferData.MinimumSwapFee : 0}{' '}
-                                {transferData.symbol}, Maximum Crosschain Fee is{' '}
-                                {transferData.MaximumSwapFee ? transferData.MaximumSwapFee : 0} {transferData.symbol}
-                            </Text>
-                            <Text fontSize={16} fontWeight={400}>
-                                Minimum Crosschain Amount is {transferData.MinimumSwap ? transferData.MinimumSwap : 0}{' '}
-                                {transferData.symbol}
-                            </Text>
-                            <Text fontSize={16} fontWeight={400}>
-                                Maximum Crosschain Amount is {transferData.MaximumSwap ? transferData.MaximumSwap : 0}{' '}
-                                {transferData.symbol}
-                            </Text>
-                            <Text fontSize={16} fontWeight={400}>
-                                Estimated Time of Crosschain Arrival is 3-30 min
-                            </Text>
-                            <Text fontSize={16} fontWeight={400}>
-                                Crosschain amount larger than{' '}
-                                {transferData.BigValueThreshold ? transferData.BigValueThreshold : 0}{' '}
-                                {transferData.symbol} could take up to 12 hours
-                            </Text>
+                        <AutoColumn gap={'12px'}>
+                            <ReminderTitle>
+                                <Text fontSize={16} fontWeight={500}>
+                                    Reminder:
+                                </Text>
+                            </ReminderTitle>
+
+                            <AutoColumn style={{ marginLeft: '35px', marginBottom: '20px' }} gap={'6px'}>
+                                <Text fontSize={14} fontWeight={400}>
+                                    - Crosschain Fee is{' '}
+                                    {transferData.SwapFeeRatePerMillion ? transferData.SwapFeeRatePerMillion : 0} %,
+                                    Minimum Crosschain Fee is{' '}
+                                    {transferData.MinimumSwapFee ? transferData.MinimumSwapFee : 0}{' '}
+                                    {transferData.symbol}, Maximum Crosschain Fee is{' '}
+                                    {transferData.MaximumSwapFee ? transferData.MaximumSwapFee : 0}{' '}
+                                    {transferData.symbol}
+                                </Text>
+                                <Text fontSize={14} fontWeight={400}>
+                                    - Minimum Crosschain Amount is{' '}
+                                    {transferData.MinimumSwap ? transferData.MinimumSwap : 0} {transferData.symbol}
+                                </Text>
+                                <Text fontSize={14} fontWeight={400}>
+                                    - Maximum Crosschain Amount is{' '}
+                                    {transferData.MaximumSwap ? transferData.MaximumSwap : 0} {transferData.symbol}
+                                </Text>
+                                <Text fontSize={14} fontWeight={400}>
+                                    - Estimated Time of Crosschain Arrival is 3-30 min
+                                </Text>
+                                <Text fontSize={14} fontWeight={400}>
+                                    - Crosschain amount larger than{' '}
+                                    {transferData.BigValueThreshold ? transferData.BigValueThreshold : 0}{' '}
+                                    {transferData.symbol} could take up to 12 hours
+                                </Text>
+                            </AutoColumn>
                         </AutoColumn>
                     )}
                 </Wrapper>
             </BridgePageBody>
-            <TYPE.black fontWeight={500} color={'#ffd545'} style={{ marginTop: '15px' }}>
+            <TYPE.black
+                fontWeight={500}
+                color={'#ffd545'}
+                style={{
+                    marginTop: '15px',
+                    backgroundColor: 'rgba(53, 61, 84, 0.5)',
+                    borderRadius: '5px',
+                    padding: '8px'
+                }}
+            >
                 Powered by MultiChain
             </TYPE.black>
         </>

@@ -50,7 +50,7 @@ export const ButtonPrimary = styled(Base)`
 //   background: linear-gradient(to right, #0094ec , #f537c3);
     background: linear-gradient(to right, #3ffff4 , #00ff2a);
   background-origin: border-box;
-  color: white;
+  color: #000;
   border-radius: 0 10px 0 10px;
   &:focus {
     box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.primary1)};
@@ -69,7 +69,7 @@ export const ButtonPrimary = styled(Base)`
     background-color: rgba(3,82,57,0.7);
     color: ${({ theme, altDisabledStyle, disabled }) =>
         altDisabledStyle ? (disabled ? theme.text3 : 'white') : theme.text3};
-    color: #309e90;
+    color: #000;
     cursor: auto;
     box-shadow: none;
     border: 1px solid transparent;

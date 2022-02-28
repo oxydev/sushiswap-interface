@@ -360,7 +360,7 @@ export default function AddLiquidity({
                                 <ColumnCenter>
                                     <BlueCard>
                                         <AutoColumn gap="10px">
-                                            <TYPE.link fontWeight={400} color={'primaryText1'}>
+                                            <TYPE.link fontWeight={400} color={'#0A1D46'}>
                                                 <b>Tip:</b> When you add liquidity, you will receive pool tokens
                                                 representing your position. These tokens automatically earn fees
                                                 proportional to your share of the pool, and can be redeemed at any time.
@@ -500,6 +500,10 @@ export default function AddLiquidity({
                     currencies={[currencies.CURRENCY_A, currencies.CURRENCY_B]}
                 />
             )}
+            {/* <Text fontSize={20} fontWeight={500}>
+                By adding liquidity you will earn 0.25% of all trades on this pair proportional to your share of the
+                pool. Fees are added to the pool, accure in real time and can be claimed by withdrawing your liquidity.
+            </Text> */}
         </>
     )
 }
