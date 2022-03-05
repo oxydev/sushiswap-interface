@@ -34,6 +34,8 @@ import usePrevious from '../../hooks/usePrevious'
 import LanguageSwitch from '../LanguageSwitch'
 import { StyledMenuButton } from 'components/StyledMenu'
 import CurrencyLogo from 'components/CurrencyLogo'
+import { useToggleFaucetModal } from 'state/application/hooks'
+import FaucetModal from 'components/FaucetModal'
 
 const ExtendedStyledMenuButton = styled(StyledMenuButton)`
     margin-left: auto;
@@ -358,6 +360,8 @@ export default function Header() {
 
     const [showLinks, setShowLinks] = useState(false)
 
+    const toggleFaucetModal = useToggleFaucetModal()
+
     // console.log(chainId)
 
     return (
@@ -406,6 +410,17 @@ export default function Header() {
                         target="_blank"
                     >
                         Bridge
+                    </StyledNavLink>
+                    <StyledNavLink
+                        onClick={() => {
+                            toggleFaucetModal()
+                            console.log('hello')
+                        }}
+                        id={`faucet-nav-link`}
+                        as="a"
+                        // href="havascript:;"
+                    >
+                        Faucet
                     </StyledNavLink>
                 </HeaderLinks>
 
@@ -487,6 +502,7 @@ export default function Header() {
                     <Menu />
                 </HeaderElementWrap>
             </HeaderControls>
+            <FaucetModal />
         </HeaderFrame>
     )
 }
