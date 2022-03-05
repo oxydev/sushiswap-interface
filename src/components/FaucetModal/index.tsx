@@ -5,6 +5,9 @@ import { useModalOpen, useToggleFaucetModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/actions'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { ButtonPrimary } from 'components/Button'
+import { Text } from 'rebass'
+import { useActiveWeb3React } from 'hooks'
+import { shortenAddress } from 'utils'
 
 const Wrapper = styled.div`
     ${({ theme }) => theme.flexColumnNoWrap}
@@ -99,7 +102,7 @@ const WalletInput = styled.input`
 export default function FaucetModal() {
     const faucetModalOpen = useModalOpen(ApplicationModal.FAUCET)
     const toggleFaucetModal = useToggleFaucetModal()
-    const [address, setAddress] = useState('')
+    const { account } = useActiveWeb3React()
 
     function Faucet() {
         console.log('faucet')
@@ -114,16 +117,12 @@ export default function FaucetModal() {
                     </CloseIcon>
                     <HeaderRow>Enter Your Wallet Address to Earn some Token</HeaderRow>
                     <ContentWrapper>
-                        <WalletInput
-                            type="text"
-                            id="faucet-address-input"
-                            placeholder="Enter your wallet address"
-                            autoComplete="off"
-                            value={address}
-                            onChange={e => {
-                                setAddress(e.target.value)
-                            }}
-                        />
+                        {account && (
+                            <Text color={'#fff'} fontSize={20} style={{ marginBottom: '20px' }}>
+                                Your Wallet Address: {shortenAddress(account)}
+                            </Text>
+                        )}
+
                         <ButtonPrimary
                             padding="8px"
                             borderRadius="8px"

@@ -411,17 +411,19 @@ export default function Header() {
                     >
                         Bridge
                     </StyledNavLink>
-                    <StyledNavLink
-                        onClick={() => {
-                            toggleFaucetModal()
-                            console.log('hello')
-                        }}
-                        id={`faucet-nav-link`}
-                        as="a"
-                        // href="havascript:;"
-                    >
-                        Faucet
-                    </StyledNavLink>
+                    {account && (
+                        <StyledNavLink
+                            onClick={() => {
+                                toggleFaucetModal()
+                                console.log('hello')
+                            }}
+                            id={`faucet-nav-link`}
+                            as="a"
+                            // href="havascript:;"
+                        >
+                            Faucet
+                        </StyledNavLink>
+                    )}
                 </HeaderLinks>
 
                 <ExtendedStyledMenuButton
@@ -468,6 +470,19 @@ export default function Header() {
                             >
                                 Bridge
                             </StyledNavLink>
+                            {account && (
+                                <StyledNavLink
+                                    onClick={() => {
+                                        toggleFaucetModal()
+                                        console.log('hello')
+                                    }}
+                                    id={`faucet-nav-link`}
+                                    as="a"
+                                    // href="havascript:;"
+                                >
+                                    Faucet
+                                </StyledNavLink>
+                            )}
                         </ResponsiveHeaderLinks>
                     )}
                 </ExtendedStyledMenuButton>
