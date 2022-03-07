@@ -60,6 +60,7 @@ import Zap from './Zap'
 import Bridge from './Bridge'
 import Footer from 'components/Footer'
 import Home from './HomePage'
+import HomeHeader from 'components/HomeHeader'
 
 const AppWrapper = styled.div`
     display: flex;
@@ -224,6 +225,9 @@ function App() {
                 </AppWrapper>
             ) : (
                 <AppWrapper>
+                    <HeaderWrapper>
+                        <HomeHeader />
+                    </HeaderWrapper>
                     <URLWarning />
                     <Home />
                 </AppWrapper>
