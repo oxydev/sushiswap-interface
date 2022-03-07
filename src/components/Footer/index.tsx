@@ -14,7 +14,7 @@ import { ExternalLink } from 'theme'
 
 const FooterFrame = styled.div`
     width: 100%;
-    padding: 52px 6vw 28px;
+    padding: 42px 3vw;
     margin-top: 182px;
     position: relative;
 
@@ -30,17 +30,18 @@ const FooterFrame = styled.div`
         z-index: -1;
     }
 
+    ${({ theme }) => theme.mediaWidth.upToLarge`
+        padding-bottom: 120px;
+    `};
+
     ${({ theme }) => theme.mediaWidth.upToSmall`
         padding: 52px 7vw 28px;
-        padding-bottom: 120px;
     `};
 `
 
 const FooterContent = styled.div`
     display: flex;
     width: 100%;
-    padding-bottom: 51px;
-    border-bottom: 1px solid #305a5d;
     justify-content: space-between;
     ${({ theme }) => theme.mediaWidth.upToLarge`
         flex-direction: column;
@@ -51,9 +52,11 @@ const FooterLogoPart = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
+    padding: 0 2vw;
 
     ${({ theme }) => theme.mediaWidth.upToSmall`
-            align-items: flex-start;
+            align-items: center;
         `};
 
     & > .CopyRight {
@@ -63,23 +66,12 @@ const FooterLogoPart = styled.div`
         `};
     }
 `
-const FooterLogoPartMobile = styled(FooterLogoPart)`
-    ${({ theme }) => theme.mediaWidth.upToSmall`
-    align-items: center;
-        `};
-    & > .CopyRight {
-        display: none;
-        ${({ theme }) => theme.mediaWidth.upToLarge`
-            display: block;
-    `};
-    }
-`
 
 const FooterLogo = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 38px;
+    margin-bottom: 10px;
 
     & > img {
         width: 50px;
@@ -92,21 +84,14 @@ const FooterLogo = styled.div`
 const FooterSocial = styled.div`
     display: flex;
     justify-content: center;
-    padding-bottom: 12px;
+    padding: 10px 0;
     border-bottom: 1px solid #62ba89;
+    border-top: 1px solid #62ba89;
     margin-bottom: 16px;
 
     ${({ theme }) => theme.mediaWidth.upToLarge`
-        display: none;
         width: fit-content;
-        margin: 0 auto 16px;
-    `};
-`
-
-const FooterSocialMobile = styled(FooterSocial)`
-    display: none;
-    ${({ theme }) => theme.mediaWidth.upToLarge`
-        display: flex;
+        border-bottom: none;
     `};
 `
 
@@ -125,22 +110,31 @@ const FooterSocialLink = styled.a<{ icon: any }>`
 const FooterMenuPart = styled.div`
     display: flex;
     justify-content: center;
-    ${({ theme }) => theme.mediaWidth.upToMedium`
+    border-left: 2px solid #2a685b;
+    border-right: 2px solid #2a685b;
+    padding: 0 2vw;
+    ${({ theme }) => theme.mediaWidth.upToLarge`
         flex-wrap: wrap;
         justify-content: center;;
-        border-bottom:1px solid #305A5D;
         margin-bottom:24px;
+        padding-top: 35px;
+        border-left: none;
+        border-right: none;
+        border-top: 2px solid #2a685b;
+        border-bottom: 2px solid #2a685b;
     `}
 
     ${({ theme }) => theme.mediaWidth.upToSmall`
+        align-items:center;
+        padding-top: 35px;
         justify-content: flex-start;
     `}
 `
 
 const FooterMenu = styled.div`
-    margin: 0 60px;
+    margin: 0 2vw;
 
-    ${({ theme }) => theme.mediaWidth.upToMedium`
+    ${({ theme }) => theme.mediaWidth.upToLarge`
         margin: 0 30px 0 0;
         & > .MenuTitle {
             font-size: 16px;
@@ -160,7 +154,7 @@ const FooterList = styled.div`
         font-weight: 400;
     }
 
-    ${({ theme }) => theme.mediaWidth.upToMedium`
+    ${({ theme }) => theme.mediaWidth.upToLarge`
     margin-bottom: 35px;
     & > a {
         font-size: 14px;
@@ -169,17 +163,36 @@ const FooterList = styled.div`
 `
 
 const Audited = styled.div`
-    height: 48px;
-    padding: 8px 26px;
+    padding: 8px 15px;
     border-radius: 24px;
-    text-aling: center;
-    background-color: #305a5d;
+    text-align: center;
+    background-color: #2a685b;
     width: fit-content;
-    margin: 25px auto 0;
+    margin: 25px auto 16px;
+    border: 2px solid #327466;
 
     & img {
         height: 30px;
         display: inline;
+    }
+`
+const FooterBadge = styled.div`
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 2vw;
+
+    .CopyRight {
+        border-top: 1px solid #327466;
+        padding-top: 16px;
+        margin-top: 16px;
+
+        ${({ theme }) => theme.mediaWidth.upToLarge`
+            border-top: none;
+            padding-top: 0;
+            margin-top: 0;
+        `}
     }
 `
 
@@ -214,33 +227,25 @@ export default function Footer() {
                         <FooterSocialLink icon={Instagram}></FooterSocialLink>
                         <FooterSocialLink icon={Linkedin}></FooterSocialLink>
                     </FooterSocial>
-                    <Text className="CopyRight" fontSize={14} fontWeight={400} color={'#40787C'}>
-                        Copyright © 2022 GemKeeper Finance
-                    </Text>
                 </FooterLogoPart>
                 <FooterMenuPart>{menuElements}</FooterMenuPart>
-                <FooterLogoPartMobile>
-                    <FooterSocialMobile>
-                        <FooterSocialLink icon={Twitter}></FooterSocialLink>
-                        <FooterSocialLink icon={Facebook}></FooterSocialLink>
-                        <FooterSocialLink icon={Instagram}></FooterSocialLink>
-                        <FooterSocialLink icon={Linkedin}></FooterSocialLink>
-                    </FooterSocialMobile>
-                    <Text className="CopyRight" fontSize={14} fontWeight={400} color={'#40787C'}>
+                <FooterBadge>
+                    <ExternalLink
+                        style={{ textDecoration: 'none' }}
+                        href="https://github.com/GemKeeperDEV/GemKeeperFinance/blob/main/PeckShield-Audit-Report-GemKeeper-v1.0.pdf"
+                    >
+                        <Audited>
+                            <Text fontSize={20} fontWeight={400} color={'#fff'}>
+                                Audited by <img src={PeckShieldLogo} alt="PeckShieldLogo" />
+                            </Text>
+                        </Audited>
+                    </ExternalLink>
+
+                    <Text className="CopyRight" fontSize={14} fontWeight={400} color={'#29907B'}>
                         Copyright © 2022 GemKeeper Finance
                     </Text>
-                </FooterLogoPartMobile>
+                </FooterBadge>
             </FooterContent>
-            <ExternalLink
-                style={{ textDecoration: 'none' }}
-                href="https://github.com/GemKeeperDEV/GemKeeperFinance/blob/main/PeckShield-Audit-Report-GemKeeper-v1.0.pdf"
-            >
-                <Audited>
-                    <Text fontSize={20} fontWeight={400} color={'#fff'}>
-                        Audited by <img src={PeckShieldLogo} alt="PeckShieldLogo" />
-                    </Text>
-                </Audited>
-            </ExternalLink>
         </FooterFrame>
     )
 }
