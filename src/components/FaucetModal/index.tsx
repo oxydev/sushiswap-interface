@@ -189,6 +189,12 @@ export default function FaucetModal() {
                                                     : 'Something went wrong!'}
                                             </Text>
                                         </InfoBar>
+                                        {status !== 4 && (
+                                            <Text color={'#fff'} fontSize={16} style={{ marginBottom: '20px' }}>
+                                                Address: {shortenAddress(account)}
+                                            </Text>
+                                        )}
+
                                         {status === 4 ? (
                                             <ButtonPrimary
                                                 padding="8px"
