@@ -117,6 +117,7 @@ const LaunchButton = styled.button`
     z-index: 10;
     ${({ theme }) => theme.mediaWidth.upToSmall`
         font-size: 14px;
+        padding: 14px 18px;
   `};
 `
 
@@ -266,7 +267,13 @@ export default function HomeHeader() {
                     </StyledNavLink>
                 </HeaderLinks>
             </HeaderRow>
-            <LaunchButton>Launch App</LaunchButton>
+            <LaunchButton
+                onClick={() => {
+                    window.open('https://app.gemkeeper.finance', '_self')
+                }}
+            >
+                Launch App
+            </LaunchButton>
         </HeaderFrame>
     )
 }

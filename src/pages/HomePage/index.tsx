@@ -15,36 +15,38 @@ const TitleWrapper = styled.div`
     justify-content: center;
 
     h2 {
-        font-size: 60px;
+        font-size: 3.1vw;
         font-weight: 700;
     }
 
     h3 {
-        font-size: 125px;
+        font-size: 6.5vw;
         color: #59fe7f;
         font-weight: 700;
     }
 
     p {
-        font-size: 24px;
+        font-size: 1vw;
     }
 
     ${({ theme }) => theme.mediaWidth.upToMedium`
         text-align: center;
         align-items: center;
+        justify-content: flex-start;
         padding: 0;
+        padding-top: 20vh;
         width: 100%;
         h2 {
-            font-size: 36px;
+            font-size: 6.4vw;
             font-weight: 500;
         }
 
         h3 {
-            font-size: 72px;
+            font-size: 12.8vw;
         }
 
         p {
-            font-size: 14px;
+            font-size: 2.4vw;
         }
   `}
 `
@@ -81,8 +83,11 @@ const LaunchButton = styled.button`
     margin-top: 76px;
     cursour: pointer;
     z-index: 10;
+    font-size: 20px;
 
-    ${({ theme }) => theme.mediaWidth.upToSmall`
+    ${({ theme }) => theme.mediaWidth.upToMedium`
+    margin-top: 52px;
+    font-size: 20px;
         
   `}
 `
@@ -94,7 +99,13 @@ export default function Home() {
                 <h2>Total Value Locked</h2>
                 <h3>$ 17,121,951,72</h3>
                 <p>Supply, borrow, and earn. More than a DeFi lending protocol.</p>
-                <LaunchButton>Launch App</LaunchButton>
+                <LaunchButton
+                    onClick={() => {
+                        window.open('https://app.gemkeeper.finance', '_self')
+                    }}
+                >
+                    Launch App
+                </LaunchButton>
             </TitleWrapper>
             <HomeImage />
         </HomePage>
