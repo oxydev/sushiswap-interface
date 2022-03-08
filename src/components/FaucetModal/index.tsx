@@ -99,6 +99,16 @@ const WalletInput = styled.input`
     }
 `
 
+const InfoBar = styled.div`
+    background-color: rgba(94, 151, 204, 0.2);
+    border-radius: 10px;
+    border: 1px solid #4476a9;
+    display: flex;
+    align-items: center;
+    margin-bottom: 32px;
+    padding: 18px;
+`
+
 export default function FaucetModal() {
     const faucetModalOpen = useModalOpen(ApplicationModal.FAUCET)
     const toggleFaucetModal = useToggleFaucetModal()
@@ -118,15 +128,18 @@ export default function FaucetModal() {
                     <HeaderRow>Enter Your Wallet Address to Earn some Token</HeaderRow>
                     <ContentWrapper>
                         {account && (
-                            <Text color={'#fff'} fontSize={20} style={{ marginBottom: '20px' }}>
-                                Your Wallet Address: {shortenAddress(account)}
-                            </Text>
+                            <InfoBar>
+                                <Text color={'#fff'} fontSize={18}>
+                                    {shortenAddress(account)}
+                                </Text>
+                            </InfoBar>
                         )}
 
                         <ButtonPrimary
                             padding="8px"
                             borderRadius="8px"
                             width="100%"
+                            height="60px"
                             onClick={() => {
                                 Faucet()
                             }}
