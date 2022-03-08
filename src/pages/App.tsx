@@ -115,7 +115,7 @@ function App() {
         <Suspense fallback={null}>
             <Route component={GoogleAnalyticsReporter} />
             <Route component={DarkModeQueryParamReader} />
-            {window.location.host.split('.')[0] === 'thisisreallytest' ? (
+            {window.location.host.split('.')[0] === 'app' ? (
                 <AppWrapper>
                     <URLWarning />
                     <HeaderWrapper>

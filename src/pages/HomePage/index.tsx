@@ -137,10 +137,10 @@ export default function Home() {
             <TitleWrapper>
                 <h2>Total Value Locked</h2>
                 <h3>$ {numberWithCommas(liquidity)}</h3>
-                <p>Supply, borrow, and earn. More than a DeFi lending protocol.</p>
+                <p>GemKeeper is a community focused AMM & DeFi Platform built on Oasis.</p>
                 <LaunchButton
                     onClick={() => {
-                        window.open('https://thisisreallytest.gemkeeper.finance', '_self')
+                        window.open('https://app.gemkeeper.finance', '_self')
                     }}
                 >
                     Launch App

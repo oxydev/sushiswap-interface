@@ -274,7 +274,7 @@ export default function HomeHeader() {
             </HeaderRow>
             <LaunchButton
                 onClick={() => {
-                    window.open('https://thisisreallytest.gemkeeper.finance', '_self')
+                    window.open('https://app.gemkeeper.finance', '_self')
                 }}
             >
                 Launch App
