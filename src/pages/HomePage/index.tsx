@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
+import { setInterval } from 'timers'
 import mainImage from '../../assets/images/homePageImage.jpg'
 import mainImageMobile from '../../assets/images/homePageImageMobile.jpg'
 
@@ -93,11 +94,45 @@ const LaunchButton = styled.button`
 `
 
 export default function Home() {
+    const [liquidity, setLiquidity] = useState(0)
+
+    function getLiquidity() {
+        fetch('https://subgraph.gemkeeper.finance/subgraphs/name/generated/sample', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                query: `query{
+                    dayDatas(first: 1000, orderBy: date, orderDirection: desc) {
+                        id
+                        date
+                        volumeETH
+                        volumeUSD
+                        untrackedVolume
+                        liquidityETH
+                        liquidityUSD
+                        txCount
+                      }
+                }`
+            })
+        })
+            .then(res => res.json())
+            .then(result => {
+                console.log(result.data.dayDatas[0].liquidityUSD)
+                setLiquidity(parseInt(result.data.dayDatas[0].liquidityUSD))
+            })
+    }
+    useEffect(() => {
+        getLiquidity()
+        let interval = setInterval(getLiquidity, 10000)
+        return clearInterval(interval)
+    }, [])
     return (
         <HomePage>
             <TitleWrapper>
                 <h2>Total Value Locked</h2>
-                <h3>$ 17,121,951,72</h3>
+                <h3>$ {liquidity}</h3>
                 <p>Supply, borrow, and earn. More than a DeFi lending protocol.</p>
                 <LaunchButton
                     onClick={() => {
