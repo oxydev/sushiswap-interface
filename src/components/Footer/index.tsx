@@ -209,7 +209,7 @@ export default function Footer() {
                         </Text>
                     </FooterLogo>
                     <FooterSocial>
-                        <FooterSocialLink icon={Twitter}></FooterSocialLink>
+                        <FooterSocialLink href={'https://twitter.com/GemKeeperDeFi'} icon={Twitter}></FooterSocialLink>
                         <FooterSocialLink icon={Facebook}></FooterSocialLink>
                         <FooterSocialLink icon={Instagram}></FooterSocialLink>
                         <FooterSocialLink icon={Linkedin}></FooterSocialLink>

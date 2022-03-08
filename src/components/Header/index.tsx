@@ -401,11 +401,17 @@ export default function Header() {
                     </StyledNavLink>
                     <StyledNavLink
                         id={`zap-nav-link`}
-                        as="a"
-                        href="https://app.multichain.org/#/router"
-                        target="_blank"
+                        to={'/bridge'}
                     >
                         Bridge
+                    </StyledNavLink>
+                    <StyledNavLink
+                      id={`zap-nav-link`}
+                      as="a"
+                      href="https://analytics.gemkeeper.finance/"
+                      target="_blank"
+                    >
+                        Analytics
                     </StyledNavLink>
                 </HeaderLinks>
 
@@ -447,11 +453,17 @@ export default function Header() {
                             </StyledNavLink>
                             <StyledNavLink
                                 id={`zap-nav-link`}
-                                as="a"
-                                href="https://app.multichain.org/#/router"
-                                target="_blank"
+                                to={'/bridge'}
                             >
                                 Bridge
+                            </StyledNavLink>
+                            <StyledNavLink
+                              id={`zap-nav-link`}
+                              as="a"
+                              href="https://analytics.gemkeeper.finance/"
+                              target="_blank"
+                            >
+                                Analytics
                             </StyledNavLink>
                         </ResponsiveHeaderLinks>
                     )}

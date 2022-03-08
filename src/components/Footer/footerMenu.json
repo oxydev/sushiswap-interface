@@ -5,19 +5,15 @@
             "items": [
                 {
                     "name": "Discord",
-                    "link": "gemkeeper.com"
+                    "link": "https://discord.com/invite/Jcbj5E9Ysd"
                 },
                 {
                     "name": "Twitter",
-                    "link": "gemkeeper.com"
+                    "link": "https://twitter.com/GemKeeperDeFi"
                 },
                 {
                     "name": "Telegram",
-                    "link": "gemkeeper.com"
-                },
-                {
-                    "name": "Reddit",
-                    "link": "gemkeeper.com"
+                    "link": "https://t.me/GemKeeperAnnouncements"
                 }
             ]
         },
@@ -25,20 +21,20 @@
             "title": "Tools",
             "items": [
                 {
-                    "name": "Analytics",
-                    "link": "gemkeeper.com"
+                    "name": "Swap",
+                    "link": "#/swap"
                 },
                 {
-                    "name": "Github",
-                    "link": "gemkeeper.com"
+                    "name": "Zap",
+                    "link": "#/zap"
                 },
                 {
-                    "name": "Coingecko",
-                    "link": "gemkeeper.com"
+                    "name": "Liquidity",
+                    "link": "#/pool"
                 },
                 {
-                    "name": "CoinMarketCap",
-                    "link": "gemkeeper.com"
+                    "name": "Gem Mine",
+                    "link": "#/yield"
                 }
             ]
         },
@@ -46,41 +42,24 @@
             "title": "Info",
             "items": [
                 {
-                    "name": "News",
-                    "link": "gemkeeper.com"
+                    "name": "Analytics",
+                    "link": "https://analytics.gemkeeper.finance/"
                 },
                 {
                     "name": "Medium",
-                    "link": "gemkeeper.com"
+                    "link": "https://gemkeeperdefi.medium.com/"
                 },
                 {
                     "name": "Docs",
-                    "link": "gemkeeper.com"
+                    "link": "https://gemkeeper-finance.gitbook.io/docs/welcome/introduction"
                 },
                 {
-                    "name": "FAQs",
-                    "link": "gemkeeper.com"
-                }
-            ]
-        },
-        {
-            "title": "Participate",
-            "items": [
-                {
-                    "name": "Vote",
-                    "link": "gemkeeper.com"
+                    "name": "Github",
+                    "link": "https://github.com/GemKeeperDEV/GemKeeperFinance"
                 },
                 {
-                    "name": "Forum",
-                    "link": "gemkeeper.com"
-                },
-                {
-                    "name": "Apply for collab",
-                    "link": "gemkeeper.com"
-                },
-                {
-                    "name": "Apply for token",
-                    "link": "gemkeeper.com"
+                    "name": "DexScreener",
+                    "link": "https://dexscreener.com/oasisemerald/gemkeeper"
                 }
             ]
         }

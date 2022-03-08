@@ -69,7 +69,7 @@ export default function ConfirmBridgeModal({
                 <TransactionErrorContent onDismiss={onDismiss} message={swapErrorMessage} />
             ) : (
                 <ConfirmationModalContent
-                    title="Confirm ‌Bridge"
+                    title="Confirm Bridge"
                     onDismiss={onDismiss}
                     topContent={modalHeader}
                     bottomContent={modalBottom}

@@ -37,6 +37,14 @@ const tokenLogos: Record<string, string> = {
     '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599': Bitcoin,
     '0x72Ad551af3c884d02e864B182aD9A34EE414C36C': Bling,
     '0xE3F5a90F9cb311505cd691a46596599aA1A0AD7D': Binance,
+    '0xa1E73c01E0cF7930F5e91CB291031739FE5Ad6C2':
+      'https://raw.githubusercontent.com/certusone/wormhole-token-list/main/assets/UST_wh.png',
+    '0xd17dDAC91670274F7ba1590a06EcA0f2FD2b12bc':
+      'https://raw.githubusercontent.com/certusone/wormhole-token-list/main/assets/SOL_wh.png',
+    '0x32847e63E99D3a044908763056e25694490082F8':
+      'https://raw.githubusercontent.com/certusone/wormhole-token-list/main/assets/AVAX_wh.png',
+    '0x4F43717B20ae319Aa50BC5B2349B93af5f7Ac823':
+      'https://raw.githubusercontent.com/certusone/wormhole-token-list/main/assets/LUNA_wh.png',
     '0xB44a9B6905aF7c801311e8F4E76932ee959c663C':
         'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/info/logo.png',
     '0x639A647fbe20b6c8ac19E48E2de44ea792c62c5C':
