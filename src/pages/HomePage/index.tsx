@@ -128,15 +128,19 @@ export default function Home() {
         let interval = setInterval(getLiquidity, 10000)
         return clearInterval(interval)
     }, [])
-    return (
+  function numberWithCommas(x:number) {
+    return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+  }
+
+  return (
         <HomePage>
             <TitleWrapper>
                 <h2>Total Value Locked</h2>
-                <h3>$ {liquidity}</h3>
+                <h3>$ {numberWithCommas(liquidity)}</h3>
                 <p>Supply, borrow, and earn. More than a DeFi lending protocol.</p>
                 <LaunchButton
                     onClick={() => {
-                        window.open('https://app.gemkeeper.finance', '_self')
+                        window.open('https://thisisreallytest.gemkeeper.finance', '_self')
                     }}
                 >
                     Launch App

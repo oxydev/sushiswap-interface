@@ -110,12 +110,12 @@ function App() {
             bodyRef.current.scrollTo(0, 0)
         }
     }, [pathname])
-
+    console.log(window.location.host.split('.')[0])
     return (
         <Suspense fallback={null}>
             <Route component={GoogleAnalyticsReporter} />
             <Route component={DarkModeQueryParamReader} />
-            {window.location.host.split('.')[0] === 'app' ? (
+            {window.location.host.split('.')[0] === 'thisisreallytest' ? (
                 <AppWrapper>
                     <URLWarning />
                     <HeaderWrapper>

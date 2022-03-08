@@ -222,22 +222,28 @@ export default function HomeHeader() {
                         setShow(false)
                     }}
                 ></CloseHeader>
-                <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
-                    {t('swap')}
-                </StyledNavLink>
-                <StyledNavLink
-                    id={`pool-nav-link`}
-                    to={'/pool'}
-                    isActive={(match, { pathname }) =>
-                        Boolean(match) ||
-                        pathname.startsWith('/add') ||
-                        pathname.startsWith('/remove') ||
-                        pathname.startsWith('/create') ||
-                        pathname.startsWith('/find')
-                    }
-                >
-                    Home
-                </StyledNavLink>
+              <StyledNavLink
+                id={`pool-nav-link`}
+                to={'/'}
+                isActive={(match, { pathname }) =>
+                  Boolean(match) ||
+                  pathname.startsWith('/add') ||
+                  pathname.startsWith('/remove') ||
+                  pathname.startsWith('/create') ||
+                  pathname.startsWith('/find')
+                }
+              >
+                Home
+              </StyledNavLink>
+              <StyledNavLink
+                id={`zap-nav-link`}
+                as="a"
+                href="https://analytics.gemkeeper.finance/"
+                target="_blank"
+              >
+                Analytics
+              </StyledNavLink>
+
             </MobileHeaderLinks>
             <HeaderRow>
                 <Title href=".">
@@ -249,12 +255,10 @@ export default function HomeHeader() {
                     {/*</StaticIcon>*/}
                 </Title>
                 <HeaderLinks>
-                    <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
-                        {t('swap')}
-                    </StyledNavLink>
+
                     <StyledNavLink
                         id={`pool-nav-link`}
-                        to={'/pool'}
+                        to={'/'}
                         isActive={(match, { pathname }) =>
                             Boolean(match) ||
                             pathname.startsWith('/add') ||
@@ -265,11 +269,19 @@ export default function HomeHeader() {
                     >
                         Home
                     </StyledNavLink>
+                  <StyledNavLink
+                    id={`zap-nav-link`}
+                    as="a"
+                    href="https://analytics.gemkeeper.finance/"
+                    target="_blank"
+                  >
+                    Analytics
+                  </StyledNavLink>
                 </HeaderLinks>
             </HeaderRow>
             <LaunchButton
                 onClick={() => {
-                    window.open('https://app.gemkeeper.finance', '_self')
+                    window.open('https://thisisreallytest.gemkeeper.finance', '_self')
                 }}
             >
                 Launch App

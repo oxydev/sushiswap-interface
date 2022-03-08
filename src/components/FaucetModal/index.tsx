@@ -175,23 +175,23 @@ export default function FaucetModal() {
                                 {account ? (
                                     <>
                                         <InfoBar>
-                                            <Text color={'#fff'} fontSize={18}>
+                                            <Text color={'#fff'} fontSize={13}>
                                                 {status === 0
                                                     ? 'Loading'
                                                     : status === 1
                                                     ? 'Your wallet address is not qualified!'
                                                     : status === 2
-                                                    ? `Faucet can not be accurated because of wrong policy!`
+                                                    ? `Your wallet should not have any ROSE and you need a minimum amount of bridged token in your wallet!`
                                                     : status === 3
-                                                    ? `You have allready received some tokens!`
+                                                    ? `You can only use GemKeeper Faucet Once!`
                                                     : status === 4
-                                                    ? shortenAddress(account)
+                                                    ? account
                                                     : 'Something went wrong!'}
                                             </Text>
                                         </InfoBar>
                                         {status !== 4 && (
-                                            <Text color={'#fff'} fontSize={16} style={{ marginBottom: '20px' }}>
-                                                Address: {shortenAddress(account)}
+                                            <Text color={'#fff'} fontSize={14} style={{ marginBottom: '20px' }}>
+                                                Address: {account}
                                             </Text>
                                         )}
 
@@ -205,20 +205,20 @@ export default function FaucetModal() {
                                                     Faucet()
                                                 }}
                                             >
-                                                Faucet
+                                                Request 0.5 ROSE
                                             </ButtonPrimary>
                                         ) : (
                                             <ButtonError disabled={true} width={'100%'}>
                                                 <Text fontSize={20} fontWeight={500}>
                                                     {status === 0
-                                                        ? 'Loading'
+                                                        ? 'Checking...'
                                                         : status === 1
                                                         ? 'Address not qualified!'
                                                         : status === 2
-                                                        ? `Wrong policy!`
+                                                        ? `Not Eligible!`
                                                         : status === 3
-                                                        ? `Allready received!`
-                                                        : 'Something wrong!'}
+                                                        ? `Already received!`
+                                                        : 'Something Went Wrong!'}
                                                 </Text>
                                             </ButtonError>
                                         )}
@@ -227,7 +227,7 @@ export default function FaucetModal() {
                                     <>
                                         <InfoBar>
                                             <Text color={'#fff'} fontSize={18}>
-                                                If you want to access foucet, you need to connect wallet
+                                                If you want to access faucet, you need to connect wallet
                                             </Text>
                                         </InfoBar>
 
@@ -245,13 +245,13 @@ export default function FaucetModal() {
                                     {result === 1
                                         ? 'Your wallet address is not qualified!'
                                         : result === 2
-                                        ? 'You have allready received some tokens!'
+                                        ? 'You can only use GemKeeper Faucet Once!'
                                         : result === 3
-                                        ? 'Something went wrong suring faucet!'
+                                        ? 'There is a problem in Faucet, please contact support!'
                                         : result === 4
-                                        ? 'Faucet Successful!'
+                                        ? 'Sent 0.5 Rose Successfully, please wait to receive it!'
                                         : result === 5
-                                        ? 'Faucet can not be accurated because of wrong policy!'
+                                        ? 'Your wallet should not have any ROSE and you need a minimum amount of bridged token in your wallet!'
                                         : 'Something went wrong!'}
                                 </Text>
                             </InfoBar>

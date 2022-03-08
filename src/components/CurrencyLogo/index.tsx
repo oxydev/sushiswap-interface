@@ -13,6 +13,7 @@ import HecoLogo from '../../assets/images/heco-logo.png'
 import Tether from '../../assets/images/tether.png'
 import Tulip from '../../assets/images/tulip.png'
 import Tulip2 from '../../assets/images/Tulip2.png'
+import FTP from '../../assets/images/ftp.png'
 import Dune from '../../assets/images/dune.png'
 import Yuzu from '../../assets/images/yuzu.png'
 import Bitcoin from '../../assets/images/bitcoin.png'
@@ -35,6 +36,8 @@ const tokenLogos: Record<string, string> = {
     '0xf02b3e437304892105992512539F769423a515Cb': Yuzu,
     '0xd43ce0aa2a29DCb75bDb83085703dc589DE6C7eb': Bitcoin,
     '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599': Bitcoin,
+    '0xd1dF9CE4b6159441D18BD6887dbd7320a8D52a05': FTP,
+
     '0x72Ad551af3c884d02e864B182aD9A34EE414C36C': Bling,
     '0xE3F5a90F9cb311505cd691a46596599aA1A0AD7D': Binance,
     '0xB44a9B6905aF7c801311e8F4E76932ee959c663C':
