@@ -66,7 +66,7 @@ export const ButtonPrimary = styled(Base)`
     pointer-events: none;
     background: ${({ theme, altDisabledStyle, disabled }) =>
         altDisabledStyle ? (disabled ? theme.bg3 : theme.primary1) : theme.bg3};
-    background-color: rgba(3,82,57,0.7);
+    background-color: #F0BA03;
     color: ${({ theme, altDisabledStyle, disabled }) =>
         altDisabledStyle ? (disabled ? theme.text3 : 'white') : theme.text3};
     color: #000;
@@ -74,7 +74,7 @@ export const ButtonPrimary = styled(Base)`
     box-shadow: none;
     border: 1px solid transparent;
     outline: none;
-    opacity: ${({ altDisabledStyle }) => (altDisabledStyle ? '0.5' : '1')};
+    opacity: ${({ altDisabledStyle }) => (altDisabledStyle ? '0.5' : '0.7')};
     border: 1px solid #062a26;
   }
   &:hover {

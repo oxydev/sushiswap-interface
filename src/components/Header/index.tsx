@@ -34,6 +34,8 @@ import usePrevious from '../../hooks/usePrevious'
 import LanguageSwitch from '../LanguageSwitch'
 import { StyledMenuButton } from 'components/StyledMenu'
 import CurrencyLogo from 'components/CurrencyLogo'
+import { useToggleFaucetModal } from 'state/application/hooks'
+import FaucetModal from 'components/FaucetModal'
 
 const ExtendedStyledMenuButton = styled(StyledMenuButton)`
     margin-left: auto;
@@ -358,6 +360,8 @@ export default function Header() {
 
     const [showLinks, setShowLinks] = useState(false)
 
+    const toggleFaucetModal = useToggleFaucetModal()
+
     // console.log(chainId)
 
     return (
@@ -399,20 +403,30 @@ export default function Header() {
                     <StyledNavLink id={`zap-nav-link`} to={'/zap'}>
                         Zap
                     </StyledNavLink>
-                    <StyledNavLink
-                        id={`zap-nav-link`}
-                        to={'/bridge'}
-                    >
+                    <StyledNavLink id={`zap-nav-link`} to={'/bridge'}>
                         Bridge
                     </StyledNavLink>
                     <StyledNavLink
-                      id={`zap-nav-link`}
-                      as="a"
-                      href="https://analytics.gemkeeper.finance/"
-                      target="_blank"
+                        id={`zap-nav-link`}
+                        as="a"
+                        href="https://analytics.gemkeeper.finance/"
+                        target="_blank"
                     >
                         Analytics
                     </StyledNavLink>
+                    {account && (
+                        <StyledNavLink
+                            onClick={() => {
+                                toggleFaucetModal()
+                                console.log('hello')
+                            }}
+                            id={`faucet-nav-link`}
+                            as="a"
+                            // href="havascript:;"
+                        >
+                            Faucet
+                        </StyledNavLink>
+                    )}
                 </HeaderLinks>
 
                 <ExtendedStyledMenuButton
@@ -451,20 +465,30 @@ export default function Header() {
                             <StyledNavLink id={`zap-nav-link`} to={'/zap'}>
                                 Zap
                             </StyledNavLink>
-                            <StyledNavLink
-                                id={`zap-nav-link`}
-                                to={'/bridge'}
-                            >
+                            <StyledNavLink id={`zap-nav-link`} to={'/bridge'}>
                                 Bridge
                             </StyledNavLink>
                             <StyledNavLink
-                              id={`zap-nav-link`}
-                              as="a"
-                              href="https://analytics.gemkeeper.finance/"
-                              target="_blank"
+                                id={`zap-nav-link`}
+                                as="a"
+                                href="https://analytics.gemkeeper.finance/"
+                                target="_blank"
                             >
                                 Analytics
                             </StyledNavLink>
+                            {account && (
+                                <StyledNavLink
+                                    onClick={() => {
+                                        toggleFaucetModal()
+                                        console.log('hello')
+                                    }}
+                                    id={`faucet-nav-link`}
+                                    as="a"
+                                    // href="havascript:;"
+                                >
+                                    Faucet
+                                </StyledNavLink>
+                            )}
                         </ResponsiveHeaderLinks>
                     )}
                 </ExtendedStyledMenuButton>
@@ -499,6 +523,7 @@ export default function Header() {
                     <Menu />
                 </HeaderElementWrap>
             </HeaderControls>
+            <FaucetModal />
         </HeaderFrame>
     )
 }
