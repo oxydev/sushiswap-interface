@@ -1,13 +1,14 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Modal from 'components/Modal'
 import styled from 'styled-components'
-import { useModalOpen, useToggleFaucetModal } from 'state/application/hooks'
+import { useModalOpen, useToggleFaucetModal, useWalletModalToggle } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/actions'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
-import { ButtonPrimary } from 'components/Button'
+import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
 import { Text } from 'rebass'
 import { useActiveWeb3React } from 'hooks'
 import { shortenAddress } from 'utils'
+import axios from 'axios'
 
 const Wrapper = styled.div`
     ${({ theme }) => theme.flexColumnNoWrap}
@@ -113,10 +114,52 @@ export default function FaucetModal() {
     const faucetModalOpen = useModalOpen(ApplicationModal.FAUCET)
     const toggleFaucetModal = useToggleFaucetModal()
     const { account } = useActiveWeb3React()
+    const [status, setStatus] = useState(0)
+    const [result, setResult] = useState(0)
+
+    const toggleWalletModal = useWalletModalToggle()
 
     function Faucet() {
-        console.log('faucet')
+        const formData = new FormData()
+        if (account) {
+            formData.append('wallet', account)
+            axios
+                .post('https://api.gemkeeper.finance/faucet/request', formData, {
+                    withCredentials: false,
+                    headers: {
+                        'Access-Control-Allow-Origin': '*',
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(res => {
+                    console.log(res)
+                    setResult(res.data.status)
+                })
+        }
     }
+
+    function checkStatus() {
+        const formData = new FormData()
+        if (account) {
+            formData.append('wallet', account)
+            axios
+                .post('https://api.gemkeeper.finance/faucet/status', formData, {
+                    withCredentials: false,
+                    headers: {
+                        'Access-Control-Allow-Origin': '*',
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(res => {
+                    console.log(res)
+                    setStatus(res.data.status)
+                })
+        }
+    }
+
+    useEffect(() => {
+        checkStatus()
+    }, [faucetModalOpen])
 
     return (
         <Modal isOpen={faucetModalOpen} onDismiss={toggleFaucetModal} minHeight={false} maxHeight={90}>
@@ -125,27 +168,88 @@ export default function FaucetModal() {
                     <CloseIcon onClick={toggleFaucetModal}>
                         <CloseColor />
                     </CloseIcon>
-                    <HeaderRow>Enter Your Wallet Address to Earn some Token</HeaderRow>
+                    <HeaderRow>GemKeeper ROSE Faucet</HeaderRow>
                     <ContentWrapper>
-                        {account && (
+                        {result === 0 ? (
+                            <>
+                                {account ? (
+                                    <>
+                                        <InfoBar>
+                                            <Text color={'#fff'} fontSize={18}>
+                                                {status === 0
+                                                    ? 'Loading'
+                                                    : status === 1
+                                                    ? 'Your wallet address is not qualified!'
+                                                    : status === 2
+                                                    ? `Faucet can not be accurated because of wrong policy!`
+                                                    : status === 3
+                                                    ? `You have allready received some tokens!`
+                                                    : status === 4
+                                                    ? shortenAddress(account)
+                                                    : 'Something went wrong!'}
+                                            </Text>
+                                        </InfoBar>
+                                        {status === 4 ? (
+                                            <ButtonPrimary
+                                                padding="8px"
+                                                borderRadius="8px"
+                                                width="100%"
+                                                height="60px"
+                                                onClick={() => {
+                                                    Faucet()
+                                                }}
+                                            >
+                                                Faucet
+                                            </ButtonPrimary>
+                                        ) : (
+                                            <ButtonError disabled={true} width={'100%'}>
+                                                <Text fontSize={20} fontWeight={500}>
+                                                    {status === 0
+                                                        ? 'Loading'
+                                                        : status === 1
+                                                        ? 'Address not qualified!'
+                                                        : status === 2
+                                                        ? `Wrong policy!`
+                                                        : status === 3
+                                                        ? `Allready received!`
+                                                        : 'Something wrong!'}
+                                                </Text>
+                                            </ButtonError>
+                                        )}
+                                    </>
+                                ) : (
+                                    <>
+                                        <InfoBar>
+                                            <Text color={'#fff'} fontSize={18}>
+                                                If you want to access foucet, you need to connect wallet
+                                            </Text>
+                                        </InfoBar>
+
+                                        <ButtonLight onClick={toggleWalletModal} disabled={false} width={'100%'}>
+                                            <Text fontSize={20} fontWeight={500}>
+                                                Connect to a wallet
+                                            </Text>
+                                        </ButtonLight>
+                                    </>
+                                )}
+                            </>
+                        ) : (
                             <InfoBar>
                                 <Text color={'#fff'} fontSize={18}>
-                                    {shortenAddress(account)}
+                                    {result === 1
+                                        ? 'Your wallet address is not qualified!'
+                                        : result === 2
+                                        ? 'You have allready received some tokens!'
+                                        : result === 3
+                                        ? 'Something went wrong suring faucet!'
+                                        : result === 4
+                                        ? 'Faucet Successful!'
+                                        : result === 5
+                                        ? 'Faucet can not be accurated because of wrong policy!'
+                                        : 'Something went wrong!'}
                                 </Text>
                             </InfoBar>
                         )}
-
-                        <ButtonPrimary
-                            padding="8px"
-                            borderRadius="8px"
-                            width="100%"
-                            height="60px"
-                            onClick={() => {
-                                Faucet()
-                            }}
-                        >
-                            Faucet
-                        </ButtonPrimary>
                     </ContentWrapper>
                 </UpperSection>
             </Wrapper>
