@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { darken } from 'polished'
 import { useTranslation } from 'react-i18next'
@@ -114,6 +114,7 @@ const LaunchButton = styled.button`
     flex-shrink: 0;
     cursor: pointer;
     font-weight: normal;
+    z-index: 10;
     ${({ theme }) => theme.mediaWidth.upToSmall`
         font-size: 14px;
   `};
@@ -137,23 +138,89 @@ const HeaderLinksIcon = styled.div`
   `};
 `
 
-const MobileHeaderLinks = styled.div`
-    display: none;
+const MobileHeaderLinks = styled.div<{ show: boolean }>`
+    display: ${props => (props.show ? 'flex' : 'none')};
+    padding: 117px 20px 43px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    flex-direction: column;
+    background-color: #010326;
+    border-radius: 0 0 25px 25px;
+
+    & > a {
+        display: block;
+        width: 100%;
+        line-height: 53px;
+        padding-left: 31px;
+        border-bottom: 1px solid #98cdff;
+        border-radius: 0;
+        margin: 0;
+        font-size: 16px;
+
+        &.ACTIVE {
+            border-radius: 0;
+            background-color: rgba(152, 205, 255, 0.1);
+        }
+
+        &:nth-child(2) {
+            border-top: 2px solid #2b318f;
+        }
+    }
+`
+
+const CloseHeader = styled.div`
+    width: 23px;
+    height: 23px;
+    position: absolute;
+    top: 46px;
+    left: 25px;
+    &::after,
+    &::before {
+        content: '';
+        display: block;
+        width: 25px;
+        height: 3px;
+        background-color: #fff;
+        transform-origin: center;
+        transform: rotate(45deg);
+        position: absolute;
+        right: 0;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        margin: auto;
+    }
+
+    &::before {
+        transform: rotate(-45deg);
+    }
 `
 
 export default function HomeHeader() {
     const { t } = useTranslation()
+    const [show, setShow] = useState(false)
 
     // console.log(chainId)
 
     return (
         <HeaderFrame>
-            <HeaderLinksIcon>
+            <HeaderLinksIcon
+                onClick={() => {
+                    setShow(true)
+                }}
+            >
                 <div></div>
                 <div></div>
                 <div></div>
             </HeaderLinksIcon>
-            <MobileHeaderLinks>
+            <MobileHeaderLinks show={show}>
+                <CloseHeader
+                    onClick={() => {
+                        setShow(false)
+                    }}
+                ></CloseHeader>
                 <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
                     {t('swap')}
                 </StyledNavLink>
