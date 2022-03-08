@@ -1,8 +1,11 @@
 import React from 'react'
 import styled from 'styled-components'
 import mainImage from '../../assets/images/homePageImage.jpg'
+import mainImageMobile from '../../assets/images/homePageImageMobile.jpg'
 
-const HomePage = styled.section``
+const HomePage = styled.section`
+    width: 100%;
+`
 
 const TitleWrapper = styled.div`
     height: 100vh;
@@ -25,20 +28,47 @@ const TitleWrapper = styled.div`
     p {
         font-size: 24px;
     }
+
+    ${({ theme }) => theme.mediaWidth.upToMedium`
+        text-align: center;
+        align-items: center;
+        padding: 0;
+        width: 100%;
+        h2 {
+            font-size: 36px;
+            font-weight: 500;
+        }
+
+        h3 {
+            font-size: 72px;
+        }
+
+        p {
+            font-size: 14px;
+        }
+  `}
 `
 
 const HomeImage = styled.div`
     background-image: url(${mainImage});
     background-color: blue;
     background-repeat: no-repeat;
-    width: 92vw;
-    height: 92vh;
+    width: 104vw;
+    height: 100%;
     background-size: cover;
     opacity: 0.6;
     position: fixed;
     top: 0;
     right: -4vw;
     mix-blend-mode: color-dodge;
+    background-position: right;
+
+    ${({ theme }) => theme.mediaWidth.upToMedium`
+        background-image: url(${mainImageMobile});
+        background-position: bottom;
+        width:100vw;
+        right:0;
+  `}
 `
 
 const LaunchButton = styled.button`
@@ -50,6 +80,11 @@ const LaunchButton = styled.button`
     width: fit-content;
     margin-top: 76px;
     cursour: pointer;
+    z-index: 10;
+
+    ${({ theme }) => theme.mediaWidth.upToSmall`
+        
+  `}
 `
 
 export default function Home() {

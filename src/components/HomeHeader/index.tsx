@@ -10,8 +10,7 @@ import LogoHover from '../../assets/images/main_logo.png'
 import Row, { RowFixed } from '../Row'
 
 const HeaderFrame = styled.div`
-    display: grid;
-    grid-template-columns: 1fr 120px;
+    display: flex;
     align-items: center;
     justify-content: space-between;
     align-items: center;
@@ -19,14 +18,8 @@ const HeaderFrame = styled.div`
     width: 100%;
     top: 0;
     position: fixed;
-    padding: 1rem;
+    padding: 2rem 6vw;
     z-index: 2;
-    padding-left: 6vw;
-    ${({ theme }) => theme.mediaWidth.upToMedium`
-    grid-template-columns: 1fr;
-    padding: 0 1rem;
-    width: calc(100%);
-  `};
 
     ${({ theme }) => theme.mediaWidth.upToExtraSmall`
         padding: 0.5rem 1rem;
@@ -34,25 +27,20 @@ const HeaderFrame = styled.div`
 `
 
 const HeaderRow = styled(RowFixed)`
-    ${({ theme }) => theme.mediaWidth.upToMedium`
-   width: 100%;
-  `};
-
-    @media (max-width: 720px) {
-        padding: 0.5rem 0;
-    }
+    ${({ theme }) => theme.mediaWidth.upToSmall`
+    padding: 0.5rem 0;
+    position: absolute;
+    right: 0;
+    left: 0;
+    margin: auto;
+  `}
 `
 
 const HeaderLinks = styled(Row)`
     justify-content: center;
-    ${({ theme }) => theme.mediaWidth.upToMedium`
-    padding: 1rem 0 1rem 1rem;
-    justify-content: flex-end;
-
-    @media (max-width: 720px) {
+    ${({ theme }) => theme.mediaWidth.upToSmall`
         display: none;
-    }
-`};
+  `}
 `
 
 const activeClassName = 'ACTIVE'
@@ -69,7 +57,7 @@ const StyledNavLink = styled(NavLink).attrs({
     color: ${({ theme }) => theme.text2};
     font-size: 1rem;
     width: fit-content;
-    margin: 0 12px;
+    margin: 0 32px;
     font-weight: 500;
 
     &.${activeClassName} {
@@ -101,6 +89,56 @@ const HoverIcon = styled.div`
     position: relative;
     display: flex;
     align-items: center;
+
+    img {
+        width: 78px;
+    }
+
+    ${({ theme }) => theme.mediaWidth.upToSmall`
+        & > img {
+            width: 45px;
+        }    
+      `};
+`
+
+const LaunchButton = styled.button`
+    background-color: #2655c2;
+    border-radius: 12px;
+    border: none;
+    outline: none;
+    color: #fff;
+    font-size: 20px;
+    padding: 14px 54px;
+    margin-left: auto;
+    margin-right: 0;
+    flex-shrink: 0;
+    cursor: pointer;
+    font-weight: normal;
+    ${({ theme }) => theme.mediaWidth.upToSmall`
+        font-size: 14px;
+  `};
+`
+
+const HeaderLinksIcon = styled.div`
+    display: none;
+    width: 26px;
+    height: 20px;
+    flex-direction: column;
+    justify-content: space-between;
+
+    & > div {
+        width: 100%;
+        background-color: #fff;
+        height: 2px;
+    }
+
+    ${({ theme }) => theme.mediaWidth.upToSmall`
+        display: flex;
+  `};
+`
+
+const MobileHeaderLinks = styled.div`
+    display: none;
 `
 
 export default function HomeHeader() {
@@ -110,10 +148,33 @@ export default function HomeHeader() {
 
     return (
         <HeaderFrame>
+            <HeaderLinksIcon>
+                <div></div>
+                <div></div>
+                <div></div>
+            </HeaderLinksIcon>
+            <MobileHeaderLinks>
+                <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
+                    {t('swap')}
+                </StyledNavLink>
+                <StyledNavLink
+                    id={`pool-nav-link`}
+                    to={'/pool'}
+                    isActive={(match, { pathname }) =>
+                        Boolean(match) ||
+                        pathname.startsWith('/add') ||
+                        pathname.startsWith('/remove') ||
+                        pathname.startsWith('/create') ||
+                        pathname.startsWith('/find')
+                    }
+                >
+                    Home
+                </StyledNavLink>
+            </MobileHeaderLinks>
             <HeaderRow>
                 <Title href=".">
                     <HoverIcon>
-                        <img width={'48px'} src={LogoHover} alt="logo" />
+                        <img width={'78px'} src={LogoHover} alt="logo" />
                     </HoverIcon>
                     {/*<StaticIcon>*/}
                     {/*    <img width={'40px'} src={Logo} alt="logo" />*/}
@@ -138,6 +199,7 @@ export default function HomeHeader() {
                     </StyledNavLink>
                 </HeaderLinks>
             </HeaderRow>
+            <LaunchButton>Launch App</LaunchButton>
         </HeaderFrame>
     )
 }
