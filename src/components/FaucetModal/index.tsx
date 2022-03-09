@@ -116,10 +116,12 @@ export default function FaucetModal() {
     const { account } = useActiveWeb3React()
     const [status, setStatus] = useState(0)
     const [result, setResult] = useState(0)
+    const [localLoading, setLocalLoading] = useState(false)
 
     const toggleWalletModal = useWalletModalToggle()
 
     function Faucet() {
+        setLocalLoading(true)
         const formData = new FormData()
         if (account) {
             formData.append('wallet', account)
@@ -132,8 +134,12 @@ export default function FaucetModal() {
                     }
                 })
                 .then(res => {
+                    setLocalLoading(false)
                     console.log(res)
                     setResult(res.data.status)
+                })
+                .catch(() => {
+                    setLocalLoading(false)
                 })
         }
     }
@@ -204,8 +210,9 @@ export default function FaucetModal() {
                                                 onClick={() => {
                                                     Faucet()
                                                 }}
+                                                disabled={localLoading}
                                             >
-                                                Request 0.5 ROSE
+                                                {localLoading ? 'Waiting' : 'Request 0.5 ROSE'}
                                             </ButtonPrimary>
                                         ) : (
                                             <ButtonError disabled={true} width={'100%'}>
