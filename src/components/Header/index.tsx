@@ -49,7 +49,7 @@ const ExtendedStyledMenuButton = styled(StyledMenuButton)`
 
 const HeaderFrame = styled.div`
     display: grid;
-    grid-template-columns: 1fr 120px;
+    grid-template-columns: 1fr 290px;
     align-items: center;
     justify-content: space-between;
     align-items: center;
@@ -126,6 +126,7 @@ const HeaderElement = styled.div`
 const HeaderElementWrap = styled.div`
     display: flex;
     align-items: center;
+    flex-shrink: 0;
 `
 
 const HeaderRow = styled(RowFixed)`
@@ -519,7 +520,7 @@ export default function Header() {
                     {/* <ExtendedStyledMenuButton onClick={() => toggleDarkMode()}>
             {darkMode ? <Moon size={20} /> : <Sun size={20} />}
           </ExtendedStyledMenuButton> */}
-                    {/* <LanguageSwitch /> */}
+                    <LanguageSwitch />
                     <Menu />
                 </HeaderElementWrap>
             </HeaderControls>
