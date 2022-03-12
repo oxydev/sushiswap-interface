@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 import { setInterval } from 'timers'
 import mainImage from '../../assets/images/homePageImage.jpg'
+import LogoRing from '../../assets/images/logoRing.png'
 import mainImageMobile from '../../assets/images/homePageImageMobile.jpg'
 
 const HomePage = styled.section`
@@ -53,8 +54,8 @@ const TitleWrapper = styled.div`
 `
 
 const HomeImage = styled.div`
-    background-image: url(${mainImage});
-    background-color: blue;
+    // background-image: url(${mainImage});
+    // background-color: blue;
     background-repeat: no-repeat;
     width: 104vw;
     height: 100%;
@@ -91,6 +92,30 @@ const LaunchButton = styled.button`
     font-size: 20px;
         
   `}
+`
+const hueRotate = keyframes`
+        from {
+            filter: hue-rotate(0);
+        }
+        to {
+            filter: hue-rotate(360deg);
+        }
+`
+
+const LogoRingImage = styled.img`
+    background-repeat: no-repeat;
+    width: 104vw;
+    height: 100%;
+    background-size: cover;
+    opacity: 0.6;
+    position: fixed;
+    top: 0;
+    right: -4vw;
+    mix-blend-mode: color-dodge;
+    background-position: right;
+    object-fit: contain;
+    object-position: right;
+    animation: ${hueRotate} 10s linear infinite;
 `
 
 export default function Home() {
@@ -134,6 +159,7 @@ export default function Home() {
 
     return (
         <HomePage>
+            <LogoRingImage src={LogoRing} />
             <TitleWrapper>
                 <h2>Total Value Locked</h2>
                 <h3>$ {numberWithCommas(liquidity)}</h3>
@@ -146,7 +172,7 @@ export default function Home() {
                     Launch App
                 </LaunchButton>
             </TitleWrapper>
-            <HomeImage />
+            {/* <HomeImage /> */}
         </HomePage>
     )
 }
