@@ -4,7 +4,7 @@ import { transparentize } from 'polished'
 
 export const BodyWrapper = styled.div`
     position: relative;
-    max-width: 840px;
+    max-width: 601px;
     width: 100%;
     // background: ${({ theme }) => transparentize(0.25, theme.bg1)};
     background: rgba(61,63,90,0.76);

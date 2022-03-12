@@ -57,7 +57,7 @@ const LabelRow = styled.div`
 const InputRow = styled.div<{ selected: boolean }>`
     ${({ theme }) => theme.flexRowNoWrap}
     align-items: center;
-    padding: 1.5rem;
+    padding: 1rem 1.5rem;
     display: flex;
 
     @media (max-width: 720px) {
@@ -98,7 +98,7 @@ const StyledBalanceMax = styled.button`
 
     font-weight: 500;
     cursor: pointer;
-    margin-right: 2.5rem;
+    margin-right: 15px;
     color: ${({ theme }) => theme.primaryText1};
     :hover {
         border: 1px solid ${({ theme }) => theme.primary1};
@@ -146,6 +146,9 @@ const Aligner = styled.span`
 const StyledTokenName = styled.span<{ active?: boolean }>`
   ${({ active }) => (active ? '  margin: 0 0.25rem 0 0.75rem;' : '  margin: 0 0.25rem 0 0.25rem;')}
   font-size:  ${({ active }) => (active ? '20px' : '16px')};
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 
 `
 
@@ -276,7 +279,7 @@ export default function BridgeInputPart({
                             <CurrencySelect
                                 selected={!!currency}
                                 className="open-currency-select-button"
-                                style={{ marginRight: '50px', width: '130px' }}
+                                style={{ marginRight: '10px', width: '130px' }}
                                 onClick={() => {
                                     if (!disableCurrencySelect) {
                                         setModalOpen(true)
