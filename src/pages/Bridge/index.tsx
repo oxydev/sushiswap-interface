@@ -30,6 +30,7 @@ import Loader from '../../components/Loader'
 import ProgressSteps from '../../components/ProgressSteps'
 import DownArrow from '../../assets/images/downArrow.svg'
 import ReminderIcon from '../../assets/images/reminderIcon.svg'
+import { useTranslation } from 'react-i18next'
 
 const BottomGrouping = styled.div`
     margin-top: 1rem;
@@ -490,10 +491,11 @@ export default function Bridge() {
             setApprovalSubmitted(true)
         }
     }, [approval, approvalSubmitted])
-    const showApproveFlow = bridgeTrade.type === "UNDERLYINGV2" && (
-        approval === ApprovalState.NOT_APPROVED ||
-        approval === ApprovalState.PENDING ||
-        (approvalSubmitted && approval === ApprovalState.APPROVED))
+    const showApproveFlow =
+        bridgeTrade.type === 'UNDERLYINGV2' &&
+        (approval === ApprovalState.NOT_APPROVED ||
+            approval === ApprovalState.PENDING ||
+            (approvalSubmitted && approval === ApprovalState.APPROVED))
 
     const { callback: swapCallback, error: swapCallbackError } = useBridgeCallback(bridgeTrade, bridgeRecipient)
 
@@ -779,6 +781,8 @@ export default function Bridge() {
         }
     }
 
+    const { t } = useTranslation()
+
     return (
         <>
             <BridgePageBody>
@@ -786,7 +790,7 @@ export default function Bridge() {
 
                 <Wrapper>
                     <TYPE.black fontSize={24} fontWeight={500} color={'#ffd545'} style={{ marginBottom: '29px' }}>
-                        Bridge
+                        {t('Bridge')}
                     </TYPE.black>
                     <ConfirmBridgeModal
                         isOpen={showConfirm}
@@ -859,12 +863,12 @@ export default function Bridge() {
                                 >
                                     {approval === ApprovalState.PENDING ? (
                                         <AutoRow gap="6px" justify="center">
-                                            Approving <Loader stroke="white" />
+                                            {t('Approving')} <Loader stroke="white" />
                                         </AutoRow>
                                     ) : approvalSubmitted && approval === ApprovalState.APPROVED ? (
-                                        'Approved'
+                                        t('Approved')
                                     ) : (
-                                        'Approve ' + currencyInput.getSymbol(chainId)
+                                        t('Approve ') + currencyInput.getSymbol(chainId)
                                     )}
                                 </ButtonConfirmed>
                             ) : null}
@@ -887,7 +891,7 @@ export default function Bridge() {
                                         style={{ maxWidth: showApproveFlow ? '48%' : '100%', flexShrink: 0 }}
                                         disabled={showApproveFlow && approval !== ApprovalState.APPROVED ? true : false}
                                     >
-                                        Bridge
+                                        {t('Bridge')}
                                     </ButtonConfirmed>
                                 </>
                             ) : (
@@ -911,14 +915,14 @@ export default function Bridge() {
                                 >
                                     <Text fontSize={20} fontWeight={500}>
                                         {!transferData
-                                            ? 'Loading'
+                                            ? t('Loading')
                                             : bridgeStatus === 'notBalance'
-                                            ? 'Not Enough Balance'
+                                            ? t('Not Enough Balance')
                                             : bridgeStatus === 'maxLimit'
-                                            ? `Exceeds Max Limit`
+                                            ? t('Exceeds Max Limit')
                                             : bridgeStatus === 'minLimit'
-                                            ? `Exceeds Min Limit`
-                                            : 'Enter an amount'}
+                                            ? t('Exceeds Min Limit')
+                                            : t('Enter an amount')}
                                     </Text>
                                 </ButtonError>
                             )}
@@ -936,33 +940,33 @@ export default function Bridge() {
                         <AutoColumn gap={'12px'}>
                             <ReminderTitle>
                                 <Text fontSize={16} fontWeight={500}>
-                                    Reminder:
+                                    {t('Reminder:')}
                                 </Text>
                             </ReminderTitle>
 
                             <AutoColumn style={{ marginLeft: '35px', marginBottom: '20px' }} gap={'6px'}>
                                 <Text fontSize={14} fontWeight={400}>
-                                    - Crosschain Fee is{' '}
+                                    {t('- Crosschain Fee is')}{' '}
                                     {transferData.SwapFeeRatePerMillion ? transferData.SwapFeeRatePerMillion : 0} %,
-                                    Minimum Crosschain Fee is{' '}
+                                    {t('Minimum Crosschain Fee is')}{' '}
                                     {transferData.MinimumSwapFee ? transferData.MinimumSwapFee : 0}{' '}
                                     {transferData.symbol}, Maximum Crosschain Fee is{' '}
                                     {transferData.MaximumSwapFee ? transferData.MaximumSwapFee : 0}{' '}
                                     {transferData.symbol}
                                 </Text>
                                 <Text fontSize={14} fontWeight={400}>
-                                    - Minimum Crosschain Amount is{' '}
+                                    {t('- Minimum Crosschain Amount is')}{' '}
                                     {transferData.MinimumSwap ? transferData.MinimumSwap : 0} {transferData.symbol}
                                 </Text>
                                 <Text fontSize={14} fontWeight={400}>
-                                    - Maximum Crosschain Amount is{' '}
+                                    {t('- Maximum Crosschain Amount is')}{' '}
                                     {transferData.MaximumSwap ? transferData.MaximumSwap : 0} {transferData.symbol}
                                 </Text>
                                 <Text fontSize={14} fontWeight={400}>
-                                    - Estimated Time of Crosschain Arrival is 3-30 min
+                                    {t('- Estimated Time of Crosschain Arrival is 3-30 min')}
                                 </Text>
                                 <Text fontSize={14} fontWeight={400}>
-                                    - Crosschain amount larger than{' '}
+                                    {t('- Crosschain amount larger than')}{' '}
                                     {transferData.BigValueThreshold ? transferData.BigValueThreshold : 0}{' '}
                                     {transferData.symbol} could take up to 12 hours
                                 </Text>
@@ -981,7 +985,7 @@ export default function Bridge() {
                     padding: '8px'
                 }}
             >
-                Powered by MultiChain
+                {t('Powered by MultiChain')}
             </TYPE.black>
         </>
     )

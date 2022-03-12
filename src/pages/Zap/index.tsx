@@ -262,6 +262,8 @@ export default function Zap(): JSX.Element {
     const [input, setInput] = useState<string>('')
     const [output, setOutput] = useState<string>('0.0')
 
+    const { t } = useTranslation()
+
     useEffect(() => {
         console.log(input, currency)
         if (currency?.symbol && parseFloat(input) > parseFloat(limitObject[currency?.symbol])) {
@@ -397,17 +399,20 @@ export default function Zap(): JSX.Element {
         [approval, inputToken, pair]
     )
 
-    const { t } = useTranslation()
     return (
         <ZapPage>
             <BodyWrapper>
                 <StyledZapHeader>
                     <TYPE.black fontWeight={500} color={'#ffd545'}>
-                        ZAP
+                        {t('zap')}
                     </TYPE.black>
                     <TYPE.black fontWeight={400}>
-                        Convert single tokens to LP tokens directly.{' '}
-                        <QuestionHelper text=" WARNING: Zap can cause slippage. Please do not Zap large amounts. All slippages will be used to buy Back $BLING" />
+                        {t('Convert single tokens to LP tokens directly.')}{' '}
+                        <QuestionHelper
+                            text={t(
+                                ' WARNING: Zap can cause slippage. Please do not Zap large amounts. All slippages will be used to buy Back $BLING'
+                            )}
+                        />
                     </TYPE.black>
                 </StyledZapHeader>
                 <ZapImageMobile>
@@ -422,7 +427,7 @@ export default function Zap(): JSX.Element {
                     <ZapTopInput>
                         <Line style={{ marginBottom: '15px' }}>
                             <TYPE.black fontWeight={500} color={'#fff'} fontSize={14}>
-                                From
+                                {t('From')}
                             </TYPE.black>
                             <TYPE.black fontWeight={500} color={'#fff'} fontSize={14}>
                                 {!!currency && selectedCurrencyBalance
@@ -447,7 +452,7 @@ export default function Zap(): JSX.Element {
                                         style={{ marginTop: 'auto', marginBottom: 'auto' }}
                                         onClick={onMax}
                                     >
-                                        Max
+                                        {t('Max')}
                                     </StyledBalanceMax>
                                 )}
                             </>
@@ -543,10 +548,10 @@ export default function Zap(): JSX.Element {
                         >
                             {approval === ApprovalState.PENDING ? (
                                 <AutoRow gap="6px" justify="center">
-                                    Approving <Loader stroke="white" />
+                                    {t('Approving')} <Loader stroke="white" />
                                 </AutoRow>
                             ) : (
-                                'Approve ' + currency.symbol
+                                t('Approve ') + currency.symbol
                             )}
                         </ButtonConfirmed>
                     ) : estimateLp ? (

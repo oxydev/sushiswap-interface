@@ -39,6 +39,7 @@ import { currencyId } from '../../utils/currencyId'
 import { PoolPriceBar } from './PoolPriceBar'
 import { useIsTransactionUnsupported } from 'hooks/Trades'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
+import { useTranslation } from 'react-i18next'
 
 export default function AddLiquidity({
     match: {
@@ -48,6 +49,7 @@ export default function AddLiquidity({
 }: RouteComponentProps<{ currencyIdA?: string; currencyIdB?: string }>) {
     const { account, chainId, library } = useActiveWeb3React()
     const theme = useContext(ThemeContext)
+    const { t } = useTranslation()
 
     const currencyA = useCurrency(currencyIdA)
     const currencyB = useCurrency(currencyIdB)
@@ -345,13 +347,13 @@ export default function AddLiquidity({
                                     <BlueCard>
                                         <AutoColumn gap="10px">
                                             <TYPE.link fontWeight={600} color={'primaryText1'}>
-                                                You are the first liquidity provider.
+                                                {t('You are the first liquidity provider.')}
                                             </TYPE.link>
                                             <TYPE.link fontWeight={400} color={'primaryText1'}>
-                                                The ratio of tokens you add will set the price of this pool.
+                                                {t('The ratio of tokens you add will set the price of this pool.')}
                                             </TYPE.link>
                                             <TYPE.link fontWeight={400} color={'primaryText1'}>
-                                                Once you are happy with the rate click supply to review.
+                                                {t('Once you are happy with the rate click supply to review.')}
                                             </TYPE.link>
                                         </AutoColumn>
                                     </BlueCard>
@@ -361,9 +363,10 @@ export default function AddLiquidity({
                                     <BlueCard>
                                         <AutoColumn gap="10px">
                                             <TYPE.link fontWeight={400} color={'#0A1D46'}>
-                                                <b>Tip:</b> When you add liquidity, you will receive pool tokens
-                                                representing your position. These tokens automatically earn fees
-                                                proportional to your share of the pool, and can be redeemed at any time.
+                                                <b>{t('Tip:')}</b>{' '}
+                                                {t(
+                                                    'When you add liquidity, you will receive pool tokens representing your position. These tokens automatically earn fees proportional to your share of the pool, and can be redeemed at any time.'
+                                                )}
                                             </TYPE.link>
                                         </AutoColumn>
                                     </BlueCard>
@@ -403,7 +406,7 @@ export default function AddLiquidity({
                                     <LightCard padding="0px" borderRadius={'20px'}>
                                         <RowBetween padding="1rem">
                                             <TYPE.subHeader fontWeight={500} fontSize={14}>
-                                                {noLiquidity ? 'Initial prices' : 'Prices'} and pool share
+                                                {noLiquidity ? t('Initial prices') : t('Prices')} {t('and pool share')}
                                             </TYPE.subHeader>
                                         </RowBetween>{' '}
                                         <LightCard padding="1rem" borderRadius={'20px'}>
@@ -420,10 +423,10 @@ export default function AddLiquidity({
 
                         {addIsUnsupported ? (
                             <ButtonPrimary disabled={true}>
-                                <TYPE.main mb="4px">Unsupported Asset</TYPE.main>
+                                <TYPE.main mb="4px">{t('Unsupported Asset')}</TYPE.main>
                             </ButtonPrimary>
                         ) : !account ? (
-                            <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
+                            <ButtonLight onClick={toggleWalletModal}>{t('ConnectToWallet')}</ButtonLight>
                         ) : (
                             <AutoColumn gap={'md'}>
                                 {(approvalA === ApprovalState.NOT_APPROVED ||
@@ -443,7 +446,7 @@ export default function AddLiquidity({
                                                             Approving {currencies[Field.CURRENCY_A]?.getSymbol(chainId)}
                                                         </Dots>
                                                     ) : (
-                                                        'Approve ' + currencies[Field.CURRENCY_A]?.getSymbol(chainId)
+                                                        t('Approve ') + currencies[Field.CURRENCY_A]?.getSymbol(chainId)
                                                     )}
                                                 </ButtonPrimary>
                                             )}
@@ -458,7 +461,7 @@ export default function AddLiquidity({
                                                             Approving {currencies[Field.CURRENCY_B]?.getSymbol(chainId)}
                                                         </Dots>
                                                     ) : (
-                                                        'Approve ' + currencies[Field.CURRENCY_B]?.getSymbol(chainId)
+                                                        t('Approve ') + currencies[Field.CURRENCY_B]?.getSymbol(chainId)
                                                     )}
                                                 </ButtonPrimary>
                                             )}

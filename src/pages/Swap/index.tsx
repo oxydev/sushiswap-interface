@@ -48,9 +48,11 @@ import Loader from '../../components/Loader'
 import { useIsTransactionUnsupported } from 'hooks/Trades'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { isTradeBetter } from 'utils/trades'
+import { useTranslation } from 'react-i18next'
 
 export default function Swap() {
     const loadedUrlParams = useDefaultsFromURLSearch()
+    const { t } = useTranslation()
 
     // token warning stuff
     const [loadedInputCurrency, loadedOutputCurrency] = [
@@ -112,16 +114,12 @@ export default function Swap() {
                 } catch (addError) {
                     // handle "add" error
                 }
-
-            } catch (e) {
-
-            }
-
+            } catch (e) {}
         }
     }
-    useEffect(()=>{
+    useEffect(() => {
         switchNetwork()
-    },[])
+    }, [])
     // get custom setting values for user
     const [allowedSlippage] = useUserSlippageTolerance()
 
@@ -479,10 +477,10 @@ export default function Swap() {
                     <BottomGrouping style={{ paddingBottom: '1rem' }}>
                         {swapIsUnsupported ? (
                             <ButtonPrimary disabled={true}>
-                                <TYPE.main mb="4px">Unsupported Asset</TYPE.main>
+                                <TYPE.main mb="4px">{t('unsupportedAsset')}</TYPE.main>
                             </ButtonPrimary>
                         ) : !account ? (
-                            <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
+                            <ButtonLight onClick={toggleWalletModal}>{t('connectToWallet')}</ButtonLight>
                         ) : showWrap ? (
                             <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap}>
                                 {wrapInputError ??
@@ -494,8 +492,8 @@ export default function Swap() {
                             </ButtonPrimary>
                         ) : noRoute && userHasSpecifiedInputOutput ? (
                             <GreyCard style={{ textAlign: 'center' }}>
-                                <TYPE.main mb="4px">Insufficient liquidity for this trade.</TYPE.main>
-                                {singleHopOnly && <TYPE.main mb="4px">Try enabling multi-hop trades.</TYPE.main>}
+                                <TYPE.main mb="4px">{t('Insufficient liquidity for this trade.')}</TYPE.main>
+                                {singleHopOnly && <TYPE.main mb="4px">{t('Try enabling multi-hop trades')}.</TYPE.main>}
                             </GreyCard>
                         ) : showApproveFlow ? (
                             <RowBetween>
@@ -508,12 +506,12 @@ export default function Swap() {
                                 >
                                     {approval === ApprovalState.PENDING ? (
                                         <AutoRow gap="6px" justify="center">
-                                            Approving <Loader stroke="white" />
+                                            {t('Approving')} <Loader stroke="white" />
                                         </AutoRow>
                                     ) : approvalSubmitted && approval === ApprovalState.APPROVED ? (
-                                        'Approved'
+                                        t('Approved')
                                     ) : (
-                                        'Approve ' + currencies[Field.INPUT]?.getSymbol(chainId)
+                                        t('Approve ') + currencies[Field.INPUT]?.getSymbol(chainId)
                                     )}
                                 </ButtonConfirmed>
                                 <ButtonError
@@ -541,8 +539,8 @@ export default function Swap() {
                                 >
                                     <Text fontSize={16} fontWeight={500}>
                                         {priceImpactSeverity > 3 && !isExpertMode
-                                            ? `Price Impact High`
-                                            : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
+                                            ? t('Price Impact High')
+                                            : `${t('Swap')}${priceImpactSeverity > 2 ? t(' Anyway') : ''}`}
                                     </Text>
                                 </ButtonError>
                             </RowBetween>
@@ -569,8 +567,8 @@ export default function Swap() {
                                     {swapInputError
                                         ? swapInputError
                                         : priceImpactSeverity > 3 && !isExpertMode
-                                        ? `Price Impact Too High`
-                                        : `Swap${priceImpactSeverity > 2 ? ' Anyway' : ''}`}
+                                        ? t('Price Impact High')
+                                        : `${t('Swap')}${priceImpactSeverity > 2 ? t(' Anyway') : ''}`}
                                 </Text>
                             </ButtonError>
                         )}
@@ -593,7 +591,7 @@ export default function Swap() {
                                     {Boolean(trade) && (
                                         <RowBetween align="center">
                                             <Text fontWeight={500} fontSize={14} color={theme.text3}>
-                                                Price
+                                                {t('Price')}
                                             </Text>
                                             <TradePrice
                                                 price={trade?.executionPrice}
@@ -610,7 +608,7 @@ export default function Swap() {
                                                 color={theme.text2}
                                                 onClick={toggleSettings}
                                             >
-                                                Slippage Tolerance
+                                                {t('Slippage Tolerance')}
                                             </ClickableText>
                                             <ClickableText
                                                 fontWeight={500}

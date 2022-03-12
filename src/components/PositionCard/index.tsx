@@ -25,6 +25,7 @@ import DoubleCurrencyLogo from '../DoubleLogo'
 import { RowBetween, RowFixed, AutoRow } from '../Row'
 import { Dots } from '../swap/styleds'
 import { BIG_INT_ZERO } from '../../constants'
+import { useTranslation } from 'react-i18next'
 
 export const FixedHeightRow = styled(RowBetween)`
     height: 24px;
@@ -59,6 +60,8 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
     const currency0 = showUnwrapped ? pair.token0 : unwrappedToken(pair.token0)
     const currency1 = showUnwrapped ? pair.token1 : unwrappedToken(pair.token1)
 
+    const { t } = useTranslation()
+
     const [showMore, setShowMore] = useState(false)
 
     const userPoolBalance = useTokenBalance(account ?? undefined, pair.liquidityToken)
@@ -89,7 +92,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
                         <FixedHeightRow>
                             <RowFixed>
                                 <Text fontWeight={500} fontSize={16}>
-                                    Your position
+                                    {t('Your position')}
                                 </Text>
                             </RowFixed>
                         </FixedHeightRow>
@@ -157,9 +160,9 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
                         <span role="img" aria-label="wizard-icon">
                             ⭐️
                         </span>{' '}
-                        By adding liquidity you&apos;ll earn 0.25% of all trades on this pair proportional to your share
-                        of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing
-                        your liquidity.
+                        {t(
+                            'By adding liquidity you&apos;ll earn 0.25% of all trades on this pair proportional to your share of the pool. Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity.'
+                        )}
                     </TYPE.subHeader>
                 </LightCard>
             )}
@@ -172,6 +175,8 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
 
     const currency0 = unwrappedToken(pair.token0)
     const currency1 = unwrappedToken(pair.token1)
+
+    const { t } = useTranslation()
 
     const [showMore, setShowMore] = useState(false)
 
@@ -208,7 +213,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
                         <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={20} />
                         <Text fontWeight={500} fontSize={20}>
                             {!currency0 || !currency1 ? (
-                                <Dots>Loading</Dots>
+                                <Dots>{t('Loading')}</Dots>
                             ) : (
                                 `${currency0.getSymbol(chainId)}/${currency1.getSymbol(chainId)}`
                             )}
@@ -223,12 +228,12 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
                         >
                             {showMore ? (
                                 <>
-                                    Manage
+                                    {t('Manage')}
                                     <ChevronUp size="20" style={{ marginLeft: '10px' }} />
                                 </>
                             ) : (
                                 <>
-                                    Manage
+                                    {t('Manage')}
                                     <ChevronDown size="20" style={{ marginLeft: '10px' }} />
                                 </>
                             )}
@@ -240,7 +245,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
                     <AutoColumn gap="8px">
                         <FixedHeightRow>
                             <Text fontSize={16} fontWeight={500}>
-                                Your total pool tokens:
+                                {t('Your total pool tokens:')}
                             </Text>
                             <Text fontSize={16} fontWeight={500}>
                                 {userPoolBalance ? userPoolBalance.toSignificant(4) : '-'}
@@ -249,7 +254,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
                         {stakedBalance && (
                             <FixedHeightRow>
                                 <Text fontSize={16} fontWeight={500}>
-                                    Pool tokens in rewards pool:
+                                    {t('Pool tokens in rewards pool:')}
                                 </Text>
                                 <Text fontSize={16} fontWeight={500}>
                                     {stakedBalance.toSignificant(4)}
@@ -277,7 +282,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
                         <FixedHeightRow>
                             <RowFixed>
                                 <Text fontSize={16} fontWeight={500}>
-                                    Pooled {currency1?.getSymbol(chainId)}:
+                                    {t('Pooled')} {currency1?.getSymbol(chainId)}:
                                 </Text>
                             </RowFixed>
                             {token1Deposited ? (
@@ -294,7 +299,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
 
                         <FixedHeightRow>
                             <Text fontSize={16} fontWeight={500}>
-                                Your pool share:
+                                {t('Your pool share:')}
                             </Text>
                             <Text fontSize={16} fontWeight={500}>
                                 {poolTokenPercentage
@@ -322,7 +327,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
                                     to={`/add/${currencyId(currency0)}/${currencyId(currency1)}`}
                                     width="48%"
                                 >
-                                    Add
+                                    {t('Add')}
                                 </ButtonPrimaryNormal>
                                 <ButtonPrimaryNormal
                                     padding="8px"
@@ -331,7 +336,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
                                     width="48%"
                                     to={`/remove/${currencyId(currency0)}/${currencyId(currency1)}`}
                                 >
-                                    Remove
+                                    {t('Remove')}
                                 </ButtonPrimaryNormal>
                             </RowBetween>
                         )}
@@ -343,7 +348,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
                                 to={`/uni/${currencyId(currency0)}/${currencyId(currency1)}`}
                                 width="100%"
                             >
-                                Manage Liquidity in Rewards Pool
+                                {t('Manage Liquidity in Rewards Pool')}
                             </ButtonPrimary>
                         )}
                     </AutoColumn>

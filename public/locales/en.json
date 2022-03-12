@@ -1,5 +1,6 @@
 {
     "noWallet": "No Ethereum wallet found",
+    "connectToWallet": "Connect to a wallet",
     "wrongNetwork": "You are on the wrong network",
     "switchNetwork": "Please switch to {{ correctNetwork }}",
     "installWeb3MobileBrowser": "Please visit us from a web3-enabled mobile browser such as Trust Wallet or Coinbase Wallet.",
@@ -8,6 +9,12 @@
     "swap": "Swap",
     "swapAnyway": "Swap Anyway",
     "send": "Send",
+    "liquidity": "Liquidity",
+    "gemMine": "Gem Mine",
+    "zap": "Zap",
+    "bridge": "Bridge",
+    "analytics": "Analytics",
+    "faucet": "Faucet",
     "sendAnyway": "Send Anyway",
     "pool": "Pool",
     "betaWarning": "This project is in beta. Use at your own risk.",
@@ -88,5 +95,6 @@
     "forAtLeast": "for at least ",
     "brokenToken": "The selected token is not compatible with Uniswap V1. Adding liquidity will result in locked funds.",
     "toleranceExplanation": "Lowering this limit decreases your risk of frontrunning. However, this makes more likely that your transaction will fail due to normal price movements.",
-    "tokenSearchPlaceholder": "Search name or paste address"
+    "tokenSearchPlaceholder": "Search name or paste address",
+    "unsupportedAsset": "Unsupported Asset"
 }

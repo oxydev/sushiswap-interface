@@ -202,7 +202,8 @@ export default function CurrencyInputPanel({
                                     style={{ display: 'inline', cursor: 'pointer' }}
                                 >
                                     {!hideBalance && !!currency && selectedCurrencyBalance
-                                        ? (customBalanceText ?? 'Balance: ') + selectedCurrencyBalance?.toSignificant(6)
+                                        ? (customBalanceText ?? t('balance')) +
+                                          selectedCurrencyBalance?.toSignificant(6)
                                         : ' -'}
                                 </TYPE.body>
                             )}

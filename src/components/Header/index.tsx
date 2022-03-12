@@ -49,7 +49,7 @@ const ExtendedStyledMenuButton = styled(StyledMenuButton)`
 
 const HeaderFrame = styled.div`
     display: grid;
-    grid-template-columns: 1fr 290px;
+    grid-template-columns: 1fr 600px;
     align-items: center;
     justify-content: space-between;
     align-items: center;
@@ -394,18 +394,18 @@ export default function Header() {
                             pathname.startsWith('/find')
                         }
                     >
-                        Liquidity
+                        {t('liquidity')}
                     </StyledNavLink>
 
                     <StyledNavLink id={`yield-nav-link`} to={'/yield'}>
-                        Gem Mine
+                        {t('gemMine')}
                     </StyledNavLink>
 
                     <StyledNavLink id={`zap-nav-link`} to={'/zap'}>
-                        Zap
+                        {t('zap')}
                     </StyledNavLink>
                     <StyledNavLink id={`zap-nav-link`} to={'/bridge'}>
-                        Bridge
+                        {t('bridge')}
                     </StyledNavLink>
                     <StyledNavLink
                         id={`zap-nav-link`}
@@ -413,19 +413,18 @@ export default function Header() {
                         href="https://analytics.gemkeeper.finance/"
                         target="_blank"
                     >
-                        Analytics
+                        {t('analytics')}
                     </StyledNavLink>
                     {account && (
                         <StyledNavLink
                             onClick={() => {
                                 toggleFaucetModal()
-                                console.log('hello')
                             }}
                             id={`faucet-nav-link`}
                             as="a"
                             // href="havascript:;"
                         >
-                            Faucet
+                            {t('faucet')}
                         </StyledNavLink>
                     )}
                 </HeaderLinks>
@@ -456,18 +455,18 @@ export default function Header() {
                                     pathname.startsWith('/find')
                                 }
                             >
-                                Liquidity
+                                {t('liquidity')}
                             </StyledNavLink>
 
                             <StyledNavLink id={`yield-nav-link`} to={'/yield'}>
-                                Gem Mine
+                                {t('gemMine')}
                             </StyledNavLink>
 
                             <StyledNavLink id={`zap-nav-link`} to={'/zap'}>
-                                Zap
+                                {t('zap')}
                             </StyledNavLink>
                             <StyledNavLink id={`zap-nav-link`} to={'/bridge'}>
-                                Bridge
+                                {t('bridge')}
                             </StyledNavLink>
                             <StyledNavLink
                                 id={`zap-nav-link`}
@@ -475,7 +474,7 @@ export default function Header() {
                                 href="https://analytics.gemkeeper.finance/"
                                 target="_blank"
                             >
-                                Analytics
+                                {t('analytics')}
                             </StyledNavLink>
                             {account && (
                                 <StyledNavLink
@@ -487,7 +486,7 @@ export default function Header() {
                                     as="a"
                                     // href="havascript:;"
                                 >
-                                    Faucet
+                                    {t('faucet')}
                                 </StyledNavLink>
                             )}
                         </ResponsiveHeaderLinks>

@@ -13,12 +13,14 @@ import useFarms from 'sushi-hooks/useFarms'
 import { ChevronUp, ChevronDown } from 'react-feather'
 import InputGroup from './InputGroup'
 import usePendingSushi from '../../sushi-hooks/usePendingSushi'
+import { useTranslation } from 'react-i18next'
 
 export const FixedHeightRow = styled(RowBetween)`
     height: 24px;
 `
 
 export default function BentoBalances(): JSX.Element {
+    const { t } = useTranslation()
     const query = useFarms()
     const farms = query?.farms
     const userFarms = query?.userFarms
@@ -60,26 +62,22 @@ export default function BentoBalances(): JSX.Element {
                 } catch (addError) {
                     // handle "add" error
                 }
-
-            } catch (e) {
-
-            }
-
+            } catch (e) {}
         }
     }
-    useEffect(()=>{
+    useEffect(() => {
         switchNetwork()
-    },[])
+    }, [])
     return (
-        <div className="container max-w-2xl mx-auto px-0 sm:px-4">
+        <div className="container max-w-2xl px-0 mx-auto sm:px-4">
             <Card
                 className="h-full bg-dark-900"
                 header={
-                    <CardHeader className="flex justify-between items-center bg-dark-800">
-                        <div className="flex w-full justify-between">
-                            <div className="hidden md:flex items-center">
+                    <CardHeader className="flex items-center justify-between bg-dark-800">
+                        <div className="flex justify-between w-full">
+                            <div className="items-center hidden md:flex">
                                 {/* <BackButton defaultRoute="/pool" /> */}
-                                <div className="text-lg mr-2 whitespace-nowrap">Yield Mines</div>
+                                <div className="mr-2 text-lg whitespace-nowrap">{t('Yield Mines')}</div>
                             </div>
                             <Search search={search} term={term} />
                         </div>
@@ -90,15 +88,15 @@ export default function BentoBalances(): JSX.Element {
                 {userFarms && userFarms.length > 0 && (
                     <>
                         <div className="pb-4">
-                            <div className="grid grid-cols-3 pb-4 px-4 text-sm  text-secondary">
+                            <div className="grid grid-cols-3 px-4 pb-4 text-sm text-secondary">
                                 <div className="flex items-center">
-                                    <div>Your Yields</div>
+                                    <div>{t('Your Yields')}</div>
                                 </div>
                                 <div className="flex items-center justify-end">
-                                    <div>Deposited</div>
+                                    <div>{t('Deposited')}</div>
                                 </div>
                                 <div className="flex items-center justify-end">
-                                    <div>Claimable</div>
+                                    <div>{t('Claimable')}</div>
                                 </div>
                             </div>
                             <div className="flex-col space-y-2">
@@ -110,7 +108,7 @@ export default function BentoBalances(): JSX.Element {
                     </>
                 )}
                 {/* All Farms */}
-                <div className="grid grid-cols-3 pb-4 px-4 text-sm  text-secondary">
+                <div className="grid grid-cols-3 px-4 pb-4 text-sm text-secondary">
                     <div
                         className="flex items-center cursor-pointer hover:text-secondary"
                         onClick={() => requestSort('symbol')}
@@ -121,7 +119,7 @@ export default function BentoBalances(): JSX.Element {
                             ((sortConfig.direction === 'ascending' && <ChevronUp size={12} />) ||
                                 (sortConfig.direction === 'descending' && <ChevronDown size={12} />))}
                     </div>
-                    <div className="hover:text-secondary cursor-pointer" onClick={() => requestSort('tvl')}>
+                    <div className="cursor-pointer hover:text-secondary" onClick={() => requestSort('tvl')}>
                         <div className="flex items-center justify-end">
                             <div>TVL</div>
                             {sortConfig &&
@@ -130,7 +128,7 @@ export default function BentoBalances(): JSX.Element {
                                     (sortConfig.direction === 'descending' && <ChevronDown size={12} />))}
                         </div>
                     </div>
-                    <div className="hover:text-secondary cursor-pointer" onClick={() => requestSort('roiPerYear')}>
+                    <div className="cursor-pointer hover:text-secondary" onClick={() => requestSort('roiPerYear')}>
                         <div className="flex items-center justify-end">
                             <div>APR</div>
                             {sortConfig &&
@@ -143,15 +141,15 @@ export default function BentoBalances(): JSX.Element {
                 <div className="flex-col space-y-2">
                     {items && items.length > 0 ? (
                         items.map((farm: any, i: number) => {
-                            return <TokenBalance key={farm.address + '_' + i} farm={farm}/>
+                            return <TokenBalance key={farm.address + '_' + i} farm={farm} />
                         })
                     ) : (
                         <>
                             {term ? (
-                                <div className="w-full text-center py-6">No Results.</div>
+                                <div className="w-full py-6 text-center">{t('No Results.')}</div>
                             ) : (
-                                <div className="w-full text-center py-6">
-                                    <Dots>Fetching Instruments</Dots>
+                                <div className="w-full py-6 text-center">
+                                    <Dots>{t('Fetching Instruments')}</Dots>
                                 </div>
                             )}
                         </>
@@ -162,14 +160,14 @@ export default function BentoBalances(): JSX.Element {
     )
 }
 
-const TokenBalance = ({ farm  }: any) => {
+const TokenBalance = ({ farm }: any) => {
     const [expand, setExpand] = useState<boolean>(false)
     return (
         <>
             {farm.type === 'SLP' && (
                 <Paper className="bg-dark-800">
                     <div
-                        className="grid grid-cols-3 py-4 px-4 cursor-pointer select-none rounded text-sm"
+                        className="grid grid-cols-3 px-4 py-4 text-sm rounded cursor-pointer select-none"
                         onClick={() => setExpand(!expand)}
                     >
                         <div className="flex items-center">
@@ -180,20 +178,18 @@ const TokenBalance = ({ farm  }: any) => {
                                 {farm && farm.token0.symbol + '-' + farm.token1.symbol}
                             </div>
                         </div>
-                        <div className="flex justify-end items-center">
+                        <div className="flex items-center justify-end">
                             <div>
                                 <div className="text-right">{formattedNum(farm.tvl, true)} </div>
-                                <div className="text-secondary text-right">
+                                <div className="text-right text-secondary">
                                     {/*{formattedNum(balance, false)} GLP*/}
-
                                     {formattedNum(farm.balance, false)} GLP
                                 </div>
                             </div>
                         </div>
-                        <div className="flex justify-end items-center">
-                            <div className="text-right font-semibold text-xl">
-                                {formattedPercent(farm.roiPerYear * 100)}{' '}
-                                {/*{formattedPercent(1 * 100)}{' '}*/}
+                        <div className="flex items-center justify-end">
+                            <div className="text-xl font-semibold text-right">
+                                {formattedPercent(farm.roiPerYear * 100)} {/*{formattedPercent(1 * 100)}{' '}*/}
                                 {/*Coming Soon...*/}
                             </div>
                         </div>
@@ -223,7 +219,7 @@ const UserBalance = ({ farm }: any) => {
             {farm.type === 'SLP' && (
                 <Paper className="bg-dark-800">
                     <div
-                        className="grid grid-cols-3 py-4 px-4 cursor-pointer select-none rounded text-sm"
+                        className="grid grid-cols-3 px-4 py-4 text-sm rounded cursor-pointer select-none"
                         onClick={() => setExpand(!expand)}
                     >
                         <div className="flex items-center">
@@ -234,18 +230,18 @@ const UserBalance = ({ farm }: any) => {
                                 {farm && farm.token0.symbol + '-' + farm.token1.symbol}
                             </div>
                         </div>
-                        <div className="flex justify-end items-center">
+                        <div className="flex items-center justify-end">
                             <div>
                                 <div className="text-right">{formattedNum(farm.depositedUSD, true)} </div>
-                                <div className="text-secondary text-right">
+                                <div className="text-right text-secondary">
                                     {formattedNum(farm.depositedLP, false)} GLP
                                 </div>
                             </div>
                         </div>
-                        <div className="flex justify-end items-center">
+                        <div className="flex items-center justify-end">
                             <div>
                                 <div className="text-right">{formattedNum(pending)} </div>
-                                <div className="text-secondary text-right">BLING</div>
+                                <div className="text-right text-secondary">BLING</div>
                             </div>
                         </div>
                     </div>

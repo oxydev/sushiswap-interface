@@ -12,6 +12,7 @@ import { getExplorerLink } from 'utils'
 import { Currency, Token } from '@sushiswap/sdk'
 import { wrappedCurrency } from 'utils/wrappedCurrency'
 import { useUnsupportedTokens } from '../../hooks/Tokens'
+import { useTranslation } from 'react-i18next'
 
 const DetailsFooter = styled.div<{ show: boolean }>`
     padding-top: calc(16px + 2rem);
@@ -57,13 +58,15 @@ export default function UnsupportedCurrencyFooter({
 
     const unsupportedTokens: { [address: string]: Token } = useUnsupportedTokens()
 
+    const { t } = useTranslation()
+
     return (
         <DetailsFooter show={show}>
             <Modal isOpen={showDetails} onDismiss={() => setShowDetails(false)}>
                 <Card padding="2rem">
                     <AutoColumn gap="lg">
                         <RowBetween>
-                            <TYPE.mediumHeader>Unsupported Assets</TYPE.mediumHeader>
+                            <TYPE.mediumHeader>{t('Unsupported Assets')}</TYPE.mediumHeader>
 
                             <CloseIcon onClick={() => setShowDetails(false)} />
                         </RowBetween>
@@ -90,15 +93,16 @@ export default function UnsupportedCurrencyFooter({
                         })}
                         <AutoColumn gap="lg">
                             <TYPE.body fontWeight={500}>
-                                Some assets are not available through this interface because they may not work well with
-                                our smart contract or we are unable to allow trading for legal reasons.
+                                {t(
+                                    'Some assets are not available through this interface because they may not work well with our smart contract or we are unable to allow trading for legal reasons.'
+                                )}
                             </TYPE.body>
                         </AutoColumn>
                     </AutoColumn>
                 </Card>
             </Modal>
             <ButtonEmpty padding={'0'} onClick={() => setShowDetails(true)}>
-                <TYPE.blue>Read more about unsupported assets</TYPE.blue>
+                <TYPE.blue>{t('Read more about unsupported assets')}</TYPE.blue>
             </ButtonEmpty>
         </DetailsFooter>
     )

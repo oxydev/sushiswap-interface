@@ -1,6 +1,7 @@
 import { Trade, TradeType } from '@sushiswap/sdk'
 import { useActiveWeb3React } from 'hooks'
 import React, { useContext } from 'react'
+import { useTranslation } from 'react-i18next'
 import styled, { ThemeContext } from 'styled-components'
 import { Field } from '../../state/swap/actions'
 import { useUserSlippageTolerance } from '../../state/user/hooks'
@@ -28,6 +29,7 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade | undefined; al
     const { priceImpactWithoutFee, realizedLPFee } = computeTradePriceBreakdown(trade)
     const isExactIn = trade?.tradeType === TradeType.EXACT_INPUT
     const slippageAdjustedAmounts = computeSlippageAdjustedAmounts(trade, allowedSlippage)
+    const { t } = useTranslation()
 
     return (
         <>
@@ -35,7 +37,7 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade | undefined; al
                 <RowBetween>
                     <RowFixed>
                         <TYPE.black fontSize={14} fontWeight={400} color={theme.text6}>
-                            {isExactIn ? 'Min Received' : 'Max Sold'}
+                            {isExactIn ? t('Min Received') : t('Max Sold')}
                         </TYPE.black>
                     </RowFixed>
                     <RowFixed>
@@ -50,25 +52,31 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade | undefined; al
                                       )} ${trade?.inputAmount.currency.getSymbol(chainId)}` ?? '-'
                                 : ''}
                         </TYPE.black>
-                        <QuestionHelper text="Your transaction will revert if there is a large, unfavorable price movement before it is confirmed." />
+                        <QuestionHelper
+                            text={t(
+                                'Your transaction will revert if there is a large, unfavorable price movement before it is confirmed.'
+                            )}
+                        />
                     </RowFixed>
                 </RowBetween>
                 <RowBetween>
                     <RowFixed>
                         <TYPE.black fontSize={14} fontWeight={400} color={theme.text6}>
-                            Price Impact
+                            {t('Price Impact')}
                         </TYPE.black>
                     </RowFixed>
                     <RowFixed>
                         {priceImpactWithoutFee ? <FormattedPriceImpact priceImpact={priceImpactWithoutFee} /> : ''}
-                        <QuestionHelper text="The difference between the market price and estimated price due to trade size." />
+                        <QuestionHelper
+                            text={t('The difference between the market price and estimated price due to trade size.')}
+                        />
                     </RowFixed>
                 </RowBetween>
 
                 <RowBetween>
                     <RowFixed>
                         <TYPE.black fontSize={14} fontWeight={400} color={theme.text6}>
-                            Fee
+                            {t('Fee')}
                         </TYPE.black>
                     </RowFixed>
                     <RowFixed>
@@ -81,7 +89,11 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade | undefined; al
                                     : '-'
                                 : ''}
                         </TYPE.black>
-                        <QuestionHelper text="A portion of each trade (0.25%) goes to liquidity providers (LP) as a protocol incentive." />
+                        <QuestionHelper
+                            text={t(
+                                'A portion of each trade (0.25%) goes to liquidity providers (LP) as a protocol incentive.'
+                            )}
+                        />
                     </RowFixed>
                 </RowBetween>
             </AutoColumn>
@@ -102,6 +114,8 @@ export function AdvancedSwapDetailsFixed({ trade }: AdvancedSwapDetailsProps) {
 
     const showRoute = Boolean(trade && trade.route.path.length > 2)
 
+    const { t } = useTranslation()
+
     return (
         <AutoColumn gap="0px">
             <TradeSummary trade={trade} allowedSlippage={allowedSlippage} />
@@ -114,12 +128,16 @@ export function AdvancedSwapDetailsFixed({ trade }: AdvancedSwapDetailsProps) {
                             <RowBetween style={{ padding: '0 16px' }}>
                                 <span style={{ display: 'flex', alignItems: 'center' }}>
                                     <TYPE.black fontSize={14} fontWeight={400} color={theme.text3}>
-                                        Route
+                                        {t('Route')}
                                     </TYPE.black>
                                 </span>
                                 <RowFixed>
                                     <SwapRoute trade={trade} />
-                                    <QuestionHelper text="Routing through these tokens resulted in the best price for your trade." />
+                                    <QuestionHelper
+                                        text={t(
+                                            'Routing through these tokens resulted in the best price for your trade.'
+                                        )}
+                                    />
                                 </RowFixed>
                             </RowBetween>
                         </>
