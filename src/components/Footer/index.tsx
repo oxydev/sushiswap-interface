@@ -8,7 +8,6 @@ import Twitter from '../../assets/images/twitter.svg'
 import Facebook from '../../assets/images/facebook.svg'
 import Instagram from '../../assets/images/instagram.svg'
 import Linkedin from '../../assets/images/linkedin.svg'
-import { transparentize } from 'polished'
 import PeckShieldLogo from '../../assets/images/PeckShieldLogo.svg'
 import { ExternalLink } from 'theme'
 
@@ -17,6 +16,7 @@ const FooterFrame = styled.div`
     padding: 42px 3vw;
     margin-top: 182px;
     position: relative;
+    backdrop-filter: blur(10px);
 
     &::after {
         content: '';
@@ -99,7 +99,7 @@ const FooterSocialLink = styled.a<{ icon: any }>`
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    background-color: #305a5d;
+    background-color: #2a685b;
     margin: 0 6px;
     background-image: url(${props => props.icon});
     background-repeat: no-repeat;
@@ -110,18 +110,18 @@ const FooterSocialLink = styled.a<{ icon: any }>`
 const FooterMenuPart = styled.div`
     display: flex;
     justify-content: center;
-    border-left: 2px solid #2a685b;
-    border-right: 2px solid #2a685b;
+    border-left: 1px solid #2a685b;
+    border-right: 1px solid #2a685b;
     padding: 0 2vw;
     ${({ theme }) => theme.mediaWidth.upToLarge`
         flex-wrap: wrap;
-        justify-content: center;;
+        justify-content: center;
         margin-bottom:24px;
         padding-top: 35px;
         border-left: none;
         border-right: none;
-        border-top: 2px solid #2a685b;
-        border-bottom: 2px solid #2a685b;
+        border-top: 1px solid #2a685b;
+        border-bottom: 1px solid #2a685b;
     `}
 
     ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -133,6 +133,9 @@ const FooterMenuPart = styled.div`
 
 const FooterMenu = styled.div`
     margin: 0 2vw;
+    & > .MenuTitle {
+        font-size: 16px;
+    }
 
     ${({ theme }) => theme.mediaWidth.upToLarge`
         margin: 0 30px 0 0;
@@ -148,7 +151,7 @@ const FooterList = styled.div`
 
     & > a {
         color: #fff;
-        font-size: 16px;
+        font-size: 14px;
         color: #62ba89;
         margin: 8px 0;
         font-weight: 400;
@@ -169,7 +172,7 @@ const Audited = styled.div`
     background-color: #2a685b;
     width: fit-content;
     margin: 25px auto 16px;
-    border: 2px solid #327466;
+    border: 1px solid #327466;
 
     & img {
         height: 30px;
@@ -199,7 +202,7 @@ const FooterBadge = styled.div`
 export default function Footer() {
     const menuElements = MenuData.footerMenu.map(item => (
         <FooterMenu key={item.title}>
-            <Text className="MenuTitle" fontSize={20} style={{ marginBottom: '24px' }}>
+            <Text className="MenuTitle" style={{ marginBottom: '24px' }}>
                 {item.title}
             </Text>
             <FooterList>
