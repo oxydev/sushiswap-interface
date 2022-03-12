@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Modal from 'components/Modal'
 import styled from 'styled-components'
-import { useModalOpen, useToggleFaucetModal, useWalletModalToggle } from 'state/application/hooks'
+import { useCloseModals, useModalOpen, useToggleFaucetModal, useWalletModalToggle } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/actions'
 import { ReactComponent as Close } from '../../assets/images/x.svg'
 import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
@@ -9,6 +9,10 @@ import { Text } from 'rebass'
 import { useActiveWeb3React } from 'hooks'
 import { shortenAddress } from 'utils'
 import axios from 'axios'
+import SuccessIcon from '../../assets/images/faucet-success.png'
+import ErrorIcon from '../../assets/images/faucet-error.png'
+import WarningIcon from '../../assets/images/faucet-warning.png'
+import InfoIcon from '../../assets/images/faucet-info.png'
 
 const Wrapper = styled.div`
     ${({ theme }) => theme.flexColumnNoWrap}
@@ -46,14 +50,66 @@ const CloseIcon = styled.div`
     }
 `
 
-const HeaderRow = styled.div`
+const HeaderRow = styled.div<{ status: number }>`
     ${({ theme }) => theme.flexRowNoWrap};
     padding: 1rem 1rem;
     font-weight: 500;
-    color: ${props => (props.color === 'blue' ? ({ theme }) => theme.primary1 : 'inherit')};
+    display: flex;
+    justify-content: center;
     ${({ theme }) => theme.mediaWidth.upToMedium`
     padding: 1rem;
   `};
+
+    & > span {
+        display: block;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+
+        background: ${props =>
+            props.status === 1
+                ? 'linear-gradient(180deg, #FFAEAE 0%, #FF0000 100%)'
+                : props.status === 2
+                ? '#0195FF'
+                : props.status === 3
+                ? 'linear-gradient(181.64deg, rgba(255, 253, 249, 0.9) 3.67%, #FFB703 101.55%)'
+                : props.status === 4
+                ? 'linear-gradient(360deg, #3BCA74 5.23%, rgba(195, 255, 219, 0.94) 99.49%)'
+                : 'none'};
+
+        box-shadow: ${props =>
+            props.status === 1
+                ? '5px 5px 5px rgba(255, 0, 0, 0.25)'
+                : props.status === 2
+                ? 'none'
+                : props.status === 3
+                ? '5px 5px 5px rgba(254, 195, 48, 0.25)'
+                : props.status === 4
+                ? 'none'
+                : 'none'};
+
+        &::after {
+            content: '';
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            margin: auto;
+            background-image: ${props =>
+                props.status === 1
+                    ? `url(${ErrorIcon})`
+                    : props.status === 2
+                    ? `url(${InfoIcon})`
+                    : props.status === 3
+                    ? `url(${WarningIcon})`
+                    : props.status === 4
+                    ? `url(${SuccessIcon})`
+                    : 'none'};
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+        }
+    }
 `
 
 const CloseColor = styled(Close)`
@@ -62,11 +118,22 @@ const CloseColor = styled(Close)`
     }
 `
 
-const ContentWrapper = styled.div`
-    background-color: ${({ theme }) => theme.bg2};
+const ContentWrapper = styled.div<{ status: number }>`
+    background: ${props =>
+        props.status === 1
+            ? 'linear-gradient(176.4deg, rgba(255, 0, 0, 0.5) -51.24%, rgba(39, 81, 124, 0.77) 96.32%)'
+            : props.status === 2
+            ? 'linear-gradient(176.59deg, rgba(41, 101, 255, 0.5) -52.78%, rgba(39, 81, 124, 0.77) 76.35%)'
+            : props.status === 3
+            ? 'linear-gradient(176.59deg, rgba(247, 252, 30, 0.5) -52.78%, rgba(39, 81, 124, 0.77) 76.35%)'
+            : props.status === 4
+            ? 'linear-gradient(176.4deg, rgba(6, 231, 15, 0.5) -51.24%, rgba(39, 81, 124, 0.77) 96.32%)'
+            : 'rgba(60,116,166,0.8)'};
     padding: 2rem;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
+    display: flex;
+    flex-direction: column;
 
     ${({ theme }) => theme.mediaWidth.upToMedium`padding: 1rem`};
 `
@@ -108,6 +175,26 @@ const InfoBar = styled.div`
     align-items: center;
     margin-bottom: 32px;
     padding: 18px;
+`
+
+const FaucetButton = styled.button<{ status: number }>`
+    width: 187px;
+    height: 45px;
+    line-height: 45px;
+    color: #fff;
+    border-radius: 10px;
+    text-align: center;
+    margin: auto;
+    background-color: ${props =>
+        props.status === 1
+            ? '#FF0000'
+            : props.status === 2
+            ? '#2965FF'
+            : props.status === 3
+            ? '#EDD140'
+            : props.status === 4
+            ? '#07D00F'
+            : '#07D00F'};
 `
 
 export default function FaucetModal() {
@@ -174,60 +261,62 @@ export default function FaucetModal() {
                     <CloseIcon onClick={toggleFaucetModal}>
                         <CloseColor />
                     </CloseIcon>
-                    <HeaderRow>GemKeeper ROSE Faucet</HeaderRow>
-                    <ContentWrapper>
+                    <HeaderRow status={status}>
+                        <span />
+                    </HeaderRow>
+                    <ContentWrapper status={status}>
                         {result === 0 ? (
                             <>
                                 {account ? (
                                     <>
-                                        <InfoBar>
-                                            <Text color={'#fff'} fontSize={13}>
-                                                {status === 0
-                                                    ? 'Loading'
-                                                    : status === 1
-                                                    ? 'Your wallet address is not qualified!'
+                                        <Text
+                                            color={
+                                                status === 1
+                                                    ? '#FF6161'
                                                     : status === 2
-                                                    ? `Your wallet should not have any ROSE and you need a minimum amount of bridged token in your wallet!`
+                                                    ? '#8BABFF'
                                                     : status === 3
-                                                    ? `You can only use GemKeeper Faucet Once!`
+                                                    ? '#EDD140'
                                                     : status === 4
-                                                    ? account
-                                                    : 'Something went wrong!'}
-                                            </Text>
-                                        </InfoBar>
-                                        {status !== 4 && (
-                                            <Text color={'#fff'} fontSize={14} style={{ marginBottom: '20px' }}>
-                                                Address: {account}
-                                            </Text>
-                                        )}
-
-                                        {status === 4 ? (
-                                            <ButtonPrimary
-                                                padding="8px"
-                                                borderRadius="8px"
-                                                width="100%"
-                                                height="60px"
-                                                onClick={() => {
-                                                    Faucet()
-                                                }}
-                                                disabled={localLoading}
+                                                    ? '#91FF95'
+                                                    : '#fff'
+                                            }
+                                            fontSize={13}
+                                            style={{ marginBottom: '32px', textAlign: 'center' }}
+                                        >
+                                            {status === 0
+                                                ? 'Loading'
+                                                : status === 1
+                                                ? 'Your wallet address is not qualified!'
+                                                : status === 2
+                                                ? `Your wallet should not have any ROSE and you need a minimum amount of bridged token in your wallet!`
+                                                : status === 3
+                                                ? `You can only use GemKeeper Faucet Once!`
+                                                : status === 4
+                                                ? 'Your wallet address is eligible!'
+                                                : 'Something went wrong!'}
+                                        </Text>
+                                        <Text font-fontSize={14} color={'#98CDFF'} style={{ marginBottom: '8px' }}>
+                                            Address:
+                                        </Text>
+                                        <Text font-fontSize={14} color={'#fff'} style={{ marginBottom: '48px' }}>
+                                            {shortenAddress(account)}
+                                        </Text>
+                                        {status !== 0 && (
+                                            <FaucetButton
+                                                onClick={
+                                                    status === 4
+                                                        ? () => {
+                                                              Faucet()
+                                                          }
+                                                        : () => {
+                                                              toggleFaucetModal()
+                                                          }
+                                                }
+                                                status={status}
                                             >
-                                                {localLoading ? 'Waiting' : 'Request 0.5 ROSE'}
-                                            </ButtonPrimary>
-                                        ) : (
-                                            <ButtonError disabled={true} width={'100%'}>
-                                                <Text fontSize={20} fontWeight={500}>
-                                                    {status === 0
-                                                        ? 'Checking...'
-                                                        : status === 1
-                                                        ? 'Address not qualified!'
-                                                        : status === 2
-                                                        ? `Not Eligible!`
-                                                        : status === 3
-                                                        ? `Already received!`
-                                                        : 'Something Went Wrong!'}
-                                                </Text>
-                                            </ButtonError>
+                                                {status === 4 ? 'Faucet' : 'Ok'}
+                                            </FaucetButton>
                                         )}
                                     </>
                                 ) : (
