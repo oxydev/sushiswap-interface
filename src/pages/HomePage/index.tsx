@@ -116,6 +116,12 @@ const LogoRingImage = styled.img`
     object-fit: contain;
     object-position: right;
     animation: ${hueRotate} 10s linear infinite;
+    ${({ theme }) => theme.mediaWidth.upToMedium`
+        width: 100vw;
+        right: unset;
+        left: -3vw;
+        object-position: bottom;
+  `}
 `
 
 export default function Home() {
