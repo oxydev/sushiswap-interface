@@ -76,7 +76,7 @@ const HeaderRow = styled.div<{ status: number }>`
                 ? 'linear-gradient(181.64deg, rgba(255, 253, 249, 0.9) 3.67%, #FFB703 101.55%)'
                 : props.status === 4
                 ? 'linear-gradient(360deg, #3BCA74 5.23%, rgba(195, 255, 219, 0.94) 99.49%)'
-                : 'none'};
+                : '#0195FF'};
 
         box-shadow: ${props =>
             props.status === 1
@@ -104,7 +104,7 @@ const HeaderRow = styled.div<{ status: number }>`
                     ? `url(${WarningIcon})`
                     : props.status === 4
                     ? `url(${SuccessIcon})`
-                    : 'none'};
+                    : `url(${InfoIcon})`};
             background-repeat: no-repeat;
             background-position: center;
             background-size: contain;
@@ -128,7 +128,7 @@ const ContentWrapper = styled.div<{ status: number }>`
             ? 'linear-gradient(176.59deg, rgba(247, 252, 30, 0.5) -52.78%, rgba(39, 81, 124, 0.77) 76.35%)'
             : props.status === 4
             ? 'linear-gradient(176.4deg, rgba(6, 231, 15, 0.5) -51.24%, rgba(39, 81, 124, 0.77) 96.32%)'
-            : 'rgba(60,116,166,0.8)'};
+            : 'linear-gradient(176.59deg, rgba(41, 101, 255, 0.5) -52.78%, rgba(39, 81, 124, 0.77) 76.35%)'};
     padding: 2rem;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
@@ -194,7 +194,12 @@ const FaucetButton = styled.button<{ status: number }>`
             ? '#EDD140'
             : props.status === 4
             ? '#07D00F'
-            : '#07D00F'};
+            : '#2965FF'};
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: default;
+    }
 `
 
 export default function FaucetModal() {
@@ -285,7 +290,7 @@ export default function FaucetModal() {
                                             style={{ marginBottom: '32px', textAlign: 'center' }}
                                         >
                                             {status === 0
-                                                ? 'Loading'
+                                                ? 'Please wait!'
                                                 : status === 1
                                                 ? 'Your wallet address is not qualified!'
                                                 : status === 2
@@ -296,28 +301,28 @@ export default function FaucetModal() {
                                                 ? 'Your wallet address is eligible!'
                                                 : 'Something went wrong!'}
                                         </Text>
-                                        <Text font-fontSize={14} color={'#98CDFF'} style={{ marginBottom: '8px' }}>
+                                        <Text fontSize={14} color={'#98CDFF'} style={{ marginBottom: '8px' }}>
                                             Address:
                                         </Text>
-                                        <Text font-fontSize={14} color={'#fff'} style={{ marginBottom: '48px' }}>
-                                            {shortenAddress(account)}
+                                        <Text fontSize={14} color={'#fff'} style={{ marginBottom: '48px' }}>
+                                            {account}
                                         </Text>
-                                        {status !== 0 && (
-                                            <FaucetButton
-                                                onClick={
-                                                    status === 4
-                                                        ? () => {
-                                                              Faucet()
-                                                          }
-                                                        : () => {
-                                                              toggleFaucetModal()
-                                                          }
-                                                }
-                                                status={status}
-                                            >
-                                                {status === 4 ? 'Faucet' : 'Ok'}
-                                            </FaucetButton>
-                                        )}
+
+                                        <FaucetButton
+                                            onClick={
+                                                status === 4
+                                                    ? () => {
+                                                          Faucet()
+                                                      }
+                                                    : () => {
+                                                          toggleFaucetModal()
+                                                      }
+                                            }
+                                            status={status}
+                                            disabled={status === 0}
+                                        >
+                                            {status === 4 ? 'Faucet' : 'Ok'}
+                                        </FaucetButton>
                                     </>
                                 ) : (
                                     <>
