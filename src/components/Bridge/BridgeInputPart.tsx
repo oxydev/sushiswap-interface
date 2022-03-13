@@ -14,6 +14,7 @@ import { useTranslation } from 'react-i18next'
 import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
 import ChainListModal from 'components/SearchModal/ChainListModal'
 import { networkData } from '../../pages/Bridge/index'
+import NameToolTip from './NameToolTip'
 
 interface bridgeInputProps {
     value: string
@@ -182,7 +183,7 @@ const InputPanel = styled.div<{ hideInput?: boolean }>`
     border-radius: ${({ hideInput }) => (hideInput ? '8px' : '20px')};
     // background-color: ${({ theme }) => theme.bg2};
     background-color: rgba(16,14,28,0.85);
-    z-index: 1;
+    
 `
 
 const chainList = {
@@ -324,34 +325,36 @@ export default function BridgeInputPart({
                                     {!disableCurrencySelect && <StyledDropDown selected={!!currency} />}
                                 </Aligner>
                             </CurrencySelect>
-                            <ChainSelect
-                                selected={!!currency}
-                                className="open-currency-select-button"
-                                onClick={() => {
-                                    if (!disableChainSelect) {
-                                        setChainModalOpen(true)
-                                    }
-                                }}
-                                style={{ width: '150px' }}
-                            >
-                                <Aligner>
-                                    {chain !== undefined ? (
-                                        <>
-                                            <CurrencyLogo chain={chain} size={'24px'} />
-                                            <StyledTokenName
-                                                style={{ fontSize: '16px', textAlign: 'left' }}
-                                                className="token-symbol-container"
-                                                active={Boolean(chain)}
-                                            >
-                                                {networkData[chain].chainName}
-                                            </StyledTokenName>
-                                        </>
-                                    ) : (
-                                        t('selectChain')
-                                    )}
-                                    {!disableCurrencySelect && <StyledDropDown selected={!!currency} />}
-                                </Aligner>
-                            </ChainSelect>
+                            <NameToolTip text={chain ? networkData[chain].chainName : false}>
+                                <ChainSelect
+                                    selected={!!currency}
+                                    className="open-currency-select-button"
+                                    onClick={() => {
+                                        if (!disableChainSelect) {
+                                            setChainModalOpen(true)
+                                        }
+                                    }}
+                                    style={{ width: '150px' }}
+                                >
+                                    <Aligner>
+                                        {chain !== undefined ? (
+                                            <>
+                                                <CurrencyLogo chain={chain} size={'24px'} />
+                                                <StyledTokenName
+                                                    style={{ fontSize: '16px', textAlign: 'left' }}
+                                                    className="token-symbol-container"
+                                                    active={Boolean(chain)}
+                                                >
+                                                    {networkData[chain].chainName}
+                                                </StyledTokenName>
+                                            </>
+                                        ) : (
+                                            t('selectChain')
+                                        )}
+                                        {!disableCurrencySelect && <StyledDropDown selected={!!currency} />}
+                                    </Aligner>
+                                </ChainSelect>
+                            </NameToolTip>
                         </InputButtonContainer>
                     </InputRow>
                 </Container>
