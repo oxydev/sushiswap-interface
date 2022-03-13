@@ -93,7 +93,6 @@ const HomeImage = styled.div`
     right: -4vw;
     bottom: 0;
     margin: auto;
-    
 
     & > img {
         width: 100%;
@@ -106,10 +105,10 @@ const HomeImage = styled.div`
         z-index: 10;
     }
     &::before {
-        content: "";
+        content: '';
         display: block;
-        position absolute;
-        top:0;
+        position: absolute;
+        top: 0;
         right: 0;
         left: 0;
         bottom: 0;
