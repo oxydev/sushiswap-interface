@@ -3,8 +3,6 @@ import styled, { keyframes } from 'styled-components'
 import { setInterval } from 'timers'
 import mainImage from '../../assets/images/homePageImage.jpg'
 import LogoRing from '../../assets/images/logoRing.png'
-import LogoRing2 from '../../assets/images/logoRing2.png'
-import LogoRing2Back from '../../assets/images/logoRing2-back.png'
 import LogoRingLogo from '../../assets/images/logoRing-logo.png'
 import mainImageMobile from '../../assets/images/homePageImageMobile.jpg'
 
@@ -57,28 +55,6 @@ const TitleWrapper = styled.div`
   `}
 `
 
-const HomeImage = styled.div`
-    // background-image: url(${mainImage});
-    // background-color: blue;
-    background-repeat: no-repeat;
-    width: 104vw;
-    height: 100%;
-    background-size: cover;
-    opacity: 0.6;
-    position: fixed;
-    top: 0;
-    right: -4vw;
-    mix-blend-mode: color-dodge;
-    background-position: right;
-
-    ${({ theme }) => theme.mediaWidth.upToMedium`
-        background-image: url(${mainImageMobile});
-        background-position: bottom;
-        width:100vw;
-        right:0;
-  `}
-`
-
 const LaunchButton = styled.button`
     border: none;
     outline: none;
@@ -106,100 +82,58 @@ const hueRotate = keyframes`
         }
 `
 
-const LogoRingImage = styled.img`
+const HomeImage = styled.div`
     background-repeat: no-repeat;
     width: 104vw;
-    height: 100%;
-    background-size: cover;
-    opacity: 0.6;
-    position: fixed;
-    top: 0;
-    right: -4vw;
-    mix-blend-mode: color-dodge;
-    background-position: right;
-    object-fit: contain;
-    object-position: right;
-    animation: ${hueRotate} 10s linear infinite;
-    ${({ theme }) => theme.mediaWidth.upToMedium`
-        width: 100vw;
-        right: unset;
-        left: -3vw;
-        object-position: bottom;
-  `}
-`
-
-const LogoRingImage2 = styled.div`
-    background-repeat: no-repeat;
-    width: 104vw;
-    height: 100%;
+    height: 90%;
     background-size: cover;
     opacity: 0.6;
     position: absolute;
     top: 0;
     right: -4vw;
+    bottom: 0;
+    margin: auto;
+    
+
+    & > img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        mix-blend-mode: color-dodge;
+        background-position: right;
+        object-position: right;
+        animation: ${hueRotate} 10s linear infinite;
+        z-index: 10;
+    }
+    &::before {
+        content: "";
+        display: block;
+        position absolute;
+        top:0;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        background-image: url(${LogoRingLogo});
+        background-size: contain;
+        background-position: right;
+        background-repeat: no-repeat;
+    }
+
     ${({ theme }) => theme.mediaWidth.upToMedium`
         width: 100vw;
+        height: 100%;
         right: unset;
         left: -3vw;
         object-position: bottom;
+        & > img {
+            object-position: bottom;
+            animation: ${hueRotate} 10s linear infinite;
+            z-index: 10;
+        }
+        &::before {
+            background-position: bottom;
+        }
   `}
-
-  & > img {
-      width: 100%;
-      height: 100%;    
-      object-fit: contain;
-      mix-blend-mode: color-dodge;
-      background-position: right;
-      object-position: right;
-      animation: ${hueRotate} 10s linear infinite;
-      z-index: 10;
-
-  }
-
-  &::after {
-      content: "";
-      display: block;
-      position absolute;
-      top:0;
-      right: 0;
-      left: 0;
-      bottom: 0;
-      background-image: url(${LogoRing2Back});
-      background-size: contain;
-      background-position: right;
-      background-repeat: no-repeat;
-      z-index: -1;
-      
-  }
-`
-
-const LogoRingImage3 = styled(LogoRingImage2)`
-&::before {
-    content: "";
-    display: block;
-    position absolute;
-    top:0;
-    right: 0;
-    left: 0;
-    bottom: 0;
-    background-image: url(${LogoRingLogo});
-    background-size: contain;
-    background-position: right;
-    background-repeat: no-repeat;
-    
-    
-}
-`
-
-const ModeButton = styled.button`
-    margin-left: 0;
-    width: 100px;
-    background-color: red;
-    margin-top: 30px;
-    border-radius: 10px;
-    padding: 15px;
-    cursou: pointer;
-    z-index: 20;
 `
 
 export default function Home() {
@@ -244,17 +178,9 @@ export default function Home() {
 
     return (
         <HomePage>
-            {mode === 1 && <LogoRingImage src={LogoRing} />}
-            {mode === 2 && (
-                <LogoRingImage2>
-                    <img src={LogoRing2} />
-                </LogoRingImage2>
-            )}
-            {mode === 3 && (
-                <LogoRingImage3>
-                    <img src={LogoRing2} />
-                </LogoRingImage3>
-            )}
+            <HomeImage>
+                <img src={LogoRing} />
+            </HomeImage>
 
             <TitleWrapper>
                 <h2>Total Value Locked</h2>
@@ -267,27 +193,6 @@ export default function Home() {
                 >
                     Launch App
                 </LaunchButton>
-                <ModeButton
-                    onClick={() => {
-                        setMode(1)
-                    }}
-                >
-                    Mode 1
-                </ModeButton>
-                <ModeButton
-                    onClick={() => {
-                        setMode(2)
-                    }}
-                >
-                    Mode 2
-                </ModeButton>
-                <ModeButton
-                    onClick={() => {
-                        setMode(3)
-                    }}
-                >
-                    Mode 3
-                </ModeButton>
             </TitleWrapper>
             {/* <HomeImage /> */}
         </HomePage>
