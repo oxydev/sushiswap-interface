@@ -138,33 +138,19 @@ const ContentWrapper = styled.div<{ status: number }>`
     ${({ theme }) => theme.mediaWidth.upToMedium`padding: 1rem`};
 `
 
-const WalletInput = styled.input`
-    position: relative;
-    display: flex;
-    padding: 16px;
-    align-items: center;
-    width: 100%;
-    white-space: nowrap;
-    background: none;
-    border: none;
-    outline: none;
-    border-radius: 10px;
-    color: ${({ theme }) => theme.text1};
-    border-style: solid;
-    border: 1px solid ${({ theme }) => theme.bg3};
-    margin-bottom: 20px;
-    -webkit-appearance: none;
-
-    font-size: 18px;
-
-    ::placeholder {
-        color: ${({ theme }) => theme.text3};
-    }
-    transition: border 100ms;
-    :focus {
-        border: 1px solid ${({ theme }) => theme.primary1};
-        outline: none;
-    }
+const ResultWrapper = styled(ContentWrapper)`
+    background: ${props =>
+        props.status === 1
+            ? 'linear-gradient(176.4deg, rgba(255, 0, 0, 0.5) -51.24%, rgba(39, 81, 124, 0.77) 96.32%)'
+            : props.status === 2
+            ? 'linear-gradient(176.59deg, rgba(247, 252, 30, 0.5) -52.78%, rgba(39, 81, 124, 0.77) 76.35%)'
+            : props.status === 3
+            ? 'linear-gradient(176.4deg, rgba(255, 0, 0, 0.5) -51.24%, rgba(39, 81, 124, 0.77) 96.32%)'
+            : props.status === 4
+            ? 'linear-gradient(176.4deg, rgba(6, 231, 15, 0.5) -51.24%, rgba(39, 81, 124, 0.77) 96.32%)'
+            : props.status === 5
+            ? 'linear-gradient(176.59deg, rgba(41, 101, 255, 0.5) -52.78%, rgba(39, 81, 124, 0.77) 76.35%)'
+            : 'linear-gradient(176.59deg, rgba(41, 101, 255, 0.5) -52.78%, rgba(39, 81, 124, 0.77) 76.35%)'};
 `
 
 const InfoBar = styled.div`
@@ -200,6 +186,21 @@ const FaucetButton = styled.button<{ status: number }>`
         opacity: 0.6;
         cursor: default;
     }
+`
+
+const EndButton = styled(FaucetButton)`
+    background-color: ${props =>
+        props.status === 1
+            ? '#FF0000'
+            : props.status === 2
+            ? '#EDD140'
+            : props.status === 3
+            ? '#FF0000'
+            : props.status === 4
+            ? '#07D00F'
+            : props.status === 5
+            ? '#2965FF'
+            : '#2965FF'};
 `
 
 export default function FaucetModal() {
@@ -269,95 +270,119 @@ export default function FaucetModal() {
                     <HeaderRow status={status}>
                         <span />
                     </HeaderRow>
-                    <ContentWrapper status={status}>
-                        {result === 0 ? (
-                            <>
-                                {account ? (
-                                    <>
-                                        <Text
-                                            color={
-                                                status === 1
-                                                    ? '#FF6161'
-                                                    : status === 2
-                                                    ? '#8BABFF'
-                                                    : status === 3
-                                                    ? '#EDD140'
-                                                    : status === 4
-                                                    ? '#91FF95'
-                                                    : '#fff'
-                                            }
-                                            fontSize={13}
-                                            style={{ marginBottom: '32px', textAlign: 'center' }}
-                                        >
-                                            {status === 0
-                                                ? 'Please wait!'
-                                                : status === 1
-                                                ? 'Your wallet address is not qualified!'
+
+                    {result === 0 ? (
+                        <ContentWrapper status={status}>
+                            {account ? (
+                                <>
+                                    <Text
+                                        color={
+                                            status === 1
+                                                ? '#FF6161'
                                                 : status === 2
-                                                ? `Your wallet should not have any ROSE and you need a minimum amount of bridged token in your wallet!`
+                                                ? '#8BABFF'
                                                 : status === 3
-                                                ? `You can only use GemKeeper Faucet Once!`
+                                                ? '#EDD140'
                                                 : status === 4
-                                                ? 'Your wallet address is eligible!'
-                                                : 'Something went wrong!'}
-                                        </Text>
-                                        <Text fontSize={14} color={'#98CDFF'} style={{ marginBottom: '8px' }}>
-                                            Address:
-                                        </Text>
-                                        <Text fontSize={14} color={'#fff'} style={{ marginBottom: '48px' }}>
-                                            {account}
-                                        </Text>
+                                                ? '#91FF95'
+                                                : '#fff'
+                                        }
+                                        fontSize={13}
+                                        style={{ marginBottom: '32px', textAlign: 'center' }}
+                                    >
+                                        {status === 0
+                                            ? 'Please wait!'
+                                            : status === 1
+                                            ? 'Your wallet address is not qualified!'
+                                            : status === 2
+                                            ? `Your wallet should not have any ROSE and you need a minimum amount of bridged token in your wallet!`
+                                            : status === 3
+                                            ? `You can only use GemKeeper Faucet Once!`
+                                            : status === 4
+                                            ? 'Your wallet address is eligible!'
+                                            : 'Something went wrong!'}
+                                    </Text>
+                                    <Text fontSize={14} fontWeight={500} color={'#fff'} style={{ marginBottom: '8px' }}>
+                                        Address:
+                                    </Text>
+                                    <Text fontSize={14} color={'#fff'} style={{ marginBottom: '48px' }}>
+                                        {account}
+                                    </Text>
 
-                                        <FaucetButton
-                                            onClick={
-                                                status === 4
-                                                    ? () => {
-                                                          Faucet()
-                                                      }
-                                                    : () => {
-                                                          toggleFaucetModal()
-                                                      }
-                                            }
-                                            status={status}
-                                            disabled={status === 0}
-                                        >
-                                            {status === 4 ? 'Faucet' : 'Ok'}
-                                        </FaucetButton>
-                                    </>
-                                ) : (
-                                    <>
-                                        <InfoBar>
-                                            <Text color={'#fff'} fontSize={18}>
-                                                If you want to access faucet, you need to connect wallet
-                                            </Text>
-                                        </InfoBar>
+                                    <FaucetButton
+                                        onClick={
+                                            status === 4
+                                                ? () => {
+                                                      Faucet()
+                                                  }
+                                                : () => {
+                                                      toggleFaucetModal()
+                                                  }
+                                        }
+                                        status={status}
+                                        disabled={status === 0}
+                                    >
+                                        {status === 4 ? 'Faucet' : 'Ok'}
+                                    </FaucetButton>
+                                </>
+                            ) : (
+                                <>
+                                    <InfoBar>
+                                        <Text color={'#fff'} fontSize={18}>
+                                            If you want to access faucet, you need to connect wallet
+                                        </Text>
+                                    </InfoBar>
 
-                                        <ButtonLight onClick={toggleWalletModal} disabled={false} width={'100%'}>
-                                            <Text fontSize={20} fontWeight={500}>
-                                                Connect to a wallet
-                                            </Text>
-                                        </ButtonLight>
-                                    </>
-                                )}
-                            </>
-                        ) : (
-                            <InfoBar>
-                                <Text color={'#fff'} fontSize={18}>
-                                    {result === 1
-                                        ? 'Your wallet address is not qualified!'
+                                    <ButtonLight onClick={toggleWalletModal} disabled={false} width={'100%'}>
+                                        <Text fontSize={20} fontWeight={500}>
+                                            Connect to a wallet
+                                        </Text>
+                                    </ButtonLight>
+                                </>
+                            )}
+                        </ContentWrapper>
+                    ) : (
+                        <ResultWrapper status={result}>
+                            <Text
+                                color={
+                                    result === 1
+                                        ? '#FF6161'
                                         : result === 2
-                                        ? 'You can only use GemKeeper Faucet Once!'
+                                        ? '#EDD140'
                                         : result === 3
-                                        ? 'There is a problem in Faucet, please contact support!'
+                                        ? '#FF6161'
                                         : result === 4
-                                        ? 'Sent 0.5 Rose Successfully, please wait to receive it!'
+                                        ? '#91FF95'
                                         : result === 5
-                                        ? 'Your wallet should not have any ROSE and you need a minimum amount of bridged token in your wallet!'
-                                        : 'Something went wrong!'}
-                                </Text>
-                            </InfoBar>
-                        )}
-                    </ContentWrapper>
+                                        ? '#8BABFF'
+                                        : '#fff'
+                                }
+                                fontSize={13}
+                                style={{ marginBottom: '70px', textAlign: 'center' }}
+                            >
+                                {result === 1
+                                    ? 'Your wallet address is not qualified!'
+                                    : result === 2
+                                    ? 'You can only use GemKeeper Faucet Once!'
+                                    : result === 3
+                                    ? 'There is a problem in Faucet, please contact support!'
+                                    : result === 4
+                                    ? 'Sent 0.5 Rose Successfully, please wait to receive it!'
+                                    : result === 5
+                                    ? 'Your wallet should not have any ROSE and you need a minimum amount of bridged token in your wallet!'
+                                    : 'Something went wrong!'}
+                            </Text>
+
+                            <EndButton
+                                onClick={() => {
+                                    toggleFaucetModal()
+                                }}
+                                status={result}
+                            >
+                                Ok
+                            </EndButton>
+                        </ResultWrapper>
+                    )}
                 </UpperSection>
             </Wrapper>
         </Modal>
