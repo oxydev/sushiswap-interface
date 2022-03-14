@@ -124,9 +124,7 @@ const FooterMenuPart = styled.div`
         border-bottom: 1px solid #2a685b;
     `}
 
-    ${({ theme }) => theme.mediaWidth.upToSmall`
-        align-items:center;
-        padding-top: 35px;
+    ${({ theme }) => theme.mediaWidth.upToExtraSmall`
         justify-content: flex-start;
     `}
 `
