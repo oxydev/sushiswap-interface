@@ -64,12 +64,9 @@ const HeaderFrame = styled.div`
     padding: 0.5 1rem;
     width: calc(100%);
     position: relative;
-  `};
-
-    ${({ theme }) => theme.mediaWidth.upToSmall`
-        display: flex;
+    display: flex;
         align-items: center;
-  `}
+  `};
 `
 
 const HeaderControls = styled.div`
@@ -78,8 +75,9 @@ const HeaderControls = styled.div`
     align-items: center;
     justify-self: flex-end;
 
-    ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    ${({ theme }) => theme.mediaWidth.upToSmall`
     padding: 5px;
+    width: 40%;
   `}
 `
 const StyledMenuIcon = styled(MenuIcon)`
@@ -105,6 +103,11 @@ const HeaderElement = styled.div`
       margin-left: 4px;
     }
   `};
+    ${({ theme }) => theme.mediaWidth.upToSmall`
+    
+    width: 100%;
+    
+  `}
 `
 
 const HeaderElementWrap = styled.div`
@@ -124,10 +127,7 @@ const HeaderElementWrap = styled.div`
 
 const HeaderRow = styled(RowFixed)`
     ${({ theme }) => theme.mediaWidth.upToMedium`
-   width: 100%;
-  `};
-
-    ${({ theme }) => theme.mediaWidth.upToSmall`
+    width: 100%;
     padding: 0.5rem 0;
     position: absolute;
     right: 0;
@@ -144,7 +144,7 @@ const HeaderLinks = styled(Row)`
     justify-content: flex-end;
 
     
-    ${({ theme }) => theme.mediaWidth.upToSmall`
+    ${({ theme }) => theme.mediaWidth.upToMedium`
         display: none;
   `}
 `};
@@ -163,6 +163,11 @@ const AccountElement = styled.div<{ active: boolean }>`
     :focus {
         border: 1px solid blue;
     }
+
+    ${({ theme }) => theme.mediaWidth.upToSmall`
+        flex-direction: column-reverse;
+        background-color: transparent;
+  `}
 `
 
 const UNIAmount = styled(AccountElement)`
@@ -188,8 +193,8 @@ const UNIWrapper = styled.span`
     }
 `
 
-const HideSmall = styled.span`
-    ${({ theme }) => theme.mediaWidth.upToSmall`
+const HideLarge = styled.span`
+    ${({ theme }) => theme.mediaWidth.upToLarge`
     display: none;
   `};
 `
@@ -209,8 +214,19 @@ const NetworkCard = styled(YellowCard)`
 `
 
 const BalanceText = styled(Text)`
-    ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    ${({ theme }) => theme.mediaWidth.upToSmall`
     display: none;
+    line-height: 41px;
+    align-items: center;
+    margin-top: 16px !important;
+    background-color: ${({ theme }) => theme.bg3};
+    border-radius: ${({ theme }) => theme.borderRadius};
+    align-self: stretch;
+    justify-content: center;
+  `};
+
+    ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    font-size: 12px;
   `};
 `
 
@@ -220,7 +236,7 @@ const Title = styled.a`
     pointer-events: auto;
     justify-self: flex-start;
     margin-right: 12px;
-    ${({ theme }) => theme.mediaWidth.upToSmall`
+    ${({ theme }) => theme.mediaWidth.upToMedium`
     justify-self: center;
   `};
     :hover {
@@ -333,7 +349,7 @@ const HeaderLinksIcon = styled.div`
         height: 2px;
     }
 
-    ${({ theme }) => theme.mediaWidth.upToSmall`
+    ${({ theme }) => theme.mediaWidth.upToMedium`
         display: flex;
   `};
 `
@@ -574,11 +590,11 @@ export default function Header() {
             </HeaderRow>
             <HeaderControls>
                 <HeaderElement>
-                    <HideSmall>
+                    <HideLarge>
                         {account && chainId && NETWORK_LABELS[chainId] && (
                             <NetworkCard title={NETWORK_LABELS[chainId]}>{NETWORK_LABELS[chainId]}</NetworkCard>
                         )}
-                    </HideSmall>
+                    </HideLarge>
                     <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
                         {account && chainId && userEthBalance ? (
                             <BalanceText
