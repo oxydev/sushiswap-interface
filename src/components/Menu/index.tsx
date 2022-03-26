@@ -10,6 +10,7 @@ import { useModalOpen, useToggleModal } from '../../state/application/hooks'
 import { ExternalLink, StyledInternalLink } from '../../theme'
 import { ButtonPrimary } from '../Button'
 import { MenuFlyout, StyledMenu, StyledMenuButton } from 'components/StyledMenu'
+import { useTranslation } from 'react-i18next'
 
 const StyledMenuIcon = styled(MenuIcon)`
     path {
@@ -69,6 +70,7 @@ export default function Menu() {
     const toggle = useToggleModal(ApplicationModal.MENU)
     useOnClickOutside(node, open ? toggle : undefined)
     const openClaimModal = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
+    const { t } = useTranslation()
 
     return (
         <StyledMenu ref={node}>
@@ -80,27 +82,27 @@ export default function Menu() {
                 <ExtendedMenuFlyout>
                     <MenuItem id="link" href="#">
                         <Info size={14} />
-                        About
+                        {t('About')}
                     </MenuItem>
                     <MenuItem id="link" href="https://gemkeeper-finance.gitbook.io/docs/">
                         <BookOpen size={14} />
-                        Docs
+                        {t('Docs')}
                     </MenuItem>
                     <MenuItem id="link" href="https://github.com/GemKeeperDEV/GemKeeperFinance">
                         <GitHub size={14} />
-                        GitHub
+                        {t('Github')}
                     </MenuItem>
                     <MenuItem id="link" href="https://t.me/GemKeeperAnnouncements">
                         <MessageCircle size={14} />
-                        Telegram
+                        {t('Telegram')}
                     </MenuItem>
                     <MenuItem id="link" href="https://twitter.com/GemKeeperDeFi">
                         <Twitter size={14} />
-                        Twitter
+                        {t('Twitter')}
                     </MenuItem>
                     <MenuItem id="link" href="https://discord.gg/Jcbj5E9Ysd">
                         <MessageCircle size={14} />
-                        Discord
+                        {t('Discord')}
                     </MenuItem>
                     {/*<MenuItem id="link" href="https://analytics.sushi.com/">*/}
                     {/*    <PieChart size={14} />*/}
