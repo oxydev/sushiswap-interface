@@ -20,6 +20,7 @@ import AppBody from '../AppBody'
 import { Dots } from '../Pool/styleds'
 import { BlueCard } from '../../components/Card'
 import { TYPE } from '../../theme'
+import { useTranslation } from 'react-i18next'
 
 enum Fields {
     TOKEN0 = 0,
@@ -70,10 +71,12 @@ export default function PoolFinder() {
         setShowSearch(false)
     }, [setShowSearch])
 
+    const { t } = useTranslation()
+
     const prerequisiteMessage = (
         <LightCard padding="45px 10px">
             <Text textAlign="center">
-                {!account ? 'Connect to a wallet to find pools' : 'Select a token to find your liquidity.'}
+                {!account ? t('Connect to a wallet to find pools') : t('Select a token to find your liquidity.')}
             </Text>
         </LightCard>
     )
@@ -85,8 +88,8 @@ export default function PoolFinder() {
                 <BlueCard>
                     <AutoColumn gap="10px">
                         <TYPE.link fontWeight={400} color={'primaryText1'}>
-                            <b>Tip:</b> Use this tool to find pairs that don&apos;t automatically appear in the
-                            interface.
+                            <b>{t('Tip') + ' :'}</b>{' '}
+                            {t('Use this tool to find pairs that do not automatically appear in the interface.')}
                         </TYPE.link>
                     </AutoColumn>
                 </BlueCard>
@@ -105,7 +108,7 @@ export default function PoolFinder() {
                         </Row>
                     ) : (
                         <Text fontWeight={500} fontSize={20} marginLeft={'12px'}>
-                            Select a Token
+                            {t('Select a Token')}
                         </Text>
                     )}
                 </ButtonDropdownLight>
@@ -129,7 +132,7 @@ export default function PoolFinder() {
                         </Row>
                     ) : (
                         <Text fontWeight={500} fontSize={20} marginLeft={'12px'}>
-                            Select a Token
+                            {t('Select a Token')}
                         </Text>
                     )}
                 </ButtonDropdownLight>
@@ -144,10 +147,10 @@ export default function PoolFinder() {
                         }}
                     >
                         <Text textAlign="center" fontWeight={500}>
-                            Pool Found!
+                            {t('Pool Found') + '!'}
                         </Text>
                         <StyledInternalLink to={`/pool`}>
-                            <Text textAlign="center">Manage this pool.</Text>
+                            <Text textAlign="center">{t('Manage this pool.')}</Text>
                         </StyledInternalLink>
                     </ColumnCenter>
                 )}
@@ -179,7 +182,7 @@ export default function PoolFinder() {
                         <LightCard padding="45px 10px">
                             <AutoColumn gap="sm" justify="center">
                                 <Text textAlign="center" fontWeight={500}>
-                                    Invalid pair.
+                                    {t('Invalid pair.')}
                                 </Text>
                             </AutoColumn>
                         </LightCard>
