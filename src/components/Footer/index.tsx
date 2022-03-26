@@ -10,6 +10,7 @@ import Instagram from '../../assets/images/instagram.svg'
 import Linkedin from '../../assets/images/linkedin.svg'
 import PeckShieldLogo from '../../assets/images/PeckShieldLogo.svg'
 import { ExternalLink } from 'theme'
+import { useTranslation } from 'react-i18next'
 
 const FooterFrame = styled.div`
     width: 100%;
@@ -198,15 +199,16 @@ const FooterBadge = styled.div`
 `
 
 export default function Footer() {
+    const { t } = useTranslation()
     const menuElements = MenuData.footerMenu.map(item => (
         <FooterMenu key={item.title}>
             <Text className="MenuTitle" style={{ marginBottom: '24px' }}>
-                {item.title}
+                {t(item.title)}
             </Text>
             <FooterList>
                 {item.items.map(subItem => (
                     <a key={subItem.name} href={subItem.link}>
-                        {subItem.name}
+                        {t(subItem.name)}
                     </a>
                 ))}
             </FooterList>
@@ -237,7 +239,7 @@ export default function Footer() {
                     >
                         <Audited>
                             <Text fontSize={20} fontWeight={400} color={'#fff'}>
-                                Audited by <img src={PeckShieldLogo} alt="PeckShieldLogo" />
+                                {t('Audited by')} <img src={PeckShieldLogo} alt="PeckShieldLogo" />
                             </Text>
                         </Audited>
                     </ExternalLink>

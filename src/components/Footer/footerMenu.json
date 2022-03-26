@@ -21,19 +21,19 @@
             "title": "Tools",
             "items": [
                 {
-                    "name": "Swap",
+                    "name": "swap",
                     "link": "#/swap"
                 },
                 {
-                    "name": "Zap",
+                    "name": "zap",
                     "link": "#/zap"
                 },
                 {
-                    "name": "Liquidity",
+                    "name": "liquidity",
                     "link": "#/pool"
                 },
                 {
-                    "name": "Gem Mine",
+                    "name": "gemMine",
                     "link": "#/yield"
                 }
             ]
@@ -42,7 +42,7 @@
             "title": "Info",
             "items": [
                 {
-                    "name": "Analytics",
+                    "name": "analytics",
                     "link": "https://analytics.gemkeeper.finance/"
                 },
                 {
