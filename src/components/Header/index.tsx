@@ -61,14 +61,12 @@ const HeaderFrame = styled.div`
     z-index: 2;
     ${({ theme }) => theme.mediaWidth.upToMedium`
     grid-template-columns: 1fr;
-    padding: 0 1rem;
+    padding: 0.5 1rem;
     width: calc(100%);
     position: relative;
+    display: flex;
+        align-items: center;
   `};
-
-    ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-        padding: 0.5rem 1rem;
-  `}
 `
 
 const HeaderControls = styled.div`
@@ -77,25 +75,9 @@ const HeaderControls = styled.div`
     align-items: center;
     justify-self: flex-end;
 
-    ${({ theme }) => theme.mediaWidth.upToMedium`
-    flex-direction: row;
-    justify-content: space-between;
-    justify-self: center;
-    width: 100%;
-    max-width: 960px;
-    padding: 1rem;
-    position: fixed;
-    bottom: 0px;
-    left: 0px;
-    width: 100%;
-    z-index: 99;
-    height: 72px;
-    border-radius: 12px 12px 0 0;
-    background-color: ${({ theme }) => theme.bg1};
-  `};
-
-    ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    ${({ theme }) => theme.mediaWidth.upToSmall`
     padding: 5px;
+    width: 40%;
   `}
 `
 const StyledMenuIcon = styled(MenuIcon)`
@@ -121,22 +103,38 @@ const HeaderElement = styled.div`
       margin-left: 4px;
     }
   `};
+    ${({ theme }) => theme.mediaWidth.upToSmall`
+    
+    width: 100%;
+    
+  `}
 `
 
 const HeaderElementWrap = styled.div`
     display: flex;
     align-items: center;
-    flex-shrink: 0;
+    ${({ theme }) => theme.mediaWidth.upToSmall`
+    padding: 0.5rem 0;
+    position: absolute;
+    right: 0;
+    left: 0;
+    margin: auto;
+    ${({ theme }) => theme.mediaWidth.upToSmall`
+        display: none;
+  `}
+  `}
 `
 
 const HeaderRow = styled(RowFixed)`
     ${({ theme }) => theme.mediaWidth.upToMedium`
-   width: 100%;
-  `};
-
-    @media (max-width: 720px) {
-        padding: 0.5rem 0;
-    }
+    width: 100%;
+    padding: 0.5rem 0;
+    position: absolute;
+    right: 0;
+    left: 0;
+    margin: auto;
+    width: fit-content;
+  `}
 `
 
 const HeaderLinks = styled(Row)`
@@ -145,9 +143,10 @@ const HeaderLinks = styled(Row)`
     padding: 1rem 0 1rem 1rem;
     justify-content: flex-end;
 
-    @media (max-width: 720px) {
+    
+    ${({ theme }) => theme.mediaWidth.upToMedium`
         display: none;
-    }
+  `}
 `};
 `
 
@@ -164,6 +163,11 @@ const AccountElement = styled.div<{ active: boolean }>`
     :focus {
         border: 1px solid blue;
     }
+
+    ${({ theme }) => theme.mediaWidth.upToSmall`
+        flex-direction: column-reverse;
+        background-color: transparent;
+  `}
 `
 
 const UNIAmount = styled(AccountElement)`
@@ -189,8 +193,8 @@ const UNIWrapper = styled.span`
     }
 `
 
-const HideSmall = styled.span`
-    ${({ theme }) => theme.mediaWidth.upToSmall`
+const HideLarge = styled.span`
+    ${({ theme }) => theme.mediaWidth.upToLarge`
     display: none;
   `};
 `
@@ -210,8 +214,19 @@ const NetworkCard = styled(YellowCard)`
 `
 
 const BalanceText = styled(Text)`
-    ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    ${({ theme }) => theme.mediaWidth.upToSmall`
     display: none;
+    line-height: 41px;
+    align-items: center;
+    margin-top: 16px !important;
+    background-color: ${({ theme }) => theme.bg3};
+    border-radius: ${({ theme }) => theme.borderRadius};
+    align-self: stretch;
+    justify-content: center;
+  `};
+
+    ${({ theme }) => theme.mediaWidth.upToExtraSmall`
+    font-size: 12px;
   `};
 `
 
@@ -221,7 +236,7 @@ const Title = styled.a`
     pointer-events: auto;
     justify-self: flex-start;
     margin-right: 12px;
-    ${({ theme }) => theme.mediaWidth.upToSmall`
+    ${({ theme }) => theme.mediaWidth.upToMedium`
     justify-self: center;
   `};
     :hover {
@@ -321,6 +336,83 @@ const StyledExternalLink = styled(ExternalLink).attrs({
       display: none;
 `}
 `
+const HeaderLinksIcon = styled.div`
+    display: none;
+    width: 26px;
+    height: 20px;
+    flex-direction: column;
+    justify-content: space-between;
+
+    & > div {
+        width: 100%;
+        background-color: #fff;
+        height: 2px;
+    }
+
+    ${({ theme }) => theme.mediaWidth.upToMedium`
+        display: flex;
+  `};
+`
+
+const MobileHeaderLinks = styled.div<{ show: boolean }>`
+    display: ${props => (props.show ? 'flex' : 'none')};
+    padding: 72px 20px 43px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    flex-direction: column;
+    background-color: #010326;
+    border-radius: 0 0 25px 25px;
+
+    & > a {
+        display: block;
+        width: 100%;
+        line-height: 53px;
+        padding-left: 31px;
+        border-bottom: 1px solid #98cdff;
+        border-radius: 0;
+        margin: 0;
+        font-size: 16px;
+
+        &.ACTIVE {
+            border-radius: 0;
+            background-color: rgba(152, 205, 255, 0.1);
+        }
+
+        &:nth-child(2) {
+            border-top: 2px solid #2b318f;
+        }
+    }
+`
+
+const CloseHeader = styled.div`
+    width: 23px;
+    height: 23px;
+    position: absolute;
+    top: 28px;
+    left: 25px;
+    &::after,
+    &::before {
+        content: '';
+        display: block;
+        width: 25px;
+        height: 3px;
+        background-color: #fff;
+        transform-origin: center;
+        transform: rotate(45deg);
+        position: absolute;
+        right: 0;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        margin: auto;
+    }
+
+    &::before {
+        transform: rotate(-45deg);
+    }
+`
 
 const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
     [ChainId.RINKEBY]: 'Rinkeby',
@@ -348,6 +440,8 @@ export default function Header() {
     const { account, chainId } = useActiveWeb3React()
     const { t } = useTranslation()
 
+    const [show, setShow] = useState(false)
+
     const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
     // const [isDark] = useDarkModeManager()
     const [darkMode, toggleDarkMode] = useDarkModeManager()
@@ -367,6 +461,70 @@ export default function Header() {
 
     return (
         <HeaderFrame>
+            <HeaderLinksIcon
+                onClick={() => {
+                    setShow(true)
+                }}
+            >
+                <div></div>
+                <div></div>
+                <div></div>
+            </HeaderLinksIcon>
+            <MobileHeaderLinks
+                show={show}
+                onClick={() => {
+                    setShow(false)
+                }}
+            >
+                <CloseHeader
+                    onClick={() => {
+                        setShow(false)
+                    }}
+                ></CloseHeader>
+                <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
+                    {t('swap')}
+                </StyledNavLink>
+                <StyledNavLink
+                    id={`pool-nav-link`}
+                    to={'/pool'}
+                    isActive={(match, { pathname }) =>
+                        Boolean(match) ||
+                        pathname.startsWith('/add') ||
+                        pathname.startsWith('/remove') ||
+                        pathname.startsWith('/create') ||
+                        pathname.startsWith('/find')
+                    }
+                >
+                    Liquidity
+                </StyledNavLink>
+
+                <StyledNavLink id={`yield-nav-link`} to={'/yield'}>
+                    Gem Mine
+                </StyledNavLink>
+
+                <StyledNavLink id={`zap-nav-link`} to={'/zap'}>
+                    Zap
+                </StyledNavLink>
+                <StyledNavLink id={`zap-nav-link`} to={'/bridge'}>
+                    Bridge
+                </StyledNavLink>
+                <StyledNavLink id={`zap-nav-link`} as="a" href="https://analytics.gemkeeper.finance/" target="_blank">
+                    Analytics
+                </StyledNavLink>
+                {account && (
+                    <StyledNavLink
+                        onClick={() => {
+                            toggleFaucetModal()
+                            console.log('hello')
+                        }}
+                        id={`faucet-nav-link`}
+                        as="a"
+                        // href="havascript:;"
+                    >
+                        Faucet
+                    </StyledNavLink>
+                )}
+            </MobileHeaderLinks>
             <Modal isOpen={showUniBalanceModal} onDismiss={() => setShowUniBalanceModal(false)}>
                 <UniBalanceContent setShowUniBalanceModal={setShowUniBalanceModal} />
             </Modal>
@@ -428,78 +586,14 @@ export default function Header() {
                         </StyledNavLink>
                     )}
                 </HeaderLinks>
-
-                <ExtendedStyledMenuButton
-                    onClick={() => {
-                        if (showLinks) {
-                            setShowLinks(false)
-                        } else {
-                            setShowLinks(true)
-                        }
-                    }}
-                >
-                    <StyledMenuIcon />
-                    {showLinks && (
-                        <ResponsiveHeaderLinks>
-                            <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
-                                {t('swap')}
-                            </StyledNavLink>
-                            <StyledNavLink
-                                id={`pool-nav-link`}
-                                to={'/pool'}
-                                isActive={(match, { pathname }) =>
-                                    Boolean(match) ||
-                                    pathname.startsWith('/add') ||
-                                    pathname.startsWith('/remove') ||
-                                    pathname.startsWith('/create') ||
-                                    pathname.startsWith('/find')
-                                }
-                            >
-                                {t('liquidity')}
-                            </StyledNavLink>
-
-                            <StyledNavLink id={`yield-nav-link`} to={'/yield'}>
-                                {t('gemMine')}
-                            </StyledNavLink>
-
-                            <StyledNavLink id={`zap-nav-link`} to={'/zap'}>
-                                {t('zap')}
-                            </StyledNavLink>
-                            <StyledNavLink id={`zap-nav-link`} to={'/bridge'}>
-                                {t('bridge')}
-                            </StyledNavLink>
-                            <StyledNavLink
-                                id={`zap-nav-link`}
-                                as="a"
-                                href="https://analytics.gemkeeper.finance/"
-                                target="_blank"
-                            >
-                                {t('analytics')}
-                            </StyledNavLink>
-                            {account && (
-                                <StyledNavLink
-                                    onClick={() => {
-                                        toggleFaucetModal()
-                                        console.log('hello')
-                                    }}
-                                    id={`faucet-nav-link`}
-                                    as="a"
-                                    // href="havascript:;"
-                                >
-                                    {t('faucet')}
-                                </StyledNavLink>
-                            )}
-                        </ResponsiveHeaderLinks>
-                    )}
-                </ExtendedStyledMenuButton>
             </HeaderRow>
             <HeaderControls>
                 <HeaderElement>
-                    <HideSmall>
+                    <HideLarge>
                         {account && chainId && NETWORK_LABELS[chainId] && (
                             <NetworkCard title={NETWORK_LABELS[chainId]}>{NETWORK_LABELS[chainId]}</NetworkCard>
                         )}
-                    </HideSmall>
+                    </HideLarge>
                     <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
                         {account && chainId && userEthBalance ? (
                             <BalanceText

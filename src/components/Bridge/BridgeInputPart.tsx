@@ -14,6 +14,7 @@ import { useTranslation } from 'react-i18next'
 import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
 import ChainListModal from 'components/SearchModal/ChainListModal'
 import { networkData } from '../../pages/Bridge/index'
+import NameToolTip from './NameToolTip'
 
 interface bridgeInputProps {
     value: string
@@ -57,7 +58,7 @@ const LabelRow = styled.div`
 const InputRow = styled.div<{ selected: boolean }>`
     ${({ theme }) => theme.flexRowNoWrap}
     align-items: center;
-    padding: 1.5rem;
+    padding: 1rem 1.5rem;
     display: flex;
 
     @media (max-width: 720px) {
@@ -98,7 +99,7 @@ const StyledBalanceMax = styled.button`
 
     font-weight: 500;
     cursor: pointer;
-    margin-right: 2.5rem;
+    margin-right: 15px;
     color: ${({ theme }) => theme.primaryText1};
     :hover {
         border: 1px solid ${({ theme }) => theme.primary1};
@@ -146,6 +147,9 @@ const Aligner = styled.span`
 const StyledTokenName = styled.span<{ active?: boolean }>`
   ${({ active }) => (active ? '  margin: 0 0.25rem 0 0.75rem;' : '  margin: 0 0.25rem 0 0.25rem;')}
   font-size:  ${({ active }) => (active ? '20px' : '16px')};
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 
 `
 
@@ -179,7 +183,7 @@ const InputPanel = styled.div<{ hideInput?: boolean }>`
     border-radius: ${({ hideInput }) => (hideInput ? '8px' : '20px')};
     // background-color: ${({ theme }) => theme.bg2};
     background-color: rgba(16,14,28,0.85);
-    z-index: 1;
+    
 `
 
 const chainList = {
@@ -276,7 +280,7 @@ export default function BridgeInputPart({
                             <CurrencySelect
                                 selected={!!currency}
                                 className="open-currency-select-button"
-                                style={{ marginRight: '50px', width: '130px' }}
+                                style={{ marginRight: '10px', width: '130px' }}
                                 onClick={() => {
                                     if (!disableCurrencySelect) {
                                         setModalOpen(true)
@@ -321,34 +325,36 @@ export default function BridgeInputPart({
                                     {!disableCurrencySelect && <StyledDropDown selected={!!currency} />}
                                 </Aligner>
                             </CurrencySelect>
-                            <ChainSelect
-                                selected={!!currency}
-                                className="open-currency-select-button"
-                                onClick={() => {
-                                    if (!disableChainSelect) {
-                                        setChainModalOpen(true)
-                                    }
-                                }}
-                                style={{ width: '150px' }}
-                            >
-                                <Aligner>
-                                    {chain !== undefined ? (
-                                        <>
-                                            <CurrencyLogo chain={chain} size={'24px'} />
-                                            <StyledTokenName
-                                                style={{ fontSize: '16px', textAlign: 'left' }}
-                                                className="token-symbol-container"
-                                                active={Boolean(chain)}
-                                            >
-                                                {networkData[chain].chainName}
-                                            </StyledTokenName>
-                                        </>
-                                    ) : (
-                                        t('selectChain')
-                                    )}
-                                    {!disableCurrencySelect && <StyledDropDown selected={!!currency} />}
-                                </Aligner>
-                            </ChainSelect>
+                            <NameToolTip text={chain ? networkData[chain].chainName : false}>
+                                <ChainSelect
+                                    selected={!!currency}
+                                    className="open-currency-select-button"
+                                    onClick={() => {
+                                        if (!disableChainSelect) {
+                                            setChainModalOpen(true)
+                                        }
+                                    }}
+                                    style={{ width: '150px' }}
+                                >
+                                    <Aligner>
+                                        {chain !== undefined ? (
+                                            <>
+                                                <CurrencyLogo chain={chain} size={'24px'} />
+                                                <StyledTokenName
+                                                    style={{ fontSize: '16px', textAlign: 'left' }}
+                                                    className="token-symbol-container"
+                                                    active={Boolean(chain)}
+                                                >
+                                                    {networkData[chain].chainName}
+                                                </StyledTokenName>
+                                            </>
+                                        ) : (
+                                            t('selectChain')
+                                        )}
+                                        {!disableCurrencySelect && <StyledDropDown selected={!!currency} />}
+                                    </Aligner>
+                                </ChainSelect>
+                            </NameToolTip>
                         </InputButtonContainer>
                     </InputRow>
                 </Container>

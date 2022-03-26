@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 import { setInterval } from 'timers'
 import mainImage from '../../assets/images/homePageImage.jpg'
+import LogoRing from '../../assets/images/logoRing.png'
+import LogoRingLogo from '../../assets/images/logoRing-logo.png'
 import mainImageMobile from '../../assets/images/homePageImageMobile.jpg'
 
 const HomePage = styled.section`
     width: 100%;
+    position: relative;
 `
 
 const TitleWrapper = styled.div`
@@ -52,28 +55,6 @@ const TitleWrapper = styled.div`
   `}
 `
 
-const HomeImage = styled.div`
-    background-image: url(${mainImage});
-    background-color: blue;
-    background-repeat: no-repeat;
-    width: 104vw;
-    height: 100%;
-    background-size: cover;
-    opacity: 0.6;
-    position: fixed;
-    top: 0;
-    right: -4vw;
-    mix-blend-mode: color-dodge;
-    background-position: right;
-
-    ${({ theme }) => theme.mediaWidth.upToMedium`
-        background-image: url(${mainImageMobile});
-        background-position: bottom;
-        width:100vw;
-        right:0;
-  `}
-`
-
 const LaunchButton = styled.button`
     border: none;
     outline: none;
@@ -82,7 +63,7 @@ const LaunchButton = styled.button`
     border-radius: 50px;
     width: fit-content;
     margin-top: 76px;
-    cursour: pointer;
+    cursor: pointer;
     z-index: 10;
     font-size: 20px;
 
@@ -92,9 +73,71 @@ const LaunchButton = styled.button`
         
   `}
 `
+const hueRotate = keyframes`
+        from {
+            filter: hue-rotate(0);
+        }
+        to {
+            filter: hue-rotate(360deg);
+        }
+`
+
+const HomeImage = styled.div`
+    background-repeat: no-repeat;
+    width: 104vw;
+    height: 90%;
+    background-size: cover;
+    opacity: 0.6;
+    position: absolute;
+    top: 0;
+    right: -4vw;
+    bottom: 0;
+    margin: auto;
+
+    & > img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        mix-blend-mode: color-dodge;
+        background-position: right;
+        object-position: right;
+        animation: ${hueRotate} 10s linear infinite;
+        z-index: 10;
+    }
+    &::before {
+        content: '';
+        display: block;
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        background-image: url(${LogoRingLogo});
+        background-size: contain;
+        background-position: right;
+        background-repeat: no-repeat;
+    }
+
+    ${({ theme }) => theme.mediaWidth.upToMedium`
+        width: 100vw;
+        height: 100%;
+        right: unset;
+        left: -3vw;
+        object-position: bottom;
+        & > img {
+            object-position: bottom;
+            animation: ${hueRotate} 10s linear infinite;
+            z-index: 10;
+        }
+        &::before {
+            background-position: bottom;
+        }
+  `}
+`
 
 export default function Home() {
     const [liquidity, setLiquidity] = useState(0)
+    const [mode, setMode] = useState(1)
 
     function getLiquidity() {
         fetch('https://subgraph.gemkeeper.finance/subgraphs/name/generated/sample', {
@@ -134,6 +177,10 @@ export default function Home() {
 
     return (
         <HomePage>
+            <HomeImage>
+                <img src={LogoRing} />
+            </HomeImage>
+
             <TitleWrapper>
                 <h2>Total Value Locked</h2>
                 <h3>$ {numberWithCommas(liquidity)}</h3>
@@ -146,7 +193,7 @@ export default function Home() {
                     Launch App
                 </LaunchButton>
             </TitleWrapper>
-            <HomeImage />
+            {/* <HomeImage /> */}
         </HomePage>
     )
 }
