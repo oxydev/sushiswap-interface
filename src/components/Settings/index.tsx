@@ -20,6 +20,7 @@ import { RowBetween, RowFixed } from '../Row'
 import Toggle from '../Toggle'
 import TransactionSettings from '../TransactionSettings'
 import { StyledMenuButton, MenuFlyout, StyledMenu } from 'components/StyledMenu'
+import { useTranslation } from 'react-i18next'
 
 const StyledMenuIcon = styled(Settings)`
     height: 20px;
@@ -80,6 +81,8 @@ export default function SettingsTab() {
     const node = useRef<HTMLDivElement>(null)
     const open = useModalOpen(ApplicationModal.SETTINGS)
     const toggle = useToggleSettingsMenu()
+
+    const { t } = useTranslation()
 
     const theme = useContext(ThemeContext)
     const [userSlippageTolerance, setUserslippageTolerance] = useUserSlippageTolerance()
@@ -151,7 +154,7 @@ export default function SettingsTab() {
                 <ExtendedMenuFlyout>
                     <AutoColumn gap="md" style={{ padding: '1rem' }}>
                         <Text fontWeight={600} fontSize={14}>
-                            Transaction Settings
+                            {t('Transaction Settings')}
                         </Text>
                         <TransactionSettings
                             rawSlippage={userSlippageTolerance}
@@ -160,14 +163,18 @@ export default function SettingsTab() {
                             setDeadline={setTtl}
                         />
                         <Text fontWeight={600} fontSize={14}>
-                            Interface Settings
+                            {t('Interface Settings')}
                         </Text>
                         <RowBetween>
                             <RowFixed>
                                 <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
-                                    Toggle Expert Mode
+                                    {t('Toggle Expert Mode')}
                                 </TYPE.black>
-                                <QuestionHelper text="Bypasses confirmation modals and allows high slippage trades. Use at your own risk." />
+                                <QuestionHelper
+                                    text={t(
+                                        'Bypasses confirmation modals and allows high slippage trades. Use at your own risk.'
+                                    )}
+                                />
                             </RowFixed>
                             <Toggle
                                 id="toggle-expert-mode-button"
@@ -188,9 +195,9 @@ export default function SettingsTab() {
                         <RowBetween>
                             <RowFixed>
                                 <TYPE.black fontWeight={400} fontSize={14} color={theme.text2}>
-                                    Disable Multihops
+                                    {t('Disable Multihops')}
                                 </TYPE.black>
-                                <QuestionHelper text="Restricts swaps to direct pairs only." />
+                                <QuestionHelper text={t('Restricts swaps to direct pairs only.')} />
                             </RowFixed>
                             <Toggle
                                 id="toggle-disable-multihop-button"
