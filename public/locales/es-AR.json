@@ -148,5 +148,11 @@
     "Pool Found": "Pool Found-es",
     "Manage this pool.": "Manage this pool.-es",
     "Connect to a wallet to find pools": "Connect to a wallet to find pools-es",
-    "Select a token to find your liquidity.": "Select a token to find your liquidity.-es"
+    "Select a token to find your liquidity.": "Select a token to find your liquidity.-es",
+    "Yield Mines": "Yield Mines-es",
+    "Your Yields": "Your Yields-es",
+    "Deposited": "Deposited-es",
+    "Claimable": "Claimable-es",
+    "Fetching Instruments": "Fetching Instruments-es",
+    "Mines": "Mines-es"
 }

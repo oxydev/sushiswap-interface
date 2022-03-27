@@ -113,7 +113,7 @@ export default function BentoBalances(): JSX.Element {
                         className="flex items-center cursor-pointer hover:text-secondary"
                         onClick={() => requestSort('symbol')}
                     >
-                        <div>Mines</div>
+                        <div>{t('Mines')}</div>
                         {sortConfig &&
                             sortConfig.key === 'symbol' &&
                             ((sortConfig.direction === 'ascending' && <ChevronUp size={12} />) ||
