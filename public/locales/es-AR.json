@@ -158,5 +158,16 @@
     "Convert single tokens to LP tokens directly.": "Convert single tokens to LP tokens directly.-es",
     "WARNING: Zap can cause slippage. Please do not Zap large amounts. All slippages will be used to buy Back $BLING": "WARNING: Zap can cause slippage. Please do not Zap large amounts. All slippages will be used to buy Back $BLING-es",
     "Select a LP": "Select a LP-es",
-    "Route Not Available": "Route Not Available-es"
+    "Route Not Available": "Route Not Available-es",
+    "Not Enough Balance": "Not Enough Balance-es",
+    "Exceeds Max Limit": "Exceeds Max Limit-es",
+    "Exceeds Min Limit": "Exceeds Min Limit-es",
+    "- Crosschain Fee is": "- Crosschain Fee is-es",
+    "Minimum Crosschain Fee is": "Minimum Crosschain Fee is-es",
+    "- Minimum Crosschain Amount is": "- Minimum Crosschain Amount is-es",
+    "- Maximum Crosschain Amount is": "- Maximum Crosschain Amount is-es",
+    "- Estimated Time of Crosschain Arrival is 3-30 min": "- Estimated Time of Crosschain Arrival is 3-30 min-es",
+    "- Crosschain amount larger than": "- Crosschain amount larger than-es",
+    "Powered by MultiChain": "Powered by MultiChain-es",
+    "could take up to 12 hours": "could take up to 12 hours-es"
 }

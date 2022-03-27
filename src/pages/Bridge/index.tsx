@@ -790,7 +790,7 @@ export default function Bridge() {
 
                 <Wrapper>
                     <TYPE.black fontSize={24} fontWeight={500} color={'#ffd545'} style={{ marginBottom: '29px' }}>
-                        {t('Bridge')}
+                        {t('bridge')}
                     </TYPE.black>
                     <ConfirmBridgeModal
                         isOpen={showConfirm}
@@ -891,7 +891,7 @@ export default function Bridge() {
                                         style={{ maxWidth: showApproveFlow ? '48%' : '100%', flexShrink: 0 }}
                                         disabled={showApproveFlow && approval !== ApprovalState.APPROVED ? true : false}
                                     >
-                                        {t('Bridge')}
+                                        {t('bridge')}
                                     </ButtonConfirmed>
                                 </>
                             ) : (
@@ -968,7 +968,7 @@ export default function Bridge() {
                                 <Text fontSize={14} fontWeight={400}>
                                     {t('- Crosschain amount larger than')}{' '}
                                     {transferData.BigValueThreshold ? transferData.BigValueThreshold : 0}{' '}
-                                    {transferData.symbol} could take up to 12 hours
+                                    {transferData.symbol} {t('could take up to 12 hours')}
                                 </Text>
                             </AutoColumn>
                         </AutoColumn>
