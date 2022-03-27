@@ -169,5 +169,16 @@
     "- Estimated Time of Crosschain Arrival is 3-30 min": "- Estimated Time of Crosschain Arrival is 3-30 min-es",
     "- Crosschain amount larger than": "- Crosschain amount larger than-es",
     "Powered by MultiChain": "Powered by MultiChain-es",
-    "could take up to 12 hours": "could take up to 12 hours-es"
+    "could take up to 12 hours": "could take up to 12 hours-es",
+    "Please wait!": "Please wait!-es",
+    "Your wallet address is not qualified!": "Your wallet address is not qualified!-es",
+    "Your wallet should not have any ROSE and you need a minimum amount of bridged token in your wallet!": "Your wallet should not have any ROSE and you need a minimum amount of bridged token in your wallet!-es",
+    "You can only use GemKeeper Faucet Once!": "You can only use GemKeeper Faucet Once!-es",
+    "Your wallet address is eligible!": "Your wallet address is eligible!-es",
+    "Something went wrong!": "Something went wrong!-es",
+    "Address:": "Address:-es",
+    "If you want to access faucet, you need to connect wallet": "If you want to access faucet, you need to connect wallet-es",
+    "Connect to a wallet": "Connect to a wallet-es",
+    "There is a problem in Faucet, please contact support!": "There is a problem in Faucet, please contact support!-es",
+    "Sent 0.5 Rose Successfully, please wait to receive it!": "Sent 0.5 Rose Successfully, please wait to receive it!-es"
 }

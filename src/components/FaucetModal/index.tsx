@@ -13,6 +13,7 @@ import SuccessIcon from '../../assets/images/faucet-success.png'
 import ErrorIcon from '../../assets/images/faucet-error.png'
 import WarningIcon from '../../assets/images/faucet-warning.png'
 import InfoIcon from '../../assets/images/faucet-info.png'
+import { useTranslation } from 'react-i18next'
 
 const Wrapper = styled.div`
     ${({ theme }) => theme.flexColumnNoWrap}
@@ -260,6 +261,8 @@ export default function FaucetModal() {
         checkStatus()
     }, [faucetModalOpen])
 
+    const { t } = useTranslation()
+
     return (
         <Modal isOpen={faucetModalOpen} onDismiss={toggleFaucetModal} minHeight={false} maxHeight={90}>
             <Wrapper>
@@ -291,19 +294,21 @@ export default function FaucetModal() {
                                         style={{ marginBottom: '32px', textAlign: 'center' }}
                                     >
                                         {status === 0
-                                            ? 'Please wait!'
+                                            ? t('Please wait!')
                                             : status === 1
-                                            ? 'Your wallet address is not qualified!'
+                                            ? t('Your wallet address is not qualified!')
                                             : status === 2
-                                            ? `Your wallet should not have any ROSE and you need a minimum amount of bridged token in your wallet!`
+                                            ? t(
+                                                  `Your wallet should not have any ROSE and you need a minimum amount of bridged token in your wallet!`
+                                              )
                                             : status === 3
-                                            ? `You can only use GemKeeper Faucet Once!`
+                                            ? t(`You can only use GemKeeper Faucet Once!`)
                                             : status === 4
-                                            ? 'Your wallet address is eligible!'
-                                            : 'Something went wrong!'}
+                                            ? t('Your wallet address is eligible!')
+                                            : t('Something went wrong!')}
                                     </Text>
                                     <Text fontSize={14} fontWeight={500} color={'#fff'} style={{ marginBottom: '8px' }}>
-                                        Address:
+                                        {t('Address:')}
                                     </Text>
                                     <Text fontSize={14} color={'#fff'} style={{ marginBottom: '48px' }}>
                                         {account}
@@ -329,13 +334,13 @@ export default function FaucetModal() {
                                 <>
                                     <InfoBar>
                                         <Text color={'#fff'} fontSize={18}>
-                                            If you want to access faucet, you need to connect wallet
+                                            {t('If you want to access faucet, you need to connect wallet')}
                                         </Text>
                                     </InfoBar>
 
                                     <ButtonLight onClick={toggleWalletModal} disabled={false} width={'100%'}>
                                         <Text fontSize={20} fontWeight={500}>
-                                            Connect to a wallet
+                                            {t('Connect to a wallet')}
                                         </Text>
                                     </ButtonLight>
                                 </>
@@ -361,16 +366,18 @@ export default function FaucetModal() {
                                 style={{ marginBottom: '70px', textAlign: 'center' }}
                             >
                                 {result === 1
-                                    ? 'Your wallet address is not qualified!'
+                                    ? t('Your wallet address is not qualified!')
                                     : result === 2
-                                    ? 'You can only use GemKeeper Faucet Once!'
+                                    ? t('You can only use GemKeeper Faucet Once!')
                                     : result === 3
-                                    ? 'There is a problem in Faucet, please contact support!'
+                                    ? t('There is a problem in Faucet, please contact support!')
                                     : result === 4
-                                    ? 'Sent 0.5 Rose Successfully, please wait to receive it!'
+                                    ? t('Sent 0.5 Rose Successfully, please wait to receive it!')
                                     : result === 5
-                                    ? 'Your wallet should not have any ROSE and you need a minimum amount of bridged token in your wallet!'
-                                    : 'Something went wrong!'}
+                                    ? t(
+                                          'Your wallet should not have any ROSE and you need a minimum amount of bridged token in your wallet!'
+                                      )
+                                    : t('Something went wrong!')}
                             </Text>
 
                             <EndButton
