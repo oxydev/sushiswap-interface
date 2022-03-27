@@ -1,6 +1,6 @@
 {
     "noWallet": "No se encontró billetera de Ethereum",
-    "connectToWallet": "Connect to a wallet",
+    "connectToWallet": "Connect to a wallet-es",
     "wrongNetwork": "Te encontrás en la red equivocada",
     "switchNetwork": "Por favor cambia a {{ correctNetwork }}",
     "installWeb3MobileBrowser": "Por favor ingresá desde un navegador móvil con web3 habilitado como Trust Wallet o Coinbase Wallet.",
@@ -14,7 +14,7 @@
     "bridge": "Bridge-es",
     "analytics": "Analytics-es",
     "faucet": "Faucet-es",
-    "pool": "Pool",
+    "pool": "Pool-es",
     "betaWarning": "Este proyecto se encuentra en beta. Usalo bajo tu propio riesgo.",
     "input": "Entrada",
     "output": "Salida",
