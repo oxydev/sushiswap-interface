@@ -571,7 +571,7 @@ export default function Zap(): JSX.Element {
                             ZAP
                         </ButtonPrimary>
                     ) : (
-                        <ButtonPrimary disabled={true}>Route Not Available</ButtonPrimary>
+                        <ButtonPrimary disabled={true}>{t('Route Not Available')}</ButtonPrimary>
                     )}
                     <CurrencyListModal
                         isOpen={showSelectCurreny}
