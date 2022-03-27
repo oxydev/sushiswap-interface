@@ -521,7 +521,7 @@ export default function Zap(): JSX.Element {
                                                 margin={true}
                                             />
                                         ) : null}
-                                        {pool ? pool.token0.symbol + '-' + pool.token1.symbol : 'Select a LP'}
+                                        {pool ? pool.token0.symbol + '-' + pool.token1.symbol : t('Select a LP')}
                                     </StyledTokenName>
                                     <StyledDropDown selected={!!pool} />
                                 </Aligner>
@@ -538,7 +538,7 @@ export default function Zap(): JSX.Element {
                     ) : !currency || !pool ? (
                         // eslint-disable-next-line @typescript-eslint/no-empty-function
                         <ButtonPrimary disabled={true} onClick={() => {}}>
-                            Select Token
+                            {t('selectToken')}
                         </ButtonPrimary>
                     ) : approval === ApprovalState.NOT_APPROVED || approval === ApprovalState.PENDING ? (
                         <ButtonConfirmed

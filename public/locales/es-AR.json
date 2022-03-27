@@ -154,5 +154,9 @@
     "Deposited": "Deposited-es",
     "Claimable": "Claimable-es",
     "Fetching Instruments": "Fetching Instruments-es",
-    "Mines": "Mines-es"
+    "Mines": "Mines-es",
+    "Convert single tokens to LP tokens directly.": "Convert single tokens to LP tokens directly.-es",
+    "WARNING: Zap can cause slippage. Please do not Zap large amounts. All slippages will be used to buy Back $BLING": "WARNING: Zap can cause slippage. Please do not Zap large amounts. All slippages will be used to buy Back $BLING-es",
+    "Select a LP": "Select a LP-es",
+    "Route Not Available": "Route Not Available-es"
 }
