@@ -504,7 +504,7 @@ export function useBridgeCallback(
               }
             })
         } else {
-          throw new Error("shit")
+          throw new Error("Unexpected Error, please refresh the app.")
         }
       },
       error: null
