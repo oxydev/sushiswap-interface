@@ -118,11 +118,11 @@ export default function Saave() {
     const theme = useContext(ThemeContext)
     const { account, chainId } = useActiveWeb3React()
 
-    const block1d = useOneDayBlock({ chainId: ChainId.ETHEREUM })
+    const block1d = useOneDayBlock({ chainId: ChainId.MAINNET })
 
-    const exchange = useFactory({ chainId: ChainId.ETHEREUM })
+    const exchange = useFactory({ chainId: ChainId.MAINNET })
     const exchange1d = useFactory({
-        chainId: ChainId.ETHEREUM,
+        chainId: ChainId.MAINNET,
         variables: {
             block: block1d
         },
@@ -130,11 +130,11 @@ export default function Saave() {
     })
 
     const xSushi = useTokens({
-        chainId: ChainId.ETHEREUM,
+        chainId: ChainId.MAINNET,
         variables: { where: { id: XSUSHI.address.toLowerCase() } }
     })?.[0]
 
-    const ethPrice = useNativePrice({ chainId: ChainId.ETHEREUM })
+    const ethPrice = useNativePrice({ chainId: ChainId.MAINNET })
 
     const bar = useBar()
     const [xSushiPrice] = [xSushi?.derivedETH * ethPrice, xSushi?.derivedETH * ethPrice * bar?.totalSupply]
@@ -146,8 +146,7 @@ export default function Saave() {
 
     const { t } = useTranslation()
     //const darkMode = useDarkModeManager()
-
-    const sushiBalance = useTokenBalance(account ?? undefined, SUSHI[ChainId.ETHEREUM])
+    const sushiBalance = useTokenBalance(account ?? undefined, SUSHI[ChainId.MAINNET].BLING)
     const xSushiBalance = useTokenBalance(account ?? undefined, XSUSHI)
 
     const [activeTab, setActiveTab] = useState(0)
@@ -159,7 +158,7 @@ export default function Saave() {
 
     const parsedAmount = usingBalance ? balance : tryParseAmount(input, balance?.currency)
 
-    const [approvalState, approve] = useApproveCallback(parsedAmount, BAR_ADDRESS[ChainId.ETHEREUM])
+    const [approvalState, approve] = useApproveCallback(parsedAmount, BAR_ADDRESS[ChainId.MAINNET])
 
     return (
         <>

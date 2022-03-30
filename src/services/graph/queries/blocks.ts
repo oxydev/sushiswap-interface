@@ -1,5 +1,5 @@
+// @ts-nocheck
 import gql from 'graphql-tag'
-
 const blockFieldsQuery = gql`
   fragment blockFields on Block {
     id
@@ -35,12 +35,11 @@ export const blocksQuery = gql`
   }
   ${blockFieldsQuery}
 `
-
 export const massBlocksQuery = (timestamps: number[] | string[]) =>
   gql`
   {
     ${timestamps.map(
-      (timestamp) =>
+      (timestamp: any) =>
         `
         block${timestamp}: blocks(first: 1, orderBy: timestamp, orderDirection: asc, where: { timestamp_gt: ${timestamp} }) {
             ...blockFields

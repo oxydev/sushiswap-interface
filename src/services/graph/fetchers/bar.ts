@@ -4,12 +4,12 @@ import { barHistoriesQuery, barQuery } from '../queries/bar'
 import { request } from 'graphql-request'
 
 const BAR = {
-  [ChainId.ETHEREUM]: 'matthewlilley/bar',
+  [ChainId.MAINNET]: 'matthewlilley/bar',
 }
 
 // @ts-ignore TYPE NEEDS FIXING
 const fetcher = async (query, variables = undefined) =>
-  request(`${GRAPH_HOST[ChainId.ETHEREUM]}/subgraphs/name/${BAR[ChainId.ETHEREUM]}`, query, variables)
+  request(`${GRAPH_HOST[ChainId.MAINNET]}/subgraphs/name/${BAR[ChainId.MAINNET]}`, query, variables)
 
 export const getBar = async (variables = undefined) => {
   const { bar } = await fetcher(barQuery, variables)

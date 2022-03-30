@@ -7,7 +7,7 @@ import useSWR, { SWRConfiguration } from 'swr'
 
 import { GraphProps } from '../interfaces/graphProps'
 
-export function useOneDayBlock({ chainId = ChainId.ETHEREUM, shouldFetch = true, swrConfig = undefined }) {
+export function useOneDayBlock({ chainId = ChainId.MAINNET, shouldFetch = true, swrConfig = undefined }) {
   const date = startOfSecond(startOfMinute(startOfHour(subDays(Date.now(), 1))))
   const start = getUnixTime(date)
   const end = getUnixTime(addSeconds(date, 600))
@@ -24,7 +24,7 @@ export function useOneDayBlock({ chainId = ChainId.ETHEREUM, shouldFetch = true,
   })
 }
 
-export function useTwoDayBlock({ chainId = ChainId.ETHEREUM, shouldFetch = true, swrConfig = undefined }) {
+export function useTwoDayBlock({ chainId = ChainId.MAINNET, shouldFetch = true, swrConfig = undefined }) {
   const date = startOfSecond(startOfMinute(startOfHour(subDays(Date.now(), 2))))
   const start = getUnixTime(date)
   const end = getUnixTime(addSeconds(date, 600))
@@ -41,7 +41,7 @@ export function useTwoDayBlock({ chainId = ChainId.ETHEREUM, shouldFetch = true,
   })
 }
 
-export function useOneWeekBlock({ chainId = ChainId.ETHEREUM, shouldFetch = true, swrConfig = undefined }) {
+export function useOneWeekBlock({ chainId = ChainId.MAINNET, shouldFetch = true, swrConfig = undefined }) {
   const date = startOfSecond(startOfMinute(startOfHour(subWeeks(Date.now(), 1))))
   const start = getUnixTime(date)
   const end = getUnixTime(addSeconds(date, 600))
@@ -58,7 +58,7 @@ export function useOneWeekBlock({ chainId = ChainId.ETHEREUM, shouldFetch = true
   })
 }
 
-export function useTwoWeekBlock({ chainId = ChainId.ETHEREUM, shouldFetch = true, swrConfig = undefined }) {
+export function useTwoWeekBlock({ chainId = ChainId.MAINNET, shouldFetch = true, swrConfig = undefined }) {
   const date = startOfSecond(startOfMinute(startOfHour(subWeeks(Date.now(), 2))))
   const start = getUnixTime(date)
   const end = getUnixTime(addSeconds(date, 600))
@@ -76,7 +76,7 @@ export function useTwoWeekBlock({ chainId = ChainId.ETHEREUM, shouldFetch = true
 }
 
 export function useBlock({
-  chainId = ChainId.ETHEREUM,
+  chainId = ChainId.MAINNET,
   variables,
   shouldFetch = true,
   swrConfig = undefined,
@@ -106,7 +106,7 @@ export function useMassBlocks({ timestamps, swrConfig = undefined }: useMassBloc
   return data
 }
 
-export function useAverageBlockTime({ chainId = ChainId.ETHEREUM, swrConfig = undefined }) {
+export function useAverageBlockTime({ chainId = ChainId.MAINNET, swrConfig = undefined }) {
   const { data } = useSWR(
     chainId ? ['averageBlockTime', chainId] : null,
     (_, chainId) => getAverageBlockTime(chainId),
