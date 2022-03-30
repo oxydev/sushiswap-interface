@@ -164,6 +164,7 @@
     },
     "license": "GPL-3.0-or-later",
     "dependencies": {
-        "axios": "^0.26.0"
+        "axios": "^0.26.0",
+        "swr": "^1.2.2"
     }
 }

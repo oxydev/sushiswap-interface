@@ -1,11 +1,16 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import styled, { ThemeContext } from 'styled-components'
+import { BAR_ADDRESS, ChainId, SUSHI, ZERO } from '@sushiswap/sdk'
+
+import { useTokenBalance } from '../../state/wallet/hooks'
+import { tryParseAmount } from '../../functions/parse'
 
 //import { WrapperNoPadding } from '../../components/swap/styleds'
 //import { useDarkModeManager } from '../../state/user/hooks'
 import AppBody from '../AppBody'
 import SaaveHeader from './SushiBarHeader'
 import { Wrapper } from '../../components/swap/styleds'
+import { useBar } from '../../services/graph/hooks/bar'
 
 import SushiDepositPanel from './SushiDepositPanel'
 import XSushiWithdrawlPanel from './XSushiWithdrawlPanel'
@@ -18,6 +23,16 @@ import { transparentize } from 'polished'
 
 import { useActiveWeb3React } from '../../hooks'
 import { Text } from 'rebass'
+
+import { aprToApy } from '../../functions/convert/apyApr'
+
+import { useFactory, useNativePrice, useTokens } from '../../services/graph/hooks/exchange'
+import { useOneDayBlock } from '../../services/graph/hooks/blocks'
+
+import { XSUSHI } from '../../config/tokens/ethereum'
+import { useTranslation } from 'react-i18next'
+
+import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 
 const PageWrapper = styled(AutoColumn)`
     width: 100%;
@@ -101,8 +116,50 @@ const ViewLink = styled.a`
 
 export default function Saave() {
     const theme = useContext(ThemeContext)
-    const { account } = useActiveWeb3React()
+    const { account, chainId } = useActiveWeb3React()
+
+    const block1d = useOneDayBlock({ chainId: ChainId.ETHEREUM })
+
+    const exchange = useFactory({ chainId: ChainId.ETHEREUM })
+    const exchange1d = useFactory({
+        chainId: ChainId.ETHEREUM,
+        variables: {
+            block: block1d
+        },
+        shouldFetch: !!block1d
+    })
+
+    const xSushi = useTokens({
+        chainId: ChainId.ETHEREUM,
+        variables: { where: { id: XSUSHI.address.toLowerCase() } }
+    })?.[0]
+
+    const ethPrice = useNativePrice({ chainId: ChainId.ETHEREUM })
+
+    const bar = useBar()
+    const [xSushiPrice] = [xSushi?.derivedETH * ethPrice, xSushi?.derivedETH * ethPrice * bar?.totalSupply]
+
+    const APY1d = aprToApy(
+        (((exchange?.volumeUSD - exchange1d?.volumeUSD) * 0.0005 * 365.25) / (bar?.totalSupply * xSushiPrice)) * 100 ??
+            0
+    )
+
+    const { t } = useTranslation()
     //const darkMode = useDarkModeManager()
+
+    const sushiBalance = useTokenBalance(account ?? undefined, SUSHI[ChainId.ETHEREUM])
+    const xSushiBalance = useTokenBalance(account ?? undefined, XSUSHI)
+
+    const [activeTab, setActiveTab] = useState(0)
+    const [input, setInput] = useState<string>('')
+
+    const balance = activeTab === 0 ? sushiBalance : xSushiBalance
+
+    const [usingBalance, setUsingBalance] = useState(false)
+
+    const parsedAmount = usingBalance ? balance : tryParseAmount(input, balance?.currency)
+
+    const [approvalState, approve] = useApproveCallback(parsedAmount, BAR_ADDRESS[ChainId.ETHEREUM])
 
     return (
         <>
@@ -181,7 +238,7 @@ export default function Saave() {
                                 </div>
                                 <div>
                                     <Text color={'#fff'} fontSize={30}>
-                                        8.49%
+                                        {`${APY1d ? APY1d.toFixed(2) + '%' : t('Loading')}`}
                                     </Text>
                                     <Text color={'#fff'} fontSize={20} style={{ marginTop: '5px' }}>
                                         {"Yesterday's APR"}
