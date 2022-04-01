@@ -37,37 +37,48 @@ import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallbac
 const PageWrapper = styled(AutoColumn)`
     width: 100%;
     justify-content: center;
+    max-width: 756px;
 `
+
 const FlexBox = styled.div`
     display: flex;
     padding-bottm: 10px;
 `
-const VoteCard = styled(DataCard)`
-    background: ${({ theme }) => transparentize(0.5, theme.bg1)};
-    overflow: hidden;
-`
 
+const StakeHeader = styled(DataCard)`
+    display: flex;
+    align-items: center;
+    margin-bottom: 0px;
+    background: ${({ theme }) => transparentize(0.5, theme.bg1)};
+`
 const StakeBody = styled.div`
     width: 66.66%;
-    max-width: 420px;
 `
 
 const StakeInfoBody = styled.div`
     width: 33.33%;
-    max-width: 280px;
     margin-left: 1rem;
 
     align-self: stretch;
 `
 const LogoBox = styled(DataCard)`
-    background: ${({ theme }) => transparentize(0.5, theme.bg1)};
+    background: transparent;
     overflow: hidden;
     margin-bottom: 10px;
     padding: 2rem;
     height: 100%;
+    width: 40%;
+    & > img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
 `
 
-const StatusBox = styled(LogoBox)``
+const StatusBox = styled(LogoBox)`
+    background: ${({ theme }) => transparentize(0.5, theme.bg1)};
+    width: 100%;
+`
 
 const BalanceBox = styled.div`
     display: flex;
@@ -104,6 +115,18 @@ const APRBox = styled.div`
     }
 `
 
+const StakeAppBody = styled.div`
+    position: relative;
+    width: 100%;
+    // background: ${({ theme }) => transparentize(0.25, theme.bg1)};
+    background: rgba(61,63,90,0.76);
+    box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.33), 0px 4px 8px rgba(0, 0, 0, 0.33), 0px 16px 24px rgba(0, 0, 0, 0.33),
+        0px 24px 32px rgba(0, 0, 0, 0.33);
+    border-radius: 0 20px 0 40px;
+    border: 1px solid #75818f;
+    padding: 1.5rem;
+`
+
 const ViewLink = styled.a`
     color: #000;
     font-size: 16px;
@@ -112,6 +135,32 @@ const ViewLink = styled.a`
     border-radius: 15px;
     margin-top: 10px;
     display: block;
+`
+
+const SushiTab = styled.div`
+    display: flex;
+    width: 100%;
+    background: #2f3353;
+    border-radius: 5px;
+    padding: 5px;
+    margin-bottom: 1rem;
+`
+
+const Tab = styled.div<{ selected: boolean }>`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: ${({ selected }) => (selected ? '#000326' : 'none')};
+    color: #fff;
+    cursor: pointer;
+    width: 50%;
+    padding: 10px;
+    border-radius: 3px;
+`
+
+const BalanceText = styled.p`
+    text-align: right;
+    font-size: 14px;
 `
 
 export default function Saave() {
@@ -164,66 +213,50 @@ export default function Saave() {
         <>
             <PageWrapper>
                 <AutoColumn gap="md">
-                    <FlexBox>
-                        <StakeBody>
-                            <VoteCard>
-                                <CardSection>
-                                    <AutoColumn gap="md">
-                                        <RowBetween>
-                                            <TYPE.white fontWeight={600} color={theme.text1}>
-                                                SushiBar: Make SUSHI work for you
-                                            </TYPE.white>
-                                        </RowBetween>
-                                        <RowBetween>
-                                            <div>
-                                                <TYPE.white
-                                                    fontSize={14}
-                                                    color={theme.text2}
-                                                    style={{ paddingBottom: '10px' }}
-                                                >
-                                                    {`Stake your SUSHI into xSUSHI for ~5% APY. No impermanent loss, no loss of governance rights. Continuously compounding.`}
-                                                </TYPE.white>
-                                                <TYPE.white
-                                                    fontSize={14}
-                                                    color={theme.text2}
-                                                    style={{ paddingBottom: '10px' }}
-                                                >
-                                                    {`xSUSHI automatically earn fees (0.05% of all swaps, including multichain swaps) proportional to your share of the SushiBar.`}
-                                                </TYPE.white>
-                                            </div>
-                                        </RowBetween>
-                                        <ExternalLink
-                                            style={{ color: 'white', textDecoration: 'underline' }}
-                                            target="_blank"
-                                            href="https://analytics.sushi.com/bar"
-                                        >
-                                            <TYPE.white fontSize={14} color={theme.text1}>
-                                                View SushiBar Stats <span style={{ fontSize: '11px' }}>↗</span>
-                                            </TYPE.white>
-                                        </ExternalLink>
-                                        {account && (
-                                            <ExternalLink
-                                                style={{ color: 'white', textDecoration: 'underline' }}
-                                                target="_blank"
-                                                href={'http://analytics.sushi.com/users/' + account}
-                                            >
-                                                <TYPE.white fontSize={14} color={theme.text1}>
-                                                    View your SushiBar Portfolio{' '}
-                                                    <span style={{ fontSize: '11px' }}>↗</span>
-                                                </TYPE.white>
-                                            </ExternalLink>
-                                        )}
-                                    </AutoColumn>
-                                </CardSection>
-                            </VoteCard>
-                        </StakeBody>
-                        <StakeInfoBody>
-                            <LogoBox>
-                                <img src="https://app.sushi.com/images/xsushi-sign.png" />
-                            </LogoBox>
-                        </StakeInfoBody>
-                    </FlexBox>
-
+                    <StakeHeader>
+                        <LogoBox>
+                            <img src="https://app.sushi.com/images/xsushi-sign.png" />
+                        </LogoBox>
+                        <CardSection>
+                            <AutoColumn gap="md">
+                                <RowBetween>
+                                    <TYPE.white fontWeight={600} color={theme.text1}>
+                                        SushiBar: Make SUSHI work for you
+                                    </TYPE.white>
+                                </RowBetween>
+                                <RowBetween>
+                                    <div>
+                                        <TYPE.white fontSize={14} color={theme.text2} style={{ paddingBottom: '10px' }}>
+                                            {`Stake your SUSHI into xSUSHI for ~5% APY. No impermanent loss, no loss of governance rights. Continuously compounding.`}
+                                        </TYPE.white>
+                                        <TYPE.white fontSize={14} color={theme.text2} style={{ paddingBottom: '10px' }}>
+                                            {`xSUSHI automatically earn fees (0.05% of all swaps, including multichain swaps) proportional to your share of the SushiBar.`}
+                                        </TYPE.white>
+                                    </div>
+                                </RowBetween>
+                                <ExternalLink
+                                    style={{ color: 'white', textDecoration: 'underline' }}
+                                    target="_blank"
+                                    href="https://analytics.sushi.com/bar"
+                                >
+                                    <TYPE.white fontSize={14} color={theme.text1}>
+                                        View SushiBar Stats <span style={{ fontSize: '11px' }}>↗</span>
+                                    </TYPE.white>
+                                </ExternalLink>
+                                {account && (
+                                    <ExternalLink
+                                        style={{ color: 'white', textDecoration: 'underline' }}
+                                        target="_blank"
+                                        href={'http://analytics.sushi.com/users/' + account}
+                                    >
+                                        <TYPE.white fontSize={14} color={theme.text1}>
+                                            View your SushiBar Portfolio <span style={{ fontSize: '11px' }}>↗</span>
+                                        </TYPE.white>
+                                    </ExternalLink>
+                                )}
+                            </AutoColumn>
+                        </CardSection>
+                    </StakeHeader>
                     <FlexBox>
                         <StakeBody>
                             <APRBox>
@@ -244,29 +277,58 @@ export default function Saave() {
                                     </Text>
                                 </div>
                             </APRBox>
-                            <AppBody>
-                                <SaaveHeader />
-                                <Wrapper id="swap-page">
+                            <StakeAppBody>
+                                {/* <SaaveHeader /> */}
+                                <SushiTab>
+                                    <Tab
+                                        onClick={() => {
+                                            if (activeTab !== 0) setActiveTab(0)
+                                        }}
+                                        selected={activeTab === 0}
+                                    >
+                                        SUSHI
+                                    </Tab>
+                                    <Tab
+                                        onClick={() => {
+                                            if (activeTab !== 1) setActiveTab(1)
+                                        }}
+                                        selected={activeTab === 1}
+                                    >
+                                        xSUSHI
+                                    </Tab>
+                                </SushiTab>
+
+                                <Wrapper style={{ padding: '0px' }} id="swap-page">
                                     <AutoColumn style={{ paddingBottom: '10px' }}>
-                                        <SushiDepositPanel
-                                            label={''}
-                                            disableCurrencySelect={true}
-                                            customBalanceText={'Available to deposit: '}
-                                            id="stake-liquidity-token"
-                                            buttonText="Deposit"
-                                            cornerRadiusBottomNone={true}
-                                        />
-                                        <XSushiWithdrawlPanel
-                                            label={''}
-                                            disableCurrencySelect={true}
-                                            customBalanceText={'Available to withdraw: '}
-                                            id="withdraw-liquidity-token"
-                                            buttonText="Withdraw"
-                                            cornerRadiusTopNone={true}
-                                        />
+                                        {activeTab === 0 && (
+                                            <SushiDepositPanel
+                                                label={''}
+                                                disableCurrencySelect={true}
+                                                customBalanceText={'Available to deposit: '}
+                                                id="stake-liquidity-token"
+                                                buttonText="Deposit"
+                                                cornerRadiusBottomNone={true}
+                                            />
+                                        )}
+                                        {activeTab === 1 && (
+                                            <XSushiWithdrawlPanel
+                                                label={''}
+                                                disableCurrencySelect={true}
+                                                customBalanceText={'Available to withdraw: '}
+                                                id="withdraw-liquidity-token"
+                                                buttonText="Withdraw"
+                                                cornerRadiusBottomNone={true}
+                                            />
+                                        )}
                                     </AutoColumn>
                                 </Wrapper>
-                            </AppBody>
+
+                                <BalanceText>
+                                    {activeTab === 0
+                                        ? 'xSUSHI Balance:' + sushiBalance
+                                        : 'SUSHI Balance:' + sushiBalance}
+                                </BalanceText>
+                            </StakeAppBody>
                         </StakeBody>
                         <StakeInfoBody>
                             <StatusBox>
