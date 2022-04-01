@@ -96,7 +96,7 @@ const BalanceBox = styled.div`
 `
 
 const APRBox = styled.div`
-    background-color: rgba(255, 209, 102, 0.4);
+    background-color: #35179a;
     border-radius: 10px;
     padding: 2rem;
     display: flex;
@@ -130,9 +130,9 @@ const StakeAppBody = styled.div`
 const ViewLink = styled.a`
     color: #000;
     font-size: 16px;
-    background-color: rgb(255, 209, 102);
+    background-color: #ffd166;
     padding: 5px 15px;
-    border-radius: 15px;
+    border-radius: 8px;
     margin-top: 10px;
     display: block;
 `
