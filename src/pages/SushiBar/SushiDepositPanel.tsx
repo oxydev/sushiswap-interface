@@ -143,7 +143,7 @@ export default function CurrencyInputPanel({
 
     const { allowance, approve, enter } = useSushiBar()
 
-    const sushiBalanceBigInt = useTokenBalance('0x6b3595068778dd592e39a122f4f5a5cf09c90fe2')
+    const sushiBalanceBigInt = useTokenBalance('0x007906a1f7f34865d6bAc41eeD4Ea3ffF4eE7cf4')
     const sushiBalance = formatFromBalance(sushiBalanceBigInt?.value, sushiBalanceBigInt?.decimals)
     const decimals = sushiBalanceBigInt?.decimals
 

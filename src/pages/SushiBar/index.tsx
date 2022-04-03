@@ -33,6 +33,7 @@ import { XSUSHI } from '../../config/tokens/ethereum'
 import { useTranslation } from 'react-i18next'
 
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
+import { formatFromBalance } from '../../utils'
 
 const PageWrapper = styled(AutoColumn)`
     width: 100%;
@@ -168,7 +169,6 @@ export default function Saave() {
     const { account, chainId } = useActiveWeb3React()
 
     const block1d = useOneDayBlock({ chainId: ChainId.MAINNET })
-
     const exchange = useFactory({ chainId: ChainId.MAINNET })
     const exchange1d = useFactory({
         chainId: ChainId.MAINNET,
@@ -186,8 +186,10 @@ export default function Saave() {
     const ethPrice = useNativePrice({ chainId: ChainId.MAINNET })
 
     const bar = useBar()
-    const [xSushiPrice] = [xSushi?.derivedETH * ethPrice, xSushi?.derivedETH * ethPrice * bar?.totalSupply]
-
+    // const [xSushiPrice] = [xSushi?.derivedETH * ethPrice, xSushi?.derivedETH * ethPrice * bar?.totalSupply]
+    const [xSushiPrice] = [0.3, 0.3 * bar?.totalSupply]
+    console.log(bar?.totalSupply)
+    // console.log(xSushi)
     const APY1d = aprToApy(
         (((exchange?.volumeUSD - exchange1d?.volumeUSD) * 0.0005 * 365.25) / (bar?.totalSupply * xSushiPrice)) * 100 ??
             0
@@ -197,7 +199,6 @@ export default function Saave() {
     //const darkMode = useDarkModeManager()
     const sushiBalance = useTokenBalance(account ?? undefined, SUSHI[ChainId.MAINNET].BLING)
     const xSushiBalance = useTokenBalance(account ?? undefined, XSUSHI)
-
     const [activeTab, setActiveTab] = useState(0)
     const [input, setInput] = useState<string>('')
 
@@ -325,8 +326,8 @@ export default function Saave() {
 
                                 <BalanceText>
                                     {activeTab === 0
-                                        ? 'xSUSHI Balance:' + sushiBalance
-                                        : 'SUSHI Balance:' + sushiBalance}
+                                        ? 'xSUSHI Balance:' + xSushiBalance?.toFixed(8)
+                                        : 'SUSHI Balance:' + sushiBalance?.toFixed(8)}
                                 </BalanceText>
                             </StakeAppBody>
                         </StakeBody>
@@ -341,7 +342,7 @@ export default function Saave() {
                                             <img src="https://app.sushi.com/images/tokens/xsushi-square.jpg" />
                                             <div>
                                                 <Text color={'#fff'} fontSize={18}>
-                                                    0
+                                                    {xSushiBalance?.toFixed(8)}
                                                 </Text>
                                                 <Text color={'#fff'} fontSize={18}>
                                                     xSushi
@@ -358,7 +359,7 @@ export default function Saave() {
                                             <img src="https://app.sushi.com/images/tokens/sushi-square.jpg" />
                                             <div>
                                                 <Text color={'#fff'} fontSize={18}>
-                                                    0
+                                                    {sushiBalance?.toFixed(8)}
                                                 </Text>
                                                 <Text color={'#fff'} fontSize={18}>
                                                     Sushi
