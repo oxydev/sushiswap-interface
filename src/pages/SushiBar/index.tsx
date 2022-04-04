@@ -164,6 +164,24 @@ const BalanceText = styled.p`
     font-size: 14px;
 `
 
+const SushiRate = styled.div`
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    align-items: center;
+
+    & > div {
+        line-height: 28px;
+        border: 1px solid #b4ffc5;
+        border-radius: 25px;
+        background: #2bc14e;
+        font-size: 14px;
+        font-weight: 500;
+        text-align: center;
+        padding: 0 12px;
+    }
+`
+
 export default function Saave() {
     const theme = useContext(ThemeContext)
     const { account, chainId } = useActiveWeb3React()
@@ -299,6 +317,11 @@ export default function Saave() {
                                     </Tab>
                                 </SushiTab>
 
+                                <SushiRate>
+                                    <p>{activeTab === 0 ? 'Stake SUSHI' : 'Unstake'}</p>
+                                    <div>1 xSUSHI = {Number(bar?.ratio ?? 0)?.toFixed(4)} SUSHI</div>
+                                </SushiRate>
+
                                 <Wrapper style={{ padding: '0px' }} id="swap-page">
                                     <AutoColumn style={{ paddingBottom: '10px' }}>
                                         {activeTab === 0 && (
@@ -326,8 +349,8 @@ export default function Saave() {
 
                                 <BalanceText>
                                     {activeTab === 0
-                                        ? 'xSUSHI Balance:' + xSushiBalance?.toFixed(8)
-                                        : 'SUSHI Balance:' + sushiBalance?.toFixed(8)}
+                                        ? 'xSUSHI Balance: ' + xSushiBalance?.toFixed(8)
+                                        : 'SUSHI Balance: ' + sushiBalance?.toFixed(8)}
                                 </BalanceText>
                             </StakeAppBody>
                         </StakeBody>
