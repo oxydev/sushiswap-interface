@@ -10,6 +10,7 @@ import Dune from '../../../assets/images/dune.png'
 import Yuzu from '../../../assets/images/yuzu.png'
 import Bitcoin from '../../../assets/images/bitcoin.png'
 import FTP from '../../../assets/images/ftp.png'
+import Spice from '../../../assets/images/Spice.png'
 
 import Bling from '../../../assets/images/main_logo.png'
 import Binance from '../../../assets/images/binance.png'
@@ -82,6 +83,7 @@ export default function TokenLogo({ address, header = false, size, ...rest }: an
         '0xf02b3e437304892105992512539F769423a515Cb': Yuzu,
         '0xd43ce0aa2a29DCb75bDb83085703dc589DE6C7eb': Bitcoin,
         '0xd1dF9CE4b6159441D18BD6887dbd7320a8D52a05': FTP,
+        '0x095c5A33aA796605F5dc8C421975549C1c80b7F0': Spice,
 
         '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599': Bitcoin,
         '0x72Ad551af3c884d02e864B182aD9A34EE414C36C': Bling,

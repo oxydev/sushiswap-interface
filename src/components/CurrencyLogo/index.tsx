@@ -26,6 +26,7 @@ import useHttpLocations from '../../hooks/useHttpLocations'
 import { WrappedTokenInfo } from '../../state/lists/hooks'
 import Logo from '../Logo'
 import { useActiveWeb3React } from '../../hooks'
+import Spice from '../../assets/images/Spice.png'
 
 const tokenLogos: Record<string, string> = {
     '0xdC19A122e268128B5eE20366299fc7b5b199C8e3': Tether,
@@ -37,6 +38,7 @@ const tokenLogos: Record<string, string> = {
     '0xd43ce0aa2a29DCb75bDb83085703dc589DE6C7eb': Bitcoin,
     '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599': Bitcoin,
     '0xd1dF9CE4b6159441D18BD6887dbd7320a8D52a05': FTP,
+    '0x095c5A33aA796605F5dc8C421975549C1c80b7F0': Spice,
 
     '0x72Ad551af3c884d02e864B182aD9A34EE414C36C': Bling,
     '0xE3F5a90F9cb311505cd691a46596599aA1A0AD7D': Binance,

@@ -383,6 +383,7 @@ export const networkData: tNetworkData = {
 
 export default function Bridge() {
     const [bridgeType, setBridgeType] = useState<string>('swapOut')
+    // console.log(bridgeType)
     const [{ showConfirm, tradeToConfirm, swapErrorMessage, attemptingTxn, txHash }, setBridgeState] = useState<{
         showConfirm: boolean
         tradeToConfirm: any | undefined
@@ -398,6 +399,7 @@ export default function Bridge() {
     })
     const [isExpertMode] = useExpertModeManager()
     const { account, chainId, library } = useActiveWeb3React()
+    // console.log(chainId)
 
     const { independentField, typedValue, recipient } = useSwapState()
     const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
@@ -638,14 +640,14 @@ export default function Bridge() {
                         })
                 } catch (addError) {}
             } catch (e) {
-                // console.log('shit')
+                console.log('shit',e)
             }
         }
     }
     useEffect(() => {
-        // console.log(chainId, selectedChainId)
+        // console.log(chainId, chainInput)
         // console.log(chainId)
-        if (chainInput !== undefined && chainId !== chainInput) {
+        if (chainInput !== undefined) {
             // if (typeof chainInput === 'string') switchNetwork(chainInput)
             // else if (chainId) {
             //     console.log('here')
@@ -667,17 +669,19 @@ export default function Bridge() {
             setCurrencyOutput(importData.destToken)
             // console.log(chainId, chainInput,chainOutput,inputTokenList,importData)
         }
-    }, [chainInput])
+    }, [chainInput, chainId])
 
     useEffect(() => {
-        if (transferData) {
+        // console.log(transferData , chainInput , currencyInput)
+        if (transferData && chainInput && currencyInput) {
             if (transferData.type === 'UNDERLYINGV2') {
                 setBridgeType('UNDERLYINGV2')
                 if (account) {
                     setBridgeRecipient(account)
                 }
             } else {
-                if (chainInput === ChainId.OASISETH_MAIN) {
+                // @ts-ignore
+                if (chainInput === ChainId.OASISETH_MAIN || chainInput === ChainId.OASISETH_MAIN.toString()) {
                     setBridgeType('swapOut')
                     if (account) {
                         setBridgeRecipient(account)
@@ -691,8 +695,7 @@ export default function Bridge() {
                 }
             }
         }
-    }, [chainInput, currencyInput, account, transferData])
-
+    }, [chainId, chainInput, currencyInput, account, transferData])
     useEffect(() => {
         const tokenIndex = currencyListInput.indexOf(currencyInput)
 
@@ -703,7 +706,7 @@ export default function Bridge() {
             setChainOutput(importData.destChain)
             setCurrencyOutput(importData.destToken)
         }
-    }, [currencyInput, currencyListInput])
+    }, [chainInput, currencyInput, currencyListInput])
 
     useEffect(() => {
         setCurrencyInput(currencyListInput[0])
@@ -711,14 +714,13 @@ export default function Bridge() {
 
     useEffect(() => {
         if (chainInput !== undefined && chainId !== undefined) {
-            // console.log(chainId, selectedChainId)
             if (chainInput !== chainId) {
                 if (chainId === ChainId.MAINNET || chainId === ChainId.OASISETH_MAIN || chainId === ChainId.BSC) {
                     setChainInput(chainId)
                 }
             }
         } else {
-            // console.log(chainId)
+            // console.log('fuck',chainId)
         }
     }, [chainId])
 

@@ -46,7 +46,7 @@ const limitObject: tLimitObject = {
     TULIP: '0',
     USDC: '5000',
     WBTC: '0',
-    wETH: '0',
+    wETH: '2',
     wROSE: '22000',
     YUZU: '10'
 }

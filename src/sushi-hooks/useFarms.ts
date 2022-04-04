@@ -15,13 +15,14 @@ const useFarms = () => {
         let prices = await bnbFetcher()
         let chainPrice
         let bnbPrice
-        [bnbPrice, chainPrice] = prices
+        let ethPrice
+        [bnbPrice, chainPrice, ethPrice] = prices
         // console.log(bnbPrice,chainPrice)
         const pools = [{
             balance:1,
             allocPoint:150,
             owner:{
-                totalAllocPoint: 800,
+                totalAllocPoint: 875,
                 sushiPerBlock: 11.152637748
             },
             token0: {
@@ -39,9 +40,9 @@ const useFarms = () => {
         },
             {
                 balance:1,
-                allocPoint:125,
+                allocPoint:100,
                 owner:{
-                    totalAllocPoint: 800,
+                    totalAllocPoint: 875,
                     sushiPerBlock: 11.152637748
                 },
                 token0  : {
@@ -61,7 +62,7 @@ const useFarms = () => {
                 balance:1,
                 allocPoint:125,
                 owner:{
-                    totalAllocPoint: 800,
+                    totalAllocPoint: 875,
                     sushiPerBlock: 11.152637748
                 },
                 token0: {
@@ -81,7 +82,7 @@ const useFarms = () => {
                 balance:1,
                 allocPoint:150,
                 owner:{
-                    totalAllocPoint: 800,
+                    totalAllocPoint: 875,
                     sushiPerBlock: 11.152637748
                 },
                 token1: {
@@ -101,7 +102,7 @@ const useFarms = () => {
                 balance:1,
                 allocPoint:100,
                 owner:{
-                    totalAllocPoint: 800,
+                    totalAllocPoint: 875,
                     sushiPerBlock: 11.152637748
                 },
                 token1: {
@@ -121,7 +122,7 @@ const useFarms = () => {
                 balance:1,
                 allocPoint:150,
                 owner:{
-                    totalAllocPoint: 800,
+                    totalAllocPoint: 875,
                     sushiPerBlock: 11.152637748
                 },
                 token1: {
@@ -136,6 +137,26 @@ const useFarms = () => {
                 },
                 id:5,
                 lpAddress:"0xbf6ABe88a1A780d17786A82c93b56941a281DB66"
+            },
+            {
+                balance:1,
+                allocPoint:100,
+                owner:{
+                    totalAllocPoint: 875,
+                    sushiPerBlock: 11.152637748
+                },
+                token1: {
+                    symbol:"WETH",
+                    name: "Wrapped Ether (Wormhole)",
+                    address:"0x3223f17957Ba502cbe71401D55A0DB26E5F7c68F"
+                },
+                token0: {
+                    symbol:"wROSE",
+                    name:"Wrapped ROSE",
+                    address:"0x21C718C22D52d0F3a789b752D4c2fD5908a8A733"
+                },
+                id:6,
+                lpAddress:"0xc1AB2878d289d5c402837600c6Abc03a8a92D890"
             }
         ]
 
@@ -208,6 +229,10 @@ const useFarms = () => {
                 reserveUSD = userFarmDetails[userFarmDetailsKey].reserve0 * chainPrice * 2 / 1e18
             else if (address1 === "0xc9BAA8cfdDe8E328787E29b4B078abf2DaDc2055")
                 reserveUSD = userFarmDetails[userFarmDetailsKey].reserve1 * chainPrice * 2 / 1e18
+            else if (address0 === "0x3223f17957Ba502cbe71401D55A0DB26E5F7c68F")
+                reserveUSD = userFarmDetails[userFarmDetailsKey].reserve0 * ethPrice * 2 / 1e18
+            else if (address1 === "0x3223f17957Ba502cbe71401D55A0DB26E5F7c68F")
+                reserveUSD = userFarmDetails[userFarmDetailsKey].reserve1 * ethPrice * 2 / 1e18
             const balanceUSD = (Number(totalSupply) / userFarmDetails[userFarmDetailsKey].lpTotalSupply) * Number(reserveUSD)
 
             const rewardPerBlock = ((farms[userFarmDetails[userFarmDetailsKey].pid.toNumber()].allocPoint
@@ -262,12 +287,12 @@ const useFarms = () => {
         fetchAllFarms()
     }, [fetchAllFarms])
     async function bnbFetcher() {
-        let response = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=binancecoin,chainlink&vs_currencies=usd", {
+        let response = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=binancecoin,chainlink,ethereum&vs_currencies=usd", {
             method: 'GET',
             redirect: 'follow'
         })
         let result = await response.text()
-        return [JSON.parse(result).binancecoin.usd, JSON.parse(result).chainlink.usd]
+        return [JSON.parse(result).binancecoin.usd, JSON.parse(result).chainlink.usd, JSON.parse(result).ethereum.usd]
 
 
     }

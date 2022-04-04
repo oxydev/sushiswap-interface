@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import styled from 'styled-components'
-import { RowBetween } from '../../components/Row'
 import { Dots } from '../Pool/styleds'
 
-//import { useActiveWeb3React } from 'hooks'
 import { formattedNum, formattedPercent } from '../../utils'
 import { Card, CardHeader, Paper, Search, DoubleLogo, TokenLogo } from './components'
 import useFuse from 'sushi-hooks/useFuse'
@@ -14,15 +11,12 @@ import { ChevronUp, ChevronDown } from 'react-feather'
 import InputGroup from './InputGroup'
 import usePendingSushi from '../../sushi-hooks/usePendingSushi'
 
-export const FixedHeightRow = styled(RowBetween)`
-    height: 24px;
-`
 
 export default function BentoBalances(): JSX.Element {
     const query = useFarms()
     const farms = query?.farms
+
     const userFarms = query?.userFarms
-    // console.log(farms)
     // Search Setup
     const options = { keys: ['symbol', 'name', 'pairAddress'], threshold: 0.4 }
     const { result, search, term } = useFuse({

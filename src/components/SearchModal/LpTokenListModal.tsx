@@ -73,7 +73,9 @@ export default function LpTokenListModal({
         "0xe593c42780ccbe7723B67b3E5FD3e0cdd2E25017",
         "0x89f5e345b7837E950136811b94af6CcBa199eFa8",
         "0x41953bAca0A634732365093f848CcFc968EF0C69",
-        "0xbf6ABe88a1A780d17786A82c93b56941a281DB66"])
+        "0xbf6ABe88a1A780d17786A82c93b56941a281DB66",
+        "0xc1AB2878d289d5c402837600c6Abc03a8a92D890"
+    ])
     // menu ui
     const [open, toggle] = useToggle(false)
     const node = useRef<HTMLDivElement>()
@@ -218,7 +220,30 @@ export default function LpTokenListModal({
             myCurrentLp: JSBI.BigInt(0),
             myReward: JSBI.BigInt(0),
             pid: 5,
-        })
+        }),
+            new StakePool({
+                token0: WETH[chainId ?? DefaultChainId],
+                token1: new Token((chainId ?? DefaultChainId), "0x3223f17957Ba502cbe71401D55A0DB26E5F7c68F", 18, "wETH", "Wrapped Ether (Wormhole)"),
+                // token0Balance: JSBI.BigInt(park.token0Balance),
+                token0Balance: JSBI.BigInt(0),
+                // token1Balance: JSBI.BigInt(park.token1Balance),
+                token1Balance: JSBI.BigInt(0),
+                // lpAddress: park.lpAddress,
+                lpAddress: "0xc1AB2878d289d5c402837600c6Abc03a8a92D890",
+                // totalLp: JSBI.BigInt(park.totalLp),
+                totalLp: JSBI.BigInt(0),
+                // totalLpInPark: JSBI.BigInt(park.totalLpInPark),
+                totalLpInPark: JSBI.BigInt(0),
+                // rewardEffect: park.rewardEffect,
+                rewardEffect: 0,
+                // lastRewardBlock: park.lastRewardBlock,
+                lastRewardBlock: 0,
+                rewardConfig: new AttenuationReward({ startBlock: 0, zooPerBlock: JSBI.BigInt(0), halfAttenuationCycle: 0 }),
+                myLpBalance: myBalances[6]||JSBI.BigInt(0),
+                myCurrentLp: JSBI.BigInt(0),
+                myReward: JSBI.BigInt(0),
+                pid: 6,
+            })
     ]
     },[myBalances])
 

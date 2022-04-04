@@ -172,7 +172,7 @@ export default function Home() {
         return clearInterval(interval)
     }, [])
     function numberWithCommas(x: number) {
-        return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',')
+        return x.toLocaleString()
     }
 
     return (
@@ -184,7 +184,7 @@ export default function Home() {
             <TitleWrapper>
                 <h2>Total Value Locked</h2>
                 <h3>$ {numberWithCommas(liquidity)}</h3>
-                <p>GemKeeper is a community focused AMM & DeFi Platform built on Oasis.</p>
+                <p>DeFi made Easy! The One-Stop Shop for All Your DeFi Needs.</p>
                 <LaunchButton
                     onClick={() => {
                         window.open('https://app.gemkeeper.finance', '_self')

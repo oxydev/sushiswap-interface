@@ -33,7 +33,8 @@ export const RPC:tPRC = {
     [ChainId.HECO]: 'https://http-mainnet.hecochain.com',
     [ChainId.HECO_TESTNET]: 'https://http-testnet.hecochain.com',
     [ChainId.OASISETH_TEST]: 'https://testnet.emerald.oasis.dev',
-    [ChainId.OASISETH_MAIN]: 'https://emerald.oasis.dev'
+    // [ChainId.OASISETH_MAIN]: 'https://explorer.emerald.oasis.dev/api'
+    [ChainId.OASISETH_MAIN]: 'https://emerald.oasis.dev/'
 }
 
 export const network = new NetworkConnector({
