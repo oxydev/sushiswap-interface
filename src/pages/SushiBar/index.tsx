@@ -50,7 +50,8 @@ const StakeHeader = styled(DataCard)`
     display: flex;
     align-items: center;
     margin-bottom: 0px;
-    background: ${({ theme }) => transparentize(0.5, theme.bg1)};
+    background: #000326;
+    opacity: 1;
 `
 const StakeBody = styled.div`
     width: 66.66%;
@@ -77,7 +78,8 @@ const LogoBox = styled(DataCard)`
 `
 
 const StatusBox = styled(LogoBox)`
-    background: ${({ theme }) => transparentize(0.5, theme.bg1)};
+    background: #000326;
+    opacity: 1;
     width: 100%;
 `
 
@@ -120,11 +122,8 @@ const StakeAppBody = styled.div`
     position: relative;
     width: 100%;
     // background: ${({ theme }) => transparentize(0.25, theme.bg1)};
-    background: rgba(61,63,90,0.76);
-    box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.33), 0px 4px 8px rgba(0, 0, 0, 0.33), 0px 16px 24px rgba(0, 0, 0, 0.33),
-        0px 24px 32px rgba(0, 0, 0, 0.33);
-    border-radius: 0 20px 0 40px;
-    border: 1px solid #75818f;
+    background: #000326;
+    border-radius: 10px;
     padding: 1.5rem;
 `
 
@@ -143,7 +142,7 @@ const SushiTab = styled.div`
     width: 100%;
     background: #2f3353;
     border-radius: 5px;
-    padding: 5px;
+    padding: 2px;
     margin-bottom: 1rem;
 `
 

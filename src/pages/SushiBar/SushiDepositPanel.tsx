@@ -78,8 +78,7 @@ const Container = styled.div<{ hideInput: boolean; cornerRadiusTopNone?: boolean
     border-radius: ${({ hideInput }) => (hideInput ? '8px' : '12px')};
     border-radius: ${({ cornerRadiusTopNone }) => cornerRadiusTopNone && '0 0 12px 12px'};
     border-radius: ${({ cornerRadiusBottomNone }) => cornerRadiusBottomNone && '12px 12px 0 0'};
-    border: 1px solid ${({ theme }) => theme.bg2};
-    background-color: ${({ theme }) => theme.bg1};
+    background-color: #121537;
 `
 
 const StyledButtonName = styled.span<{ active?: boolean }>`
