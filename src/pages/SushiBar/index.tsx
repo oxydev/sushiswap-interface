@@ -346,11 +346,11 @@ export default function Saave() {
                                     </AutoColumn>
                                 </Wrapper>
 
-                                <BalanceText>
+                                {/* <BalanceText>
                                     {activeTab === 0
                                         ? 'xSUSHI Balance: ' + xSushiBalance?.toFixed(8)
                                         : 'SUSHI Balance: ' + sushiBalance?.toFixed(8)}
-                                </BalanceText>
+                                </BalanceText> */}
                             </StakeAppBody>
                         </StakeBody>
                         <StakeInfoBody>
@@ -364,7 +364,7 @@ export default function Saave() {
                                             <img src="https://app.sushi.com/images/tokens/xsushi-square.jpg" />
                                             <div>
                                                 <Text color={'#fff'} fontSize={18}>
-                                                    {xSushiBalance?.toFixed(8)}
+                                                    {account ? xSushiBalance?.toFixed(8) : '-'}
                                                 </Text>
                                                 <Text color={'#fff'} fontSize={18}>
                                                     xSushi
@@ -381,7 +381,7 @@ export default function Saave() {
                                             <img src="https://app.sushi.com/images/tokens/sushi-square.jpg" />
                                             <div>
                                                 <Text color={'#fff'} fontSize={18}>
-                                                    {sushiBalance?.toFixed(8)}
+                                                    {account ? sushiBalance?.toFixed(8) : '-'}
                                                 </Text>
                                                 <Text color={'#fff'} fontSize={18}>
                                                     Sushi

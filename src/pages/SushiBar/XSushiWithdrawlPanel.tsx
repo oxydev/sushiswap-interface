@@ -16,6 +16,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { formatFromBalance, formatToBalance } from '../../utils'
 
 import useSushiBar from '../../sushi-hooks/useSushiBar'
+import { useWalletModalToggle } from 'state/application/hooks'
 
 const InputRow = styled.div<{ selected: boolean }>`
     ${({ theme }) => theme.flexRowNoWrap}
@@ -25,20 +26,20 @@ const InputRow = styled.div<{ selected: boolean }>`
 
 const ButtonSelect = styled.button`
     align-items: center;
-    height: 2.2rem;
+    height: 3rem;
     font-size: 20px;
     font-weight: 500;
     background-color: ${({ theme }) => theme.primary1};
     color: ${({ theme }) => theme.white};
-    border-radius: ${({ theme }) => theme.borderRadius};
+    border-radius: 5px;
     box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.075);
     outline: none;
     cursor: pointer;
     user-select: none;
     border: none;
     padding: 0 0.5rem;
-    margin: 0 0.25rem;
-    width: 6rem;
+    margin: 1rem 0 0;
+    width: 100%;
     &:focus {
         box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.primary1)};
         background-color: ${({ theme }) => darken(0.05, theme.primary1)};
@@ -75,7 +76,7 @@ const InputPanel = styled.div<{ hideInput?: boolean }>`
     ${({ theme }) => theme.flexColumnNoWrap}
     position: relative;
     border-radius: ${({ hideInput }) => (hideInput ? '8px' : '20px')};
-    background-color: ${({ theme }) => theme.bg2};
+    // background-color: ${({ theme }) => theme.bg2};
     z-index: 1;
 `
 
@@ -83,8 +84,7 @@ const Container = styled.div<{ hideInput: boolean; cornerRadiusTopNone?: boolean
     border-radius: ${({ hideInput }) => (hideInput ? '8px' : '12px')};
     border-radius: ${({ cornerRadiusTopNone }) => cornerRadiusTopNone && '0 0 12px 12px'};
     border-radius: ${({ cornerRadiusBottomNone }) => cornerRadiusBottomNone && '12px 12px 0 0'};
-    border: 1px solid ${({ theme }) => theme.bg2};
-    background-color: ${({ theme }) => theme.bg1};
+    background-color: #121537;
 `
 
 const StyledButtonName = styled.span<{ active?: boolean }>`
@@ -185,6 +185,8 @@ export default function CurrencyInputPanel({
         maxDepositAmountInput && onUserDepositInput(xSushiBalance, true)
     }, [maxDepositAmountInput, onUserDepositInput, xSushiBalance])
 
+    const toggleWalletModal = useWalletModalToggle()
+
     return (
         <>
             {/* Deposit Input */}
@@ -232,37 +234,43 @@ export default function CurrencyInputPanel({
                                 )}
                             </>
                         )}
-                        {!allowance || Number(allowance) === 0 ? (
-                            <ButtonSelect onClick={handleApprove} disabled={requestedApproval}>
-                                <Aligner>
-                                    <StyledButtonName>Approve</StyledButtonName>
-                                </Aligner>
-                            </ButtonSelect>
-                        ) : (
-                            <ButtonSelect
-                                disabled={
-                                    pendingTx ||
-                                    !xSushiBalance ||
-                                    Number(depositValue) === 0 ||
-                                    Number(depositValue) > Number(xSushiBalance)
-                                }
-                                onClick={async () => {
-                                    setPendingTx(true)
-                                    if (maxSelected) {
-                                        await leave(maxDepositAmountInput)
-                                    } else {
-                                        await leave(formatToBalance(depositValue, decimals))
-                                    }
-                                    setPendingTx(false)
-                                }}
-                            >
-                                <Aligner>
-                                    <StyledButtonName>Withdraw</StyledButtonName>
-                                </Aligner>
-                            </ButtonSelect>
-                        )}
                     </InputRow>
                 </Container>
+                {!account ? (
+                    <ButtonSelect onClick={toggleWalletModal} disabled={requestedApproval}>
+                        <Aligner>
+                            <StyledButtonName>Connect Wallet</StyledButtonName>
+                        </Aligner>
+                    </ButtonSelect>
+                ) : !allowance || Number(allowance) === 0 ? (
+                    <ButtonSelect onClick={handleApprove} disabled={requestedApproval}>
+                        <Aligner>
+                            <StyledButtonName>Approve</StyledButtonName>
+                        </Aligner>
+                    </ButtonSelect>
+                ) : (
+                    <ButtonSelect
+                        disabled={
+                            pendingTx ||
+                            !xSushiBalance ||
+                            Number(depositValue) === 0 ||
+                            Number(depositValue) > Number(xSushiBalance)
+                        }
+                        onClick={async () => {
+                            setPendingTx(true)
+                            if (maxSelected) {
+                                await leave(maxDepositAmountInput)
+                            } else {
+                                await leave(formatToBalance(depositValue, decimals))
+                            }
+                            setPendingTx(false)
+                        }}
+                    >
+                        <Aligner>
+                            <StyledButtonName>Withdraw</StyledButtonName>
+                        </Aligner>
+                    </ButtonSelect>
+                )}
             </InputPanel>
         </>
     )
