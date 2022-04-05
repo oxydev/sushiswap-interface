@@ -17,6 +17,7 @@ const InputRow = styled.div<{ selected: boolean }>`
     ${({ theme }) => theme.flexRowNoWrap}
     align-items: center;
     padding: ${({ selected }) => (selected ? '0.75rem 0.5rem 0.75rem 1rem' : '0.75rem 0.75rem 0.75rem 1rem')};
+    position: relative;
 `
 
 const ButtonSelect = styled.button`
@@ -109,6 +110,27 @@ const StyledBalanceMax = styled.button`
     ${({ theme }) => theme.mediaWidth.upToExtraSmall`
     margin-right: 0.5rem;
   `};
+`
+
+const InputOverLay = styled.p`
+    position: absolute;
+    color: ${({ theme }) => theme.text6};
+    font-weight: 500;
+    outline: none;
+    border: none;
+    flex: 1 1 auto;
+    background-color: transparent;
+    /* background-color: ${({ theme }) => theme.bg1}; */
+    font-size: 24px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0px;
+
+    & > span {
+        opacity: 0;
+        margin-right: 5px;
+    }
 `
 
 interface CurrencyInputPanelProps {
@@ -226,6 +248,9 @@ export default function CurrencyInputPanel({
                                 {account && label !== 'To' && (
                                     <StyledBalanceMax onClick={handleMaxDeposit}>MAX</StyledBalanceMax>
                                 )}
+                                <InputOverLay>
+                                    <span>{depositValue ? depositValue : '0.0'}</span> SUSHI
+                                </InputOverLay>
                             </>
                         )}
                     </InputRow>
