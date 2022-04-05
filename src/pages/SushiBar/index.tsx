@@ -364,7 +364,11 @@ export default function Saave() {
                                             <img src="https://app.sushi.com/images/tokens/xsushi-square.jpg" />
                                             <div>
                                                 <Text color={'#fff'} fontSize={18}>
-                                                    {account ? xSushiBalance?.toFixed(8) : '-'}
+                                                    {account
+                                                        ? xSushiBalance && parseInt(xSushiBalance?.toFixed(8)) !== 0
+                                                            ? xSushiBalance?.toFixed(8)
+                                                            : '0.0'
+                                                        : '-'}
                                                 </Text>
                                                 <Text color={'#fff'} fontSize={18}>
                                                     xSushi
@@ -381,7 +385,11 @@ export default function Saave() {
                                             <img src="https://app.sushi.com/images/tokens/sushi-square.jpg" />
                                             <div>
                                                 <Text color={'#fff'} fontSize={18}>
-                                                    {account ? sushiBalance?.toFixed(8) : '-'}
+                                                    {account
+                                                        ? sushiBalance && parseInt(sushiBalance?.toFixed(8)) !== 0
+                                                            ? sushiBalance?.toFixed(8)
+                                                            : '0.0'
+                                                        : '-'}
                                                 </Text>
                                                 <Text color={'#fff'} fontSize={18}>
                                                     Sushi
