@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { BigNumber } from '@ethersproject/bignumber'
 import { useActiveWeb3React } from 'hooks'
-import { useMasterChefContract } from './useContract'
+import { useDualContract, useMasterChefContract } from './useContract'
 import { useBlockNumber } from 'state/application/hooks'
 //import Fraction from 'constants/Fraction'
 
@@ -39,4 +39,32 @@ const useStakedBalance = (pid: number, decimals = 18) => {
     return balance
 }
 
+
+export const useStakedBalanceDual = (poolAddress: string, decimals = 18) => {
+    const [balance, setBalance] = useState<BalanceProps>({ value: BigNumber.from(0), decimals: 18 })
+    const { account } = useActiveWeb3React()
+    const currentBlockNumber = useBlockNumber()
+    const dualContract = useDualContract(poolAddress)
+
+    const fetchBalance = useCallback(async () => {
+        const getStaked = async (): Promise<BalanceProps> => {
+            try {
+                const { amount } = await dualContract?.balanceOf(account)
+                return { value: BigNumber.from(amount), decimals: decimals }
+            } catch (e) {
+                return { value: BigNumber.from(0), decimals: decimals }
+            }
+        }
+        const balance = await getStaked()
+        setBalance(balance)
+    }, [account, decimals, dualContract, poolAddress])
+
+    useEffect(() => {
+        if (account && dualContract) {
+            fetchBalance()
+        }
+    }, [account, setBalance, currentBlockNumber, fetchBalance, dualContract, poolAddress])
+
+    return balance
+}
 export default useStakedBalance

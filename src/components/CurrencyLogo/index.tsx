@@ -30,6 +30,7 @@ import Spice from '../../assets/images/Spice.png'
 
 const tokenLogos: Record<string, string> = {
     '0xdC19A122e268128B5eE20366299fc7b5b199C8e3': Tether,
+    '0xFb83B2c9f65f92937fd8798Acf8A79571b864273': "https://gemkeeper.finance/mirage.jpg",
     '0xdAC17F958D2ee523a2206206994597C13D831ec7': Tether,
     '0x2736643C7fFFe186984f60a2d34b91b1b7398bF1': Tulip,
     '0x9e832CaE5d19e7ff2f0D62881D1E33bb16Ac9bdc': Tulip2,

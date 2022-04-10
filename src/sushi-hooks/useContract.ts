@@ -5,6 +5,7 @@ import { useMemo } from 'react'
 import ERC20_ABI from '../constants/sushiAbis/erc20.json'
 import SUSHI_ABI from '../constants/sushiAbis/sushi.json'
 import MASTERCHEF_ABI from '../constants/sushiAbis/masterchef.json'
+import DUAL_ABI from '../constants/abis/dual-rewards.-staking.json'
 import FACTORY_ABI from '../constants/sushiAbis/factory.json'
 import ROUTER_ABI from '../constants/sushiAbis/router.json'
 import BAR_ABI from '../constants/sushiAbis/bar.json'
@@ -48,6 +49,7 @@ import {
     SUSHISWAP_SWAPPER_ADDRESS,
     CHAINLINK_ORACLE_ADDRESS
 } from 'kashi'
+
 
 // returns null on errors
 export function useContract(
@@ -98,6 +100,11 @@ export function useSushiContract(withSignerIfPossible = true): Contract | null {
 export function useMasterChefContract(withSignerIfPossible?: boolean): Contract | null {
     const { chainId } = useActiveWeb3React()
     return useContract(chainId && MASTERCHEF_ADDRESS[chainId], MASTERCHEF_ABI, withSignerIfPossible)
+}
+
+export function useDualContract(poolAddress: string, withSignerIfPossible?: boolean): Contract | null {
+    const { chainId } = useActiveWeb3React()
+    return useContract(chainId && poolAddress, DUAL_ABI, withSignerIfPossible)
 }
 
 export function useFactoryContract(): Contract | null {

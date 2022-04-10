@@ -53,6 +53,7 @@ import BorrowMarkets from '../kashi/pages/Markets/Borrow'
 import Tools from './Tools'
 import Saave from './Saave'
 import Vesting from './Vesting'
+import Dual from './Dual'
 
 import { KashiProvider } from 'kashi/context'
 import Earn from './Earn'
@@ -170,6 +171,7 @@ function App() {
                                     {/*)}*/}
                                     {/*<Route exact path="/sushibar" render={() => <Redirect to="/stake" />} />*/}
                                     <Route exact strict path="/swap" component={Swap} />
+                                    <Route exact strict path="/dual" component={Dual} />
                                     <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
                                     <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
                                     <Route exact strict path="/find" component={PoolFinder} />
