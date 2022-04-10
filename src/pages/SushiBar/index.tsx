@@ -35,6 +35,10 @@ import { useTranslation } from 'react-i18next'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { formatFromBalance } from '../../utils'
 
+import Bling from '../../assets/images/main_logo.png'
+import XBling from '../../assets/images/xBling.png'
+import MainBling from '../../assets/images/mainStakeLogo.png'
+
 const PageWrapper = styled(AutoColumn)`
     width: 100%;
     justify-content: center;
@@ -233,7 +237,7 @@ export default function Saave() {
                 <AutoColumn gap="md">
                     <StakeHeader>
                         <LogoBox>
-                            <img src="https://app.sushi.com/images/xsushi-sign.png" />
+                            <img src={MainBling} alt="bling token" />
                         </LogoBox>
                         <CardSection>
                             <AutoColumn gap="md">
@@ -361,7 +365,7 @@ export default function Saave() {
                                             Balance
                                         </Text>
                                         <BalanceBox>
-                                            <img src="https://app.sushi.com/images/tokens/xsushi-square.jpg" />
+                                            <img src={XBling} alt="xBling" />
                                             <div>
                                                 <Text color={'#fff'} fontSize={18}>
                                                     {account
@@ -382,7 +386,7 @@ export default function Saave() {
                                         </Text>
 
                                         <BalanceBox>
-                                            <img src="https://app.sushi.com/images/tokens/sushi-square.jpg" />
+                                            <img src={Bling} alt="Bling" />
                                             <div>
                                                 <Text color={'#fff'} fontSize={18}>
                                                     {account
