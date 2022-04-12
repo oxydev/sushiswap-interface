@@ -199,7 +199,7 @@ const useDualFarms = () => {
             //         }
             //     })
 
-            setFarms({ farms: sorted, userFarms: [] })
+            setFarms({ farms: sorted, userFarms: sorted })
             // console.log('userFarms:', userFarms)
         } else {
 
