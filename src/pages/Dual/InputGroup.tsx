@@ -204,7 +204,6 @@ export default function InputGroup({
                         className="px-4"
                     >
                             <Button
-                                disabled
                                 color="default"
                                 onClick={async () => {
                                     setPendingTx(true)

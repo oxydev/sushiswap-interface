@@ -49,7 +49,7 @@ export const useStakedBalanceDual = (poolAddress: string, decimals = 18) => {
     const fetchBalance = useCallback(async () => {
         const getStaked = async (): Promise<BalanceProps> => {
             try {
-                const { amount } = await dualContract?.balanceOf(account)
+                const amount = await dualContract?.balanceOf(account)
                 return { value: BigNumber.from(amount), decimals: decimals }
             } catch (e) {
                 return { value: BigNumber.from(0), decimals: decimals }

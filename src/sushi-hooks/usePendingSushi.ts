@@ -17,7 +17,7 @@ const usePending = (pid: number) => {
         const pending = await masterChefContract?.pendingBling(pid, account)
         const userInfo = await masterChefContract?.userInfo(pid, account)
         const formatted = Fraction.from(
-            BigNumber.from(pending.add(userInfo.rewardDebt)),
+            BigNumber.from(pending.add(userInfo.unclaimedReward)),
             BigNumber.from(10).pow(18)
         ).toString()
         setBalance(formatted)
@@ -42,10 +42,8 @@ export const usePendingDual = (poolAddress: string) => {
     const currentBlockNumber = useBlockNumber()
 
     const fetchPending = useCallback(async () => {
-        const earnedA = dualContract?.earnedA(account)
-        const earnedB = dualContract?.earnedB(account)
-        await earnedA
-        await earnedB
+        const earnedA = await dualContract?.earnedA(account)
+        const earnedB = await dualContract?.earnedB(account)
         const formattedA = Fraction.from(
           BigNumber.from(earnedA),
           BigNumber.from(10).pow(18)

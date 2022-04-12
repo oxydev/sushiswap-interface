@@ -41,7 +41,7 @@ const useMasterChef = () => {
     const harvest = useCallback(
         async (pid: number, name: string) => {
             try {
-                const tx = await masterChefContract?.deposit(pid, '0')
+                const tx = await masterChefContract?.withdraw(pid, '0')
                 return addTransaction(tx, { summary: `Harvest ${name}` })
             } catch (e) {
                 console.error(e)
@@ -65,6 +65,7 @@ export const useMasterChefDual = (poolAddress: string) => {
       // console.log('depositing...', pid, amount)
       try {
         const tx = await dualContract?.stake(ethers.utils.parseUnits(amount, decimals))
+        console.log(dualContract)
         return addTransaction(tx, { summary: `Staked ${name}` })
       } catch (e) {
         console.error(e)

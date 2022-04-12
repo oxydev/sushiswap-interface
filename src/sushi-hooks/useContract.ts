@@ -11,7 +11,6 @@ import ROUTER_ABI from '../constants/sushiAbis/router.json'
 import BAR_ABI from '../constants/sushiAbis/bar.json'
 import MAKER_ABI from '../constants/sushiAbis/maker.json'
 import TIMELOCK_ABI from '../constants/sushiAbis/timelock.json'
-
 import BENTOBOX_ABI from '../constants/sushiAbis/bentobox.json'
 import KASHIPAIR_ABI from '../constants/sushiAbis/kashipair.json'
 import KASHIPAIRHELPER_ABI from '../constants/sushiAbis/kashipairhelper.json'
@@ -104,6 +103,7 @@ export function useMasterChefContract(withSignerIfPossible?: boolean): Contract 
 
 export function useDualContract(poolAddress: string, withSignerIfPossible?: boolean): Contract | null {
     const { chainId } = useActiveWeb3React()
+    // console.log(chainId && poolAddress, withSignerIfPossible)
     return useContract(chainId && poolAddress, DUAL_ABI, withSignerIfPossible)
 }
 

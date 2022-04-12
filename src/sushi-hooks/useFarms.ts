@@ -1,16 +1,38 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useActiveWeb3React } from 'hooks'
 
 import _ from 'lodash'
 
-import { useBoringHelperContract } from 'hooks/useContract'
+import { useBoringHelperContract, useMulticallContract } from 'hooks/useContract'
 import { BigNumber } from '@ethersproject/bignumber'
 import Fraction from '../constants/Fraction'
+import { NEVER_RELOAD, useSingleContractMultipleData } from '../state/multicall/hooks'
+import { useMasterChefContract } from './useContract'
 
 const useFarms = () => {
     const [farms, setFarms] = useState<any | undefined>()
+    const [rewardDebt, setRewardDebt] = useState<any | undefined>()
     const { account } = useActiveWeb3React()
     const boringHelperContract = useBoringHelperContract()
+    const masterChefContract = useMasterChefContract()
+
+
+    const fetchRewardDebts = useCallback(async () => {
+        if (account) {
+            const dataPending = []
+
+            for (let i = 0; i < 7; i++) {
+                dataPending.push(masterChefContract?.userInfo(i, account))
+            }
+            for (let i = 0; i < 7; i++) {
+                dataPending[i] = await dataPending[i]
+            }
+            setRewardDebt(dataPending)
+        }
+
+    },[masterChefContract, account])
+
+
     const fetchAllFarms = useCallback(async () => {
         let prices = await bnbFetcher()
         let chainPrice
@@ -198,7 +220,7 @@ const useFarms = () => {
         })
 
         // console.log('farms:', farms)
-        const sorted = _.orderBy(farms, ['pid'], ['desc'])
+        const sorted = _.orderBy(farms, ['pid'], ['asc'])
 
         const pids = sorted.map(pool => {
             return pool.pid
@@ -243,12 +265,13 @@ const useFarms = () => {
             farms[userFarmDetails[userFarmDetailsKey].pid.toNumber()].roiPerYear = roiPerBlock * 3600 / averageBlockTime * 24 * 30 * 12
 
         }
-        if (account) {
-            // console.log(account, pids)
+        if (account && rewardDebt) {
+
             // console.log('userFarmDetails:', userFarmDetails)
             const userFarms = userFarmDetails
-                .filter((farm: any) => {
-                    return farm.balance.gt(BigNumber.from(0)) || farm.pending.gt(BigNumber.from(0))
+                .filter((farm: any, index: number) => {
+                    // @ts-ignore
+                    return farm.balance.gt(BigNumber.from(0)) || farm.pending.gt(BigNumber.from(0)) || rewardDebt[index].unclaimedReward > 0
                 })
                 .map((farm: any) => {
                     //console.log('userFarm:', farm.pid.toNumber(), farm)
@@ -281,11 +304,16 @@ const useFarms = () => {
 
             setFarms({ farms: sorted, userFarms: [] })
         }
-    }, [account, boringHelperContract])
+    }, [account, boringHelperContract, rewardDebt])
+
 
     useEffect(() => {
         fetchAllFarms()
+        // fetchRewardDebts()
     }, [fetchAllFarms])
+    useEffect(() => {
+        fetchRewardDebts()
+    }, [fetchRewardDebts])
     async function bnbFetcher() {
         let response = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=binancecoin,chainlink,ethereum&vs_currencies=usd", {
             method: 'GET',
