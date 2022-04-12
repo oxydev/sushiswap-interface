@@ -61,6 +61,11 @@ const StakeHeader = styled(DataCard)`
     background: ${CardBG};
     opacity: 1;
     padding: 16px;
+    transition: background 0.3s ease-in;
+    &:hover {
+        background: linear-gradient(94.57deg, rgba(62, 142, 215, 0.5) 51.36%, #b276d9 94.83%);
+        mix-blend-mode: multiply;
+    }
 `
 
 const PortfolioButton = styled.button`
@@ -101,6 +106,11 @@ const StakeAPR = styled(StakeHeader)`
             line-height: 36px;
         }
     }
+
+    transition: 0.3s ease-in;
+    &:hover {
+        background: #000;
+    }
 `
 
 const StatsButton = styled(PortfolioButton)`
@@ -116,6 +126,16 @@ const StakeBalance = styled(DataCard)`
     background: ${CardBG};
     width: 100%;
     padding: 1rem 1.5rem;
+    transition: 0.3s ease-in;
+    &:hover {
+        background: linear-gradient(150.02deg, #39a894 -32.47%, #daab62 91.61%);
+        mix-blend-mode: multiply;
+    }
+    &:last-child {
+        &:hover {
+            background: linear-gradient(352.44deg, #39a894 -51.92%, #b276d9 109.77%);
+        }
+    }
 `
 const LogoBox = styled(DataCard)`
     background: transparent;
