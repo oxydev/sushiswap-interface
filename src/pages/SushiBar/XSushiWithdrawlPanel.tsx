@@ -21,7 +21,7 @@ import { useWalletModalToggle } from 'state/application/hooks'
 const InputRow = styled.div<{ selected: boolean }>`
     ${({ theme }) => theme.flexRowNoWrap}
     align-items: center;
-    padding: ${({ selected }) => (selected ? '0.75rem 0.5rem 0.75rem 1rem' : '0.75rem 0.75rem 0.75rem 1rem')};
+    padding: 1.5rem 1rem;
     position: relative;
 `
 
@@ -85,7 +85,7 @@ const Container = styled.div<{ hideInput: boolean; cornerRadiusTopNone?: boolean
     border-radius: ${({ hideInput }) => (hideInput ? '8px' : '12px')};
     border-radius: ${({ cornerRadiusTopNone }) => cornerRadiusTopNone && '0 0 12px 12px'};
     border-radius: ${({ cornerRadiusBottomNone }) => cornerRadiusBottomNone && '12px 12px 0 0'};
-    background-color: #121537;
+    background-color: #262626;
 `
 
 const StyledButtonName = styled.span<{ active?: boolean }>`
@@ -94,17 +94,16 @@ const StyledButtonName = styled.span<{ active?: boolean }>`
 `
 
 const StyledBalanceMax = styled.button`
-    height: 28px;
+    height: 31px;
     padding-right: 8px;
     padding-left: 8px;
-    background-color: ${({ theme }) => theme.primary5};
-    border: 1px solid ${({ theme }) => theme.primary5};
-    border-radius: ${({ theme }) => theme.borderRadius};
+    background-color: #6d6d6d;
+    border-radius: 14px;
     font-size: 0.875rem;
     font-weight: 500;
     cursor: pointer;
     margin-right: 0.5rem;
-    color: ${({ theme }) => theme.primaryText1};
+    color: #000;
     :hover {
         border: 1px solid ${({ theme }) => theme.primary1};
     }
@@ -113,12 +112,12 @@ const StyledBalanceMax = styled.button`
         outline: none;
     }
     ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    margin-right: 0.5rem;
-  `};
+margin-right: 0.5rem;
+`};
 `
 const InputOverLay = styled.p`
     position: absolute;
-    color: ${({ theme }) => theme.text6};
+    color: #fff;
     font-weight: 500;
     outline: none;
     border: none;
@@ -217,7 +216,7 @@ export default function CurrencyInputPanel({
                     cornerRadiusBottomNone={cornerRadiusBottomNone}
                     cornerRadiusTopNone={cornerRadiusTopNone}
                 >
-                    {!hideInput && (
+                    {/* {!hideInput && (
                         <LabelRow>
                             <RowBetween>
                                 <TYPE.body color={theme.text2} fontWeight={500} fontSize={14}>
@@ -236,7 +235,7 @@ export default function CurrencyInputPanel({
                                 )}
                             </RowBetween>
                         </LabelRow>
-                    )}
+                    )} */}
                     <InputRow
                         style={hideInput ? { padding: '0', borderRadius: '8px' } : {}}
                         selected={disableCurrencySelect}
@@ -252,6 +251,17 @@ export default function CurrencyInputPanel({
                                 />
                                 {account && label !== 'To' && (
                                     <StyledBalanceMax onClick={handleMaxDeposit}>MAX</StyledBalanceMax>
+                                )}
+                                {account && (
+                                    <TYPE.body
+                                        onClick={handleMaxDeposit}
+                                        color={theme.text2}
+                                        fontWeight={500}
+                                        fontSize={14}
+                                        style={{ display: 'inline', cursor: 'pointer' }}
+                                    >
+                                        xSUSHI Balance: {xSushiBalance}
+                                    </TYPE.body>
                                 )}
                                 <InputOverLay>
                                     <span>{depositValue ? depositValue : '0.0'}</span> xSUSHI

@@ -39,6 +39,10 @@ import Bling from '../../assets/images/main_logo.png'
 import XBling from '../../assets/images/xBling.png'
 import MainBling from '../../assets/images/mainStakeLogo.png'
 
+const CardBG = '#000'
+const yellowBG = '#daab62'
+const greenBG = '#3CCA5D'
+
 const PageWrapper = styled(AutoColumn)`
     width: 100%;
     justify-content: center;
@@ -54,18 +58,64 @@ const StakeHeader = styled(DataCard)`
     display: flex;
     align-items: center;
     margin-bottom: 0px;
-    background: #000326;
+    background: ${CardBG};
     opacity: 1;
-`
-const StakeBody = styled.div`
-    width: 66.66%;
+    padding: 16px;
 `
 
-const StakeInfoBody = styled.div`
-    width: 33.33%;
-    margin-left: 1rem;
+const PortfolioButton = styled.button`
+    font-size: 14px;
+    font-weight: 500;
+    padding: 8px 20px;
+    background: transparent;
+    border: 1px solid #fff;
+    border-radius: 6px;
+`
 
-    align-self: stretch;
+const StakeAPR = styled(StakeHeader)`
+    background: linear-gradient(88.16deg, #3cca5d 9.82%, #2655c2 30.96%, #9f67f3 85.3%);
+    border-radius: 10px;
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    & > div {
+        display: flex;
+        align-items: center;
+
+        &:last-child {
+            align-items: flex-start;
+        }
+
+        p {
+            font-size: 14px;
+            font-weight: 700;
+            color: #fff;
+            margin: 0;
+        }
+        h2 {
+            font-size: 36px;
+            color: #fff;
+            margin: 0 0 0 12px;
+            line-height: 36px;
+        }
+    }
+`
+
+const StatsButton = styled(PortfolioButton)`
+    background: ${yellowBG};
+    color: #000;
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    margin-left: 19px;
+`
+
+const StakeBalance = styled(DataCard)`
+    background: ${CardBG};
+    width: 100%;
+    padding: 1rem 1.5rem;
 `
 const LogoBox = styled(DataCard)`
     background: transparent;
@@ -78,13 +128,8 @@ const LogoBox = styled(DataCard)`
         width: 100%;
         height: 100%;
         object-fit: contain;
+        object-position: top;
     }
-`
-
-const StatusBox = styled(LogoBox)`
-    background: #000326;
-    opacity: 1;
-    width: 100%;
 `
 
 const BalanceBox = styled.div`
@@ -102,59 +147,30 @@ const BalanceBox = styled.div`
     }
 `
 
-const APRBox = styled.div`
-    background-color: #35179a;
-    border-radius: 10px;
-    padding: 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 10px;
-
-    & > div {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-
-        &:last-child {
-            align-items: flex-end;
-        }
-    }
-`
-
 const StakeAppBody = styled.div`
     position: relative;
-    width: 100%;
+    width: 66.66%;
     // background: ${({ theme }) => transparentize(0.25, theme.bg1)};
-    background: #000326;
+    background: ${CardBG};
     border-radius: 10px;
-    padding: 1.5rem;
-`
-
-const ViewLink = styled.a`
-    color: #000;
-    font-size: 16px;
-    background-color: #ffd166;
-    padding: 5px 15px;
-    border-radius: 8px;
-    margin-top: 10px;
-    display: block;
+    padding: 1.5rem 0.75rem;
+    margin-right: 10px;
 `
 
 const SushiTab = styled.div`
     display: flex;
     width: 100%;
-    background: #2f3353;
+    background: #262626;
     border-radius: 5px;
     padding: 2px;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
 `
 
 const Tab = styled.div<{ selected: boolean }>`
     display: flex;
     justify-content: center;
     align-items: center;
-    background: ${({ selected }) => (selected ? '#000326' : 'none')};
+    background: ${({ selected }) => (selected ? '#000' : 'none')};
     color: #fff;
     cursor: pointer;
     width: 50%;
@@ -162,26 +178,22 @@ const Tab = styled.div<{ selected: boolean }>`
     border-radius: 3px;
 `
 
-const BalanceText = styled.p`
-    text-align: right;
-    font-size: 14px;
-`
-
 const SushiRate = styled.div`
     display: flex;
     justify-content: space-between;
-    margin-bottom: 16px;
+    margin-bottom: 1.5rem;
     align-items: center;
+    padding-left: 0.75rem;
 
     & > div {
         line-height: 28px;
-        border: 1px solid #b4ffc5;
         border-radius: 25px;
-        background: #2bc14e;
+        background: ${greenBG};
         font-size: 14px;
-        font-weight: 500;
+        font-weight: 700;
         text-align: center;
-        padding: 0 12px;
+        padding: 5px 12px;
+        color: #000;
     }
 `
 
@@ -242,7 +254,7 @@ export default function Saave() {
                         <CardSection>
                             <AutoColumn gap="md">
                                 <RowBetween>
-                                    <TYPE.white fontWeight={600} color={theme.text1}>
+                                    <TYPE.white fontSize={20} fontWeight={600} color={theme.text1}>
                                         SushiBar: Make SUSHI work for you
                                     </TYPE.white>
                                 </RowBetween>
@@ -256,154 +268,136 @@ export default function Saave() {
                                         </TYPE.white>
                                     </div>
                                 </RowBetween>
-                                <ExternalLink
-                                    style={{ color: 'white', textDecoration: 'underline' }}
-                                    target="_blank"
-                                    href="https://analytics.sushi.com/bar"
-                                >
-                                    <TYPE.white fontSize={14} color={theme.text1}>
-                                        View SushiBar Stats <span style={{ fontSize: '11px' }}>↗</span>
-                                    </TYPE.white>
-                                </ExternalLink>
+
                                 {account && (
                                     <ExternalLink
-                                        style={{ color: 'white', textDecoration: 'underline' }}
+                                        style={{ color: 'white' }}
                                         target="_blank"
                                         href={'http://analytics.sushi.com/users/' + account}
                                     >
-                                        <TYPE.white fontSize={14} color={theme.text1}>
-                                            View your SushiBar Portfolio <span style={{ fontSize: '11px' }}>↗</span>
-                                        </TYPE.white>
+                                        <PortfolioButton>View Portfolio</PortfolioButton>
                                     </ExternalLink>
                                 )}
                             </AutoColumn>
                         </CardSection>
                     </StakeHeader>
+                    <StakeAPR>
+                        <div>
+                            <Text color={'#fff'} fontSize={18} fontWeight={700}>
+                                Staking APR
+                            </Text>
+                            <ExternalLink
+                                style={{ color: 'white' }}
+                                target="_blank"
+                                href="https://analytics.sushi.com/bar"
+                            >
+                                <StatsButton>View Stats</StatsButton>
+                            </ExternalLink>
+                        </div>
+                        <div>
+                            <p>Yesterday&apos;s APR</p>
+                            <h2>{`${APY1d ? APY1d.toFixed(2) + '%' : t('Loading')}`}</h2>
+                        </div>
+                    </StakeAPR>
                     <FlexBox>
-                        <StakeBody>
-                            <APRBox>
-                                <div>
-                                    <Text color={'#fff'} fontSize={20}>
-                                        Staking APR
-                                    </Text>
-                                    <ViewLink target="_blank" href="https://analytics.sushi.com/bar">
-                                        View Stats
-                                    </ViewLink>
-                                </div>
-                                <div>
-                                    <Text color={'#fff'} fontSize={30}>
-                                        {`${APY1d ? APY1d.toFixed(2) + '%' : t('Loading')}`}
-                                    </Text>
-                                    <Text color={'#fff'} fontSize={20} style={{ marginTop: '5px' }}>
-                                        {"Yesterday's APR"}
-                                    </Text>
-                                </div>
-                            </APRBox>
-                            <StakeAppBody>
-                                {/* <SaaveHeader /> */}
-                                <SushiTab>
-                                    <Tab
-                                        onClick={() => {
-                                            if (activeTab !== 0) setActiveTab(0)
-                                        }}
-                                        selected={activeTab === 0}
-                                    >
-                                        SUSHI
-                                    </Tab>
-                                    <Tab
-                                        onClick={() => {
-                                            if (activeTab !== 1) setActiveTab(1)
-                                        }}
-                                        selected={activeTab === 1}
-                                    >
-                                        xSUSHI
-                                    </Tab>
-                                </SushiTab>
+                        <StakeAppBody>
+                            {/* <SaaveHeader /> */}
+                            <SushiTab>
+                                <Tab
+                                    onClick={() => {
+                                        if (activeTab !== 0) setActiveTab(0)
+                                    }}
+                                    selected={activeTab === 0}
+                                >
+                                    SUSHI
+                                </Tab>
+                                <Tab
+                                    onClick={() => {
+                                        if (activeTab !== 1) setActiveTab(1)
+                                    }}
+                                    selected={activeTab === 1}
+                                >
+                                    xSUSHI
+                                </Tab>
+                            </SushiTab>
 
-                                <SushiRate>
-                                    <p>{activeTab === 0 ? 'Stake SUSHI' : 'Unstake'}</p>
-                                    <div>1 xSUSHI = {Number(bar?.ratio ?? 0)?.toFixed(4)} SUSHI</div>
-                                </SushiRate>
+                            <SushiRate>
+                                <p>{activeTab === 0 ? 'Stake SUSHI' : 'Unstake'}</p>
+                                <div>1 xSUSHI = {Number(bar?.ratio ?? 0)?.toFixed(4)} SUSHI</div>
+                            </SushiRate>
 
-                                <Wrapper style={{ padding: '0px' }} id="swap-page">
-                                    <AutoColumn style={{ paddingBottom: '10px' }}>
-                                        {activeTab === 0 && (
-                                            <SushiDepositPanel
-                                                label={''}
-                                                disableCurrencySelect={true}
-                                                customBalanceText={'Available to deposit: '}
-                                                id="stake-liquidity-token"
-                                                buttonText="Deposit"
-                                                cornerRadiusBottomNone={true}
-                                            />
-                                        )}
-                                        {activeTab === 1 && (
-                                            <XSushiWithdrawlPanel
-                                                label={''}
-                                                disableCurrencySelect={true}
-                                                customBalanceText={'Available to withdraw: '}
-                                                id="withdraw-liquidity-token"
-                                                buttonText="Withdraw"
-                                                cornerRadiusBottomNone={true}
-                                            />
-                                        )}
-                                    </AutoColumn>
-                                </Wrapper>
+                            <Wrapper style={{ padding: '0px' }} id="swap-page">
+                                <AutoColumn>
+                                    {activeTab === 0 && (
+                                        <SushiDepositPanel
+                                            label={''}
+                                            disableCurrencySelect={true}
+                                            customBalanceText={'Available to deposit: '}
+                                            id="stake-liquidity-token"
+                                            buttonText="Deposit"
+                                        />
+                                    )}
+                                    {activeTab === 1 && (
+                                        <XSushiWithdrawlPanel
+                                            label={''}
+                                            disableCurrencySelect={true}
+                                            customBalanceText={'Available to withdraw: '}
+                                            id="withdraw-liquidity-token"
+                                            buttonText="Withdraw"
+                                        />
+                                    )}
+                                </AutoColumn>
+                            </Wrapper>
 
-                                {/* <BalanceText>
+                            {/* <BalanceText>
                                     {activeTab === 0
                                         ? 'xSUSHI Balance: ' + xSushiBalance?.toFixed(8)
                                         : 'SUSHI Balance: ' + sushiBalance?.toFixed(8)}
                                 </BalanceText> */}
-                            </StakeAppBody>
-                        </StakeBody>
-                        <StakeInfoBody>
-                            <StatusBox>
-                                <AutoColumn gap="md">
+                        </StakeAppBody>
+                        <AutoColumn gap="md" style={{ width: '33.33%' }}>
+                            <StakeBalance>
+                                <Text color={'#fff'} fontSize={18} style={{ marginBottom: '15px' }}>
+                                    Balance
+                                </Text>
+                                <BalanceBox>
+                                    <img src={XBling} alt="xBling" />
                                     <div>
-                                        <Text color={'#fff'} fontSize={18} style={{ marginBottom: '15px' }}>
-                                            Balance
+                                        <Text color={'#fff'} fontSize={18}>
+                                            {account
+                                                ? xSushiBalance && parseInt(xSushiBalance?.toFixed(8)) !== 0
+                                                    ? xSushiBalance?.toFixed(8)
+                                                    : '0.0'
+                                                : '-'}
                                         </Text>
-                                        <BalanceBox>
-                                            <img src={XBling} alt="xBling" />
-                                            <div>
-                                                <Text color={'#fff'} fontSize={18}>
-                                                    {account
-                                                        ? xSushiBalance && parseInt(xSushiBalance?.toFixed(8)) !== 0
-                                                            ? xSushiBalance?.toFixed(8)
-                                                            : '0.0'
-                                                        : '-'}
-                                                </Text>
-                                                <Text color={'#fff'} fontSize={18}>
-                                                    xSushi
-                                                </Text>
-                                            </div>
-                                        </BalanceBox>
+                                        <Text color={'#fff'} fontSize={18}>
+                                            xSushi
+                                        </Text>
                                     </div>
-                                    <div>
-                                        <Text color={'#fff'} fontSize={18} style={{ marginBottom: '15px' }}>
-                                            UnStaked
-                                        </Text>
+                                </BalanceBox>
+                            </StakeBalance>
+                            <StakeBalance>
+                                <Text color={'#fff'} fontSize={18} style={{ marginBottom: '15px' }}>
+                                    UnStaked
+                                </Text>
 
-                                        <BalanceBox>
-                                            <img src={Bling} alt="Bling" />
-                                            <div>
-                                                <Text color={'#fff'} fontSize={18}>
-                                                    {account
-                                                        ? sushiBalance && parseInt(sushiBalance?.toFixed(8)) !== 0
-                                                            ? sushiBalance?.toFixed(8)
-                                                            : '0.0'
-                                                        : '-'}
-                                                </Text>
-                                                <Text color={'#fff'} fontSize={18}>
-                                                    Sushi
-                                                </Text>
-                                            </div>
-                                        </BalanceBox>
+                                <BalanceBox>
+                                    <img src={Bling} alt="Bling" />
+                                    <div>
+                                        <Text color={'#fff'} fontSize={18}>
+                                            {account
+                                                ? sushiBalance && parseInt(sushiBalance?.toFixed(8)) !== 0
+                                                    ? sushiBalance?.toFixed(8)
+                                                    : '0.0'
+                                                : '-'}
+                                        </Text>
+                                        <Text color={'#fff'} fontSize={18}>
+                                            Sushi
+                                        </Text>
                                     </div>
-                                </AutoColumn>
-                            </StatusBox>
-                        </StakeInfoBody>
+                                </BalanceBox>
+                            </StakeBalance>
+                        </AutoColumn>
                     </FlexBox>
                 </AutoColumn>
             </PageWrapper>
