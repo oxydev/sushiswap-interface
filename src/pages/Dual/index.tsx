@@ -50,44 +50,56 @@ export default function BentoBalances(): JSX.Element {
     const flattenSearchResults = result.map((a: { item: any }) => (a.item ? a.item : a))
     // Sorting Setup
     const { items, requestSort, sortConfig } = useSortableData(flattenSearchResults)
-    // const switchNetwork = () => {
-    //     if (window.ethereum) {
-    //         try {
-    //             const data = [
-    //                 {
-    //                     chainId: '0xa516',
-    //                     chainName: 'Oasis Emerald',
-    //                     nativeCurrency: {
-    //                         symbol: 'ROSE',
-    //                         decimals: 18
-    //                     },
-    //                     rpcUrls: ['https://emerald.oasis.dev/'],
-    //                     blockExplorerUrls: ['https://explorer.emerald.oasis.dev/']
-    //                 }
-    //             ]
-    //
-    //             try {
-    //                 window.ethereum.request({
-    //                     method: 'wallet_addEthereumChain',
-    //                     params: data
-    //                 })
-    //                 window.ethereum.request({
-    //                     method: 'wallet_switchEthereumChain',
-    //                     params: [{ chainId: '0xa516' }]
-    //                 })
-    //             } catch (addError) {
-    //                 // handle "add" error
-    //             }
-    //
-    //         } catch (e) {
-    //
-    //         }
-    //
-    //     }
-    // }
-    // useEffect(()=>{
-    //     switchNetwork()
-    // },[])
+    const switchNetwork = () => {
+        if (window.ethereum) {
+            try {
+                // const data = [
+                //     {
+                //         chainId: '0xa516',
+                //         chainName: 'Oasis Emerald',
+                //         nativeCurrency: {
+                //             symbol: 'ROSE',
+                //             decimals: 18
+                //         },
+                //         rpcUrls: ['https://emerald.oasis.dev/'],
+                //         blockExplorerUrls: ['https://explorer.emerald.oasis.dev/']
+                //     }
+                // ]
+                 const data = [
+                    {
+                        chainId: '0xa515',
+                        chainName: 'Oasis Test',
+                        nativeCurrency: {
+                            symbol: 'tROSE',
+                            decimals: 18
+                        },
+                        rpcUrls: ['https://testnet.emerald.oasis.dev/'],
+                        blockExplorerUrls: ['https://testnet.explorer.emerald.oasis.dev/']
+                    }
+                ]
+
+                try {
+                    window.ethereum.request({
+                        method: 'wallet_addEthereumChain',
+                        params: data
+                    })
+                    window.ethereum.request({
+                        method: 'wallet_switchEthereumChain',
+                        params: [{ chainId: '0xa515' }]
+                    })
+                } catch (addError) {
+                    // handle "add" error
+                }
+
+            } catch (e) {
+
+            }
+
+        }
+    }
+    useEffect(()=>{
+        switchNetwork()
+    },[])
     return (
         <div className="container max-w-4xl px-0 mx-auto sm:px-4">
             <Card
@@ -175,7 +187,6 @@ export default function BentoBalances(): JSX.Element {
                 <div className="flex-col space-y-2">
                     {items && items.length > 0 ? (
                         items.map((farm: any, i: number) => {
-                            console.log(balances[i].result?.[0])
                             return (
                                 <TokenBalance
                                     key={farm.address + '_' + i}
@@ -215,7 +226,6 @@ const RewardRate = styled.div`
 
 const TokenBalance = ({ farm, totalSupply }: any) => {
     const [expand, setExpand] = useState<boolean>(false)
-    console.log(totalSupply)
 
     return (
         <>
@@ -251,22 +261,28 @@ const TokenBalance = ({ farm, totalSupply }: any) => {
                         </div>
                         <div className="flex items-center justify-end">
                             <div className="text-xl font-semibold text-right">
-                                {formattedPercent((farm.roiPerYear * 100) / 10000000)}{' '}
+                                {/*{formattedPercent((farm.roiPerYear * 100) / 10000000)}{' '}*/}
                                 {/*{formattedPercent(1 * 100)}{' '}*/}
-                                {/*Coming Soon...*/}
+                                Coming Soon...
                             </div>
                         </div>
                         <div style={{ paddingLeft: '20%' }} className="flex items-center justify-end">
                             <div className="text-xl font-semibold text-right">
                                 <div className="flex items-center">
-                                    <CurrencyLogo currency={testAwards[0]} />
-                                    <p style={{ fontSize: '12px', marginLeft: '12px' }}>{testAwards[0].name}</p>
-                                    <RewardRate>0.78912</RewardRate>
+                                    <CurrencyLogo currency={ new Token(ChainId.OASISETH_MAIN, farm.rewardAddress0, 18, 'ETH(MULTI)', 'Ethereum')} />
+                                    <p style={{ fontSize: '12px', marginLeft: '12px' }}>{farm.rewardName0}</p>
+                                    <RewardRate>{formattedNum(
+                                      Fraction.from(BigNumber.from(farm.rewardRate0).mul(365*864), BigNumber.from(10).pow(16)).toString(18),
+                                      false
+                                    )} / Year</RewardRate>
                                 </div>
                                 <div className="flex items-center">
-                                    <CurrencyLogo currency={testAwards[0]} />
-                                    <p style={{ fontSize: '12px', marginLeft: '12px' }}>{testAwards[0].name}</p>
-                                    <RewardRate>0.78912</RewardRate>
+                                    <CurrencyLogo currency={new Token(ChainId.OASISETH_MAIN, farm.rewardAddress1, 18, 'ETH(MULTI)', 'Ethereum')} />
+                                    <p style={{ fontSize: '12px', marginLeft: '12px' }}>{farm.rewardName1}</p>
+                                    <RewardRate>{formattedNum(
+                                      Fraction.from(BigNumber.from(farm.rewardRate1).mul(365*864), BigNumber.from(10).pow(16)).toString(18),
+                                      false
+                                    )} / Year</RewardRate>
                                 </div>
                             </div>
                         </div>
@@ -327,12 +343,12 @@ const UserBalance = ({ farm, deposited }: any) => {
                         </div>
                         <div className="flex flex-col items-start justify-end" style={{ paddingLeft: '30%' }}>
                             <div className="flex self-stretch justify-between pb-2 pr-6">
-                                <CurrencyLogo currency={testAwards[0]} />
+                                <CurrencyLogo currency={ new Token(ChainId.OASISETH_MAIN, farm.rewardAddress0, 18, 'ETH(MULTI)', 'Ethereum')} />
                                 <div className="ml-3 mr-3 text-left text-secondary">{farm.rewardName0}</div>
                                 <div className="text-left">{formattedNum(pendingA)} </div>
                             </div>
                             <div className="flex self-stretch justify-between pr-6">
-                                <CurrencyLogo currency={testAwards[1]} />
+                                <CurrencyLogo currency={ new Token(ChainId.OASISETH_MAIN, farm.rewardAddress1, 18, 'ETH(MULTI)', 'Ethereum')} />
                                 <div className="ml-3 mr-3 text-right text-secondary">{farm.rewardName1}</div>
                                 <div className="text-right">{formattedNum(pendingB)} </div>
                             </div>
