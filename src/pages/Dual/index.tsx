@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Dots } from '../Pool/styleds'
 import { ChainId, Currency, CurrencyAmount, Token } from '@sushiswap/sdk'
 
@@ -7,12 +7,18 @@ import { Card, CardHeader, Paper, Search, DoubleLogo, TokenLogo } from './compon
 import useFuse from 'sushi-hooks/useFuse'
 import useSortableData from 'sushi-hooks/useSortableData'
 import useDualFarms from 'sushi-hooks/useDualFarms'
+import Fraction from '../../constants/Fraction'
 
 import { ChevronUp, ChevronDown } from 'react-feather'
 import InputGroup from './InputGroup'
 import usePendingSushi, { usePendingDual } from '../../sushi-hooks/usePendingSushi'
 import CurrencyLogo from 'components/CurrencyLogo'
 import styled from 'styled-components'
+import { useMultipleContractSingleData } from '../../state/multicall/hooks'
+import { Interface } from '@ethersproject/abi'
+import DUAL_ABI from '../../constants/abis/dual-rewards.-staking.json'
+import { BigNumber } from '@ethersproject/bignumber'
+import { useActiveWeb3React } from '../../hooks'
 
 const testAwards = [
     new Token(ChainId.OASISETH_MAIN, '0xB44a9B6905aF7c801311e8F4E76932ee959c663C', 18, 'ETH(MULTI)', 'Ethereum'),
@@ -22,8 +28,19 @@ const testAwards = [
 export default function BentoBalances(): JSX.Element {
     const query = useDualFarms()
     const farms = query?.farms
-
     const userFarms = query?.userFarms
+    const { account } = useActiveWeb3React()
+    const accountArg = useMemo(() => [account ?? undefined], [account])
+
+    const rewardsAddresses = ['0xaea9Fd93f86970dbB8946c4e45d0C05B3259fb99']
+    const balances = useMultipleContractSingleData(rewardsAddresses, new Interface(DUAL_ABI), 'totalSupply', [])
+    const balancesPerson = useMultipleContractSingleData(
+        rewardsAddresses,
+        new Interface(DUAL_ABI),
+        'balanceOf',
+        accountArg
+    )
+
     // Search Setup
     const options = { keys: ['symbol', 'name', 'pairAddress'], threshold: 0.4 }
     const { result, search, term } = useFuse({
@@ -104,7 +121,13 @@ export default function BentoBalances(): JSX.Element {
                             </div>
                             <div className="flex-col space-y-2">
                                 {userFarms.map((farm: any, i: number) => {
-                                    return <UserBalance key={farm.address + '_' + i} farm={farm} />
+                                    return (
+                                        <UserBalance
+                                            key={farm.address + '_' + i}
+                                            farm={farm}
+                                            deposited={balancesPerson[0].result?.[0]}
+                                        />
+                                    )
                                 })}
                             </div>
                         </div>
@@ -152,7 +175,14 @@ export default function BentoBalances(): JSX.Element {
                 <div className="flex-col space-y-2">
                     {items && items.length > 0 ? (
                         items.map((farm: any, i: number) => {
-                            return <TokenBalance key={farm.address + '_' + i} farm={farm} />
+                            console.log(balances[i].result?.[0])
+                            return (
+                                <TokenBalance
+                                    key={farm.address + '_' + i}
+                                    farm={farm}
+                                    totalSupply={balances[i].result?.[0]}
+                                />
+                            )
                         })
                     ) : (
                         <>
@@ -183,8 +213,10 @@ const RewardRate = styled.div`
     text-align: left;
 `
 
-const TokenBalance = ({ farm }: any) => {
+const TokenBalance = ({ farm, totalSupply }: any) => {
     const [expand, setExpand] = useState<boolean>(false)
+    console.log(totalSupply)
+
     return (
         <>
             {farm.type === 'DLP' && (
@@ -207,7 +239,13 @@ const TokenBalance = ({ farm }: any) => {
                                 <div className="text-right">{formattedNum(farm.tvl, true)} </div>
                                 <div className="text-right text-secondary">
                                     {/*{formattedNum(balance, false)} GLP*/}
-                                    {formattedNum(farm.balance, false)} GLP
+                                    {totalSupply
+                                        ? formattedNum(
+                                              Fraction.from(totalSupply, BigNumber.from(10).pow(18)).toString(18),
+                                              false
+                                          )
+                                        : 0}{' '}
+                                    GLP
                                 </div>
                             </div>
                         </div>
@@ -252,7 +290,7 @@ const TokenBalance = ({ farm }: any) => {
     )
 }
 
-const UserBalance = ({ farm }: any) => {
+const UserBalance = ({ farm, deposited }: any) => {
     const [expand, setExpand] = useState<boolean>(false)
     const [pendingA, pendingB] = usePendingDual(farm.poolAddress)
     //todo hamid
@@ -277,7 +315,13 @@ const UserBalance = ({ farm }: any) => {
                             <div>
                                 <div className="text-right">{formattedNum(farm.depositedUSD, true)} </div>
                                 <div className="text-right text-secondary">
-                                    {formattedNum(farm.depositedLP, false)} GLP
+                                    {deposited
+                                        ? formattedNum(
+                                              Fraction.from(deposited, BigNumber.from(10).pow(18)).toString(18),
+                                              false
+                                          )
+                                        : 0}{' '}
+                                    GLP
                                 </div>
                             </div>
                         </div>
