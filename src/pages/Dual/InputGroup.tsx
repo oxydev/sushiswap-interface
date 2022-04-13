@@ -66,16 +66,14 @@ export default function InputGroup({
             new Token(chainId || 1, pairAddressChecksum, balance.decimals, pairSymbol, ''),
             ethers.constants.MaxUint256.toString()
         ),
-      poolAddress
+        poolAddress
     )
 
     const { deposit, withdraw, harvest } = useMasterChefDual(poolAddress)
 
-
-
     return (
         <>
-            <div className="flex flex-col py-6 space-y-4">
+            <div className="flex flex-col py-6 space-y-4" style={{ padding: '0 15%' }}>
                 <div className="grid grid-cols-1 gap-4 px-4 sm:grid-cols-2">
                     {type === 'LP' && (
                         <>
@@ -200,21 +198,18 @@ export default function InputGroup({
                     </div>
                 )}
                 {pendingA && Number(pendingA) > 0 && (
-                    <HarvestContainer
-                        className="px-4"
-                    >
-                            <Button
-                                color="default"
-                                onClick={async () => {
-                                    setPendingTx(true)
-                                    await harvest(pid, pairSymbol)
-                                    setPendingTx(false)
-                                }}
-                            >
-                                Harvest{'  '}
-                                {formattedNum(pendingA)} {rewardA} -
-                                {formattedNum(pendingB)} {rewardB}
-                            </Button>
+                    <HarvestContainer className="px-4">
+                        <Button
+                            color="default"
+                            onClick={async () => {
+                                setPendingTx(true)
+                                await harvest(pid, pairSymbol)
+                                setPendingTx(false)
+                            }}
+                        >
+                            Harvest{'  '}
+                            {formattedNum(pendingA)} {rewardA} -{formattedNum(pendingB)} {rewardB}
+                        </Button>
                     </HarvestContainer>
                 )}
             </div>
@@ -225,5 +220,10 @@ export default function InputGroup({
 const HarvestContainer = styled.div`
     & > div {
         width: 100%;
+    }
+
+    button {
+        background: linear-gradient(91.29deg, #39a894 -4.84%, #3e8ed7 97.49%);
+        border: 0 !important;
     }
 `
