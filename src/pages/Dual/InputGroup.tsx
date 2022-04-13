@@ -75,24 +75,24 @@ export default function InputGroup({
         <>
             <div className="flex flex-col py-6 space-y-4" style={{ padding: '0 15%' }}>
                 <div className="grid grid-cols-1 gap-4 px-4 sm:grid-cols-2">
-                    {(type === 'LP' || type === 'DLP') && (
+                    {/* {(type === 'LP' || type === 'DLP') && (
                         <>
-                            <Button
+                            <LiquidityButton
                                 color="default"
                                 onClick={() => history.push(`/add/${isWETH(token0Address)}/${isWETH(token1Address)}`)}
                             >
                                 Add Liquidity
-                            </Button>
-                            <Button
+                            </LiquidityButton>
+                            <LiquidityButton
                                 color="default"
                                 onClick={() =>
                                     history.push(`/remove/${isWETH(token0Address)}/${isWETH(token1Address)}`)
                                 }
                             >
                                 Remove Liquidity
-                            </Button>
+                            </LiquidityButton>
                         </>
-                    )}
+                    )} */}
                 </div>
 
                 {(approvalState === ApprovalState.NOT_APPROVED || approvalState === ApprovalState.PENDING) && (
@@ -226,4 +226,9 @@ const HarvestContainer = styled.div`
         background: linear-gradient(91.29deg, #39a894 -4.84%, #3e8ed7 97.49%);
         border: 0 !important;
     }
+`
+
+const LiquidityButton = styled(Button)`
+    border: 1px solid #fff !important;
+    color: #fff !important;
 `

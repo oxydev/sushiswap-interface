@@ -65,7 +65,7 @@ export default function BentoBalances(): JSX.Element {
                 //         blockExplorerUrls: ['https://explorer.emerald.oasis.dev/']
                 //     }
                 // ]
-                 const data = [
+                const data = [
                     {
                         chainId: '0xa515',
                         chainName: 'Oasis Test',
@@ -90,16 +90,12 @@ export default function BentoBalances(): JSX.Element {
                 } catch (addError) {
                     // handle "add" error
                 }
-
-            } catch (e) {
-
-            }
-
+            } catch (e) {}
         }
     }
-    useEffect(()=>{
+    useEffect(() => {
         switchNetwork()
-    },[])
+    }, [])
     return (
         <div className="container max-w-4xl px-0 mx-auto sm:px-4">
             <Card
@@ -148,7 +144,7 @@ export default function BentoBalances(): JSX.Element {
                 {/* All Farms */}
                 <div
                     className="grid px-4 pb-4 text-sm text-secondary"
-                    style={{ gridTemplateColumns: '2fr 2fr 1fr 2fr' }}
+                    style={{ gridTemplateColumns: '2fr 2fr 1fr 2.5fr' }}
                 >
                     <div
                         className="flex items-center cursor-pointer hover:text-secondary"
@@ -213,7 +209,7 @@ export default function BentoBalances(): JSX.Element {
 }
 
 const RewardRate = styled.div`
-    width: 110px;
+    width: 130px;
     background: linear-gradient(91.11deg, #39a894 -80.82%, #3e8ed7 90.23%);
     line-height: 22px;
     border-radius: 11px;
@@ -222,6 +218,7 @@ const RewardRate = styled.div`
     font-size: 12px;
     margin-left: 12px;
     text-align: left;
+    font-weight: normal;
 `
 
 const TokenBalance = ({ farm, totalSupply }: any) => {
@@ -233,7 +230,7 @@ const TokenBalance = ({ farm, totalSupply }: any) => {
                 <Paper className="bg-dark-800">
                     <div
                         className="grid px-4 py-4 text-sm rounded cursor-pointer select-none"
-                        style={{ gridTemplateColumns: '2fr 2fr 1fr 2fr ' }}
+                        style={{ gridTemplateColumns: '2fr 2fr 1fr 2.5fr ' }}
                         onClick={() => setExpand(!expand)}
                     >
                         <div className="flex items-center">
@@ -268,21 +265,53 @@ const TokenBalance = ({ farm, totalSupply }: any) => {
                         </div>
                         <div style={{ paddingLeft: '20%' }} className="flex items-center justify-end">
                             <div className="text-xl font-semibold text-right">
-                                <div className="flex items-center">
-                                    <CurrencyLogo currency={ new Token(ChainId.OASISETH_MAIN, farm.rewardAddress0, 18, 'ETH(MULTI)', 'Ethereum')} />
+                                <div className="flex items-center self-stretch justify-between my-1">
+                                    <CurrencyLogo
+                                        currency={
+                                            new Token(
+                                                ChainId.OASISETH_MAIN,
+                                                farm.rewardAddress0,
+                                                18,
+                                                'ETH(MULTI)',
+                                                'Ethereum'
+                                            )
+                                        }
+                                    />
                                     <p style={{ fontSize: '12px', marginLeft: '12px' }}>{farm.rewardName0}</p>
-                                    <RewardRate>{formattedNum(
-                                      Fraction.from(BigNumber.from(farm.rewardRate0).mul(365*864), BigNumber.from(10).pow(16)).toString(18),
-                                      false
-                                    )} / Year</RewardRate>
+                                    <RewardRate>
+                                        {formattedNum(
+                                            Fraction.from(
+                                                BigNumber.from(farm.rewardRate0).mul(365 * 864),
+                                                BigNumber.from(10).pow(16)
+                                            ).toString(18),
+                                            false
+                                        )}{' '}
+                                        / Year
+                                    </RewardRate>
                                 </div>
-                                <div className="flex items-center">
-                                    <CurrencyLogo currency={new Token(ChainId.OASISETH_MAIN, farm.rewardAddress1, 18, 'ETH(MULTI)', 'Ethereum')} />
+                                <div className="flex items-center self-stretch justify-between my-1">
+                                    <CurrencyLogo
+                                        currency={
+                                            new Token(
+                                                ChainId.OASISETH_MAIN,
+                                                farm.rewardAddress1,
+                                                18,
+                                                'ETH(MULTI)',
+                                                'Ethereum'
+                                            )
+                                        }
+                                    />
                                     <p style={{ fontSize: '12px', marginLeft: '12px' }}>{farm.rewardName1}</p>
-                                    <RewardRate>{formattedNum(
-                                      Fraction.from(BigNumber.from(farm.rewardRate1).mul(365*864), BigNumber.from(10).pow(16)).toString(18),
-                                      false
-                                    )} / Year</RewardRate>
+                                    <RewardRate>
+                                        {formattedNum(
+                                            Fraction.from(
+                                                BigNumber.from(farm.rewardRate1).mul(365 * 864),
+                                                BigNumber.from(10).pow(16)
+                                            ).toString(18),
+                                            false
+                                        )}{' '}
+                                        / Year
+                                    </RewardRate>
                                 </div>
                             </div>
                         </div>
@@ -343,12 +372,32 @@ const UserBalance = ({ farm, deposited }: any) => {
                         </div>
                         <div className="flex flex-col items-start justify-end" style={{ paddingLeft: '30%' }}>
                             <div className="flex self-stretch justify-between pb-2 pr-6">
-                                <CurrencyLogo currency={ new Token(ChainId.OASISETH_MAIN, farm.rewardAddress0, 18, 'ETH(MULTI)', 'Ethereum')} />
+                                <CurrencyLogo
+                                    currency={
+                                        new Token(
+                                            ChainId.OASISETH_MAIN,
+                                            farm.rewardAddress0,
+                                            18,
+                                            'ETH(MULTI)',
+                                            'Ethereum'
+                                        )
+                                    }
+                                />
                                 <div className="ml-3 mr-3 text-left text-secondary">{farm.rewardName0}</div>
                                 <div className="text-left">{formattedNum(pendingA)} </div>
                             </div>
                             <div className="flex self-stretch justify-between pr-6">
-                                <CurrencyLogo currency={ new Token(ChainId.OASISETH_MAIN, farm.rewardAddress1, 18, 'ETH(MULTI)', 'Ethereum')} />
+                                <CurrencyLogo
+                                    currency={
+                                        new Token(
+                                            ChainId.OASISETH_MAIN,
+                                            farm.rewardAddress1,
+                                            18,
+                                            'ETH(MULTI)',
+                                            'Ethereum'
+                                        )
+                                    }
+                                />
                                 <div className="ml-3 mr-3 text-right text-secondary">{farm.rewardName1}</div>
                                 <div className="text-right">{formattedNum(pendingB)} </div>
                             </div>
