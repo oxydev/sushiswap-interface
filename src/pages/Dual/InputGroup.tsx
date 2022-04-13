@@ -75,7 +75,7 @@ export default function InputGroup({
         <>
             <div className="flex flex-col py-6 space-y-4" style={{ padding: '0 15%' }}>
                 <div className="grid grid-cols-1 gap-4 px-4 sm:grid-cols-2">
-                    {type === 'LP' && (
+                    {(type === 'LP' || type === 'DLP') && (
                         <>
                             <Button
                                 color="default"
