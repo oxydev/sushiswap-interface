@@ -21,12 +21,12 @@ const useDualFarms = () => {
     const pools = [
         {
             token0: {
-                symbol:"wROSE",
+                symbol:"TEST",
                 name:"Wrapped ROSE",
                 address:"0xF6Ca785c9a3A5bbdb23FdF5bEEC4F77DB2f4B220"
             },
             token1: {
-                symbol:"weUSDT",
+                symbol:"TEST2 LP",
                 name:"Tether - Wormhole",
                 address:"0xdC19A122e268128B5eE20366299fc7b5b199C8e3"
             },
@@ -88,7 +88,9 @@ const useDualFarms = () => {
                 rewardRate1: pool.rewardRate1,
                 rewardRate0: pool.rewardRate0,
                 rewardName0: pool.rewardToken0.name,
+                rewardAddress0: pool.rewardToken0.address,
                 rewardName1: pool.rewardToken1.name,
+                rewardAddress1: pool.rewardToken1.address,
                 roiPerBlock,
                 roiPerHour,
                 roiPerDay,
