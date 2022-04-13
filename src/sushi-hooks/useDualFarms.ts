@@ -11,12 +11,13 @@ import DUAL_ABI from '../constants/abis/dual-rewards.-staking.json'
 
 import { NEVER_RELOAD, useMultipleContractSingleData } from '../state/multicall/hooks'
 import { Interface } from '@ethersproject/abi'
+import { usePendingDual } from './usePendingSushi'
 
 const useDualFarms = () => {
     const [farms, setFarms] = useState<any | undefined>()
     const { account } = useActiveWeb3React()
     // const boringHelperContract = useBoringHelperContract()
-    const accountArg = useMemo(() => [account ?? undefined], [account]);
+
     const pools = [
         {
             token0: {
@@ -46,26 +47,6 @@ const useDualFarms = () => {
             id:0
         }
     ]
-    const rewardsAddresses = pools.map((pool) => pool.poolAddress)
-
-    const balances = useMultipleContractSingleData(
-      rewardsAddresses,
-      new Interface(DUAL_ABI),
-      'balanceOf',
-      accountArg,
-    );
-    // const earnedAAmounts = useMultipleContractSingleData(
-    //   rewardsAddresses,
-    //   STAKING_DUAL_REWARDS_INTERFACE,
-    //   'earnedA',
-    //   accountArg,
-    // );
-    // const earnedBAmounts = useMultipleContractSingleData(
-    //   rewardsAddresses,
-    //   STAKING_DUAL_REWARDS_INTERFACE,
-    //   'earnedB',
-    //   accountArg,
-    // );
 
     const fetchAllFarms = useCallback(async () => {
         // let prices = await bnbFetcher()
@@ -114,7 +95,7 @@ const useDualFarms = () => {
                 roiPerMonth,
                 roiPerYear,
                 rewardPerThousand: 1 * roiPerDay * (1000 / sushiPrice),
-                tvl: 1
+                tvl: "NA"
             }
         })
 
