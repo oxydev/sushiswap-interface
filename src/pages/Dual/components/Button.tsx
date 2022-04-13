@@ -62,7 +62,7 @@ export function BackButton({ defaultRoute }: { defaultRoute: string }): JSX.Elem
                     history.goBack()
                 }
             }}
-            className="p-2 mr-4 rounded-full bg-dark-900 w-10 h-10"
+            className="w-10 h-10 p-2 mr-4 rounded-full bg-dark-900"
         >
             <ChevronLeft className={'w-6 h-6'} />
         </Button>

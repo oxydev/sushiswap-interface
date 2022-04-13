@@ -114,14 +114,14 @@ export default function InputGroup({
                             )}
                             <div className="relative flex items-center w-full mb-4">
                                 <NumericalInput
-                                    className="w-full p-3 rounded bg-input focus:ring focus:ring-blue"
+                                    className="w-full p-3 text-white bg-black rounded"
                                     value={depositValue}
                                     onUserInput={value => {
                                         setDepositValue(value)
                                     }}
                                 />
                                 {account && (
-                                    <Button
+                                    <DepositMaxButton
                                         variant="outlined"
                                         color="blue"
                                         onClick={() => {
@@ -130,10 +130,10 @@ export default function InputGroup({
                                         className="absolute border-0 right-4 focus:ring focus:ring-blue"
                                     >
                                         MAX
-                                    </Button>
+                                    </DepositMaxButton>
                                 )}
                             </div>
-                            <Button
+                            <DepositButton
                                 color="blue"
                                 disabled={
                                     pendingTx ||
@@ -148,7 +148,7 @@ export default function InputGroup({
                                 }}
                             >
                                 Deposit
-                            </Button>
+                            </DepositButton>
                         </div>
                         {/* Withdraw */}
                         <div className="col-span-2 text-center md:col-span-1">
@@ -159,14 +159,14 @@ export default function InputGroup({
                             )}
                             <div className="relative flex items-center w-full mb-4">
                                 <NumericalInput
-                                    className="w-full p-3 rounded bg-input focus:ring focus:ring-pink"
+                                    className="w-full p-3 text-white bg-black rounded"
                                     value={withdrawValue}
                                     onUserInput={value => {
                                         setWithdrawValue(value)
                                     }}
                                 />
                                 {account && (
-                                    <Button
+                                    <WithdrawMaxButton
                                         variant="outlined"
                                         color="pink"
                                         onClick={() => {
@@ -175,10 +175,10 @@ export default function InputGroup({
                                         className="absolute border-0 right-4 focus:ring focus:ring-pink"
                                     >
                                         MAX
-                                    </Button>
+                                    </WithdrawMaxButton>
                                 )}
                             </div>
-                            <Button
+                            <WithdrawButton
                                 color="pink"
                                 className="border-0"
                                 disabled={
@@ -193,7 +193,7 @@ export default function InputGroup({
                                 }}
                             >
                                 Withdraw
-                            </Button>
+                            </WithdrawButton>
                         </div>
                     </div>
                 )}
@@ -225,10 +225,48 @@ const HarvestContainer = styled.div`
     button {
         background: linear-gradient(91.29deg, #39a894 -4.84%, #3e8ed7 97.49%);
         border: 0 !important;
+        box-sizing: border-box;
+        border: 1px solid transparent !important;
+
+        &:hover {
+            background: #000;
+            border: 1px solid #fff !important;
+        }
     }
 `
 
 const LiquidityButton = styled(Button)`
     border: 1px solid #fff !important;
     color: #fff !important;
+`
+const DepositButton = styled(Button)`
+    background-color: #3e8ed7 !important;
+    transition: box-shadow 0.3s
+
+    &:hover {
+        box-shadow: 0 0 3px 2px rgba(0, 97, 165, 0.8);
+    }
+`
+
+const DepositMaxButton = styled(Button)`
+    background-color: rgba(0, 97, 165, 0.8) !important;
+    color: #000 !important;
+    height: 27px !important;
+    border-radius: 14px !important;
+`
+
+const WithdrawButton = styled(Button)`
+    background-color: #b276d9 !important;
+    transition: box-shadow 0.3s
+
+    &:hover {
+        box-shadow: 0 0 3px 2px rgba(129, 72, 167, 0.8);
+    }
+`
+
+const WithdrawMaxButton = styled(Button)`
+    background-color: rgba(129, 72, 167, 0.8) !important;
+    color: #000 !important;
+    height: 27px !important;
+    border-radius: 14px !important;
 `
