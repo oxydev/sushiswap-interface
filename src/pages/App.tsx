@@ -62,6 +62,7 @@ import Bridge from './Bridge'
 import Footer from 'components/Footer'
 import Home from './HomePage'
 import HomeHeader from 'components/HomeHeader'
+import ValutPage from './Vault'
 
 const AppWrapper = styled.div`
     display: flex;
@@ -172,6 +173,7 @@ function App() {
                                     {/*<Route exact path="/sushibar" render={() => <Redirect to="/stake" />} />*/}
                                     <Route exact strict path="/swap" component={Swap} />
                                     <Route exact strict path="/dualOnlyForTesting" component={Dual} />
+                                    <Route exact strict path="/vault" component={ValutPage} />
                                     <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
                                     <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
                                     <Route exact strict path="/find" component={PoolFinder} />
