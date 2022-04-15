@@ -24,6 +24,9 @@ import { useToggleStakeModal } from 'state/application/hooks'
 const fixedFormatting = (value: BigNumber, decimals?: number) => {
     return Fraction.from(value, BigNumber.from(10).pow(BigNumber.from(decimals))).toString(decimals)
 }
+const spanStyles = {
+    zIndex : 100
+};
 
 export default function InputGroup({
     pairAddress,
@@ -70,7 +73,6 @@ export default function InputGroup({
 
     //console.log('depositValue:', depositValue)
 
-    const [toolTipShow, setToolTipShow] = useState(false)
     // console.log(toolTipShow)
 
     const toggleStakeModal = useToggleStakeModal()
@@ -86,6 +88,7 @@ export default function InputGroup({
                                 onClick={() => history.push(`/add/${isWETH(token0Address)}/${isWETH(token1Address)}`)}
                             >
                                 Add Liquidity
+
                             </Button>
                             <Button
                                 color="default"
@@ -125,18 +128,20 @@ export default function InputGroup({
                                     }}
                                 />
                                 {account && (
-                                    <Button
-                                        variant="outlined"
-                                        color="blue"
-                                        onClick={() => {
-                                            setDepositValue(fixedFormatting(balance.value, balance.decimals))
-                                        }}
-                                        className="absolute border-0 right-4 focus:ring focus:ring-blue"
-                                    >
-                                        MAX
-                                    </Button>
+                                  <Button
+                                    variant="outlined"
+                                    color="blue"
+                                    onClick={() => {
+                                        setDepositValue(fixedFormatting(balance.value, balance.decimals))
+                                    }}
+                                    style={spanStyles}
+                                    className="absolute border-0 right-4 focus:ring focus:ring-blue"
+                                  >
+                                      MAX
+                                  </Button>
                                 )}
                             </div>
+
                             <Button
                                 color="blue"
                                 disabled={
@@ -169,6 +174,7 @@ export default function InputGroup({
                                         setWithdrawValue(value)
                                     }}
                                 />
+                                
                                 {account && (
                                     <Button
                                         variant="outlined"
@@ -176,6 +182,7 @@ export default function InputGroup({
                                         onClick={() => {
                                             setWithdrawValue(fixedFormatting(staked.value, staked.decimals))
                                         }}
+                                        style={spanStyles}
                                         className="absolute border-0 right-4 focus:ring focus:ring-pink"
                                     >
                                         MAX
@@ -204,27 +211,21 @@ export default function InputGroup({
                 {pending && Number(pending) > 0 && (
                     <HarvestContainer
                         className="px-4"
-                        onMouseEnter={() => {
-                            setToolTipShow(true)
-                        }}
-                        onMouseLeave={() => {
-                            setToolTipShow(false)
-                        }}
+
                     >
-                        <Tooltip text="Token can be harvested after the vesting period." show={toolTipShow}>
-                            <Button
-                                color="default"
-                                onClick={async () => {
-                                    setPendingTx(true)
-                                    await harvest(pid, pairSymbol)
-                                    setPendingTx(false)
-                                    toggleStakeModal()
-                                }}
-                            >
-                                Harvest{'  '}
-                                {formattedNum(pending)} BLING
-                            </Button>
-                        </Tooltip>
+                        <Button
+                            color="default"
+                            onClick={async () => {
+                                setPendingTx(true)
+                                await harvest(pid, pairSymbol)
+                                setPendingTx(false)
+                                toggleStakeModal()
+
+                            }}
+                        >
+                            Harvest{'  '}
+                            {formattedNum(pending)} BLING
+                        </Button>
                     </HarvestContainer>
                 )}
             </div>

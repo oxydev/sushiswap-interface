@@ -8,6 +8,8 @@ import { BigNumber } from '@ethersproject/bignumber'
 import Fraction from '../constants/Fraction'
 import { NEVER_RELOAD, useSingleContractMultipleData } from '../state/multicall/hooks'
 import { useMasterChefContract } from './useContract'
+import { useNativePrice, useTokens } from '../services/graph/hooks/exchange'
+import { ChainId } from '@sushiswap/sdk'
 
 const useFarms = () => {
     const [farms, setFarms] = useState<any | undefined>()
@@ -21,30 +23,36 @@ const useFarms = () => {
         if (account) {
             const dataPending = []
 
-            for (let i = 0; i < 7; i++) {
+            for (let i = 0; i < 8; i++) {
                 dataPending.push(masterChefContract?.userInfo(i, account))
             }
-            for (let i = 0; i < 7; i++) {
+            for (let i = 0; i < 8; i++) {
                 dataPending[i] = await dataPending[i]
             }
             setRewardDebt(dataPending)
         }
 
     },[masterChefContract, account])
-
+    const ethPrice = useNativePrice({ chainId: ChainId.MAINNET })
+    const xSushi = useTokens({
+        chainId: ChainId.MAINNET,
+        variables: { where: { id: "0x72Ad551af3c884d02e864B182aD9A34EE414C36C".toLowerCase() } },
+    })?.[0]
+    const sushiPrice = xSushi?.derivedETH * ethPrice
 
     const fetchAllFarms = useCallback(async () => {
         let prices = await bnbFetcher()
         let chainPrice
         let bnbPrice
         let ethPrice
-        [bnbPrice, chainPrice, ethPrice] = prices
+        let rosePrice
+        [bnbPrice, chainPrice, ethPrice, rosePrice] = prices
         // console.log(bnbPrice,chainPrice)
         const pools = [{
             balance:1,
             allocPoint:150,
             owner:{
-                totalAllocPoint: 875,
+                totalAllocPoint: 1125,
                 sushiPerBlock: 11.152637748
             },
             token0: {
@@ -84,7 +92,7 @@ const useFarms = () => {
                 balance:1,
                 allocPoint:125,
                 owner:{
-                    totalAllocPoint: 875,
+                    totalAllocPoint: 1125,
                     sushiPerBlock: 11.152637748
                 },
                 token0: {
@@ -104,7 +112,7 @@ const useFarms = () => {
                 balance:1,
                 allocPoint:150,
                 owner:{
-                    totalAllocPoint: 875,
+                    totalAllocPoint: 1125,
                     sushiPerBlock: 11.152637748
                 },
                 token1: {
@@ -124,7 +132,7 @@ const useFarms = () => {
                 balance:1,
                 allocPoint:100,
                 owner:{
-                    totalAllocPoint: 875,
+                    totalAllocPoint: 1125,
                     sushiPerBlock: 11.152637748
                 },
                 token1: {
@@ -144,7 +152,7 @@ const useFarms = () => {
                 balance:1,
                 allocPoint:150,
                 owner:{
-                    totalAllocPoint: 875,
+                    totalAllocPoint: 1125,
                     sushiPerBlock: 11.152637748
                 },
                 token1: {
@@ -164,7 +172,7 @@ const useFarms = () => {
                 balance:1,
                 allocPoint:100,
                 owner:{
-                    totalAllocPoint: 875,
+                    totalAllocPoint: 1125,
                     sushiPerBlock: 11.152637748
                 },
                 token1: {
@@ -179,11 +187,30 @@ const useFarms = () => {
                 },
                 id:6,
                 lpAddress:"0xc1AB2878d289d5c402837600c6Abc03a8a92D890"
+            },
+            {
+                balance:1,
+                allocPoint:250,
+                owner:{
+                    totalAllocPoint: 1125,
+                    sushiPerBlock: 11.152637748
+                },
+                token1: {
+                    symbol:"BLING",
+                    name: "GemKeeper Finance",
+                    address:"0x72Ad551af3c884d02e864B182aD9A34EE414C36C"
+                },
+                token0: {
+                    symbol:"wROSE",
+                    name:"Wrapped ROSE",
+                    address:"0x21C718C22D52d0F3a789b752D4c2fD5908a8A733"
+                },
+                id:7,
+                lpAddress:"0xB29553FAf847BA5B79B6ae13fa82d0B216fAf626"
             }
         ]
 
         const averageBlockTime = 7.4
-        const sushiPrice = 0.3
 
 
         const farms = pools.map((pool: any) => {
@@ -255,6 +282,10 @@ const useFarms = () => {
                 reserveUSD = userFarmDetails[userFarmDetailsKey].reserve0 * ethPrice * 2 / 1e18
             else if (address1 === "0x3223f17957Ba502cbe71401D55A0DB26E5F7c68F")
                 reserveUSD = userFarmDetails[userFarmDetailsKey].reserve1 * ethPrice * 2 / 1e18
+            else if (address0 === "0x21C718C22D52d0F3a789b752D4c2fD5908a8A733")
+                reserveUSD = userFarmDetails[userFarmDetailsKey].reserve0 * rosePrice * 2 / 1e18
+            else if (address1 === "0x21C718C22D52d0F3a789b752D4c2fD5908a8A733")
+                reserveUSD = userFarmDetails[userFarmDetailsKey].reserve1 * rosePrice * 2 / 1e18
             const balanceUSD = (Number(totalSupply) / userFarmDetails[userFarmDetailsKey].lpTotalSupply) * Number(reserveUSD)
 
             const rewardPerBlock = ((farms[userFarmDetails[userFarmDetailsKey].pid.toNumber()].allocPoint
@@ -297,14 +328,17 @@ const useFarms = () => {
                         pendingBling: pending,
                     }
                 })
+            if(farms[0].pid === 0)
+                [sorted[0],sorted[7]] = [sorted[7],sorted[0]]
 
             setFarms({ farms: sorted, userFarms: userFarms })
             // console.log('userFarms:', userFarms)
         } else {
-
+            if(farms[0].pid === 0)
+                [sorted[0],sorted[7]] = [sorted[7],sorted[0]]
             setFarms({ farms: sorted, userFarms: [] })
         }
-    }, [account, boringHelperContract, rewardDebt])
+    }, [account, boringHelperContract, rewardDebt, sushiPrice])
 
 
     useEffect(() => {
@@ -320,7 +354,7 @@ const useFarms = () => {
             redirect: 'follow'
         })
         let result = await response.text()
-        return [JSON.parse(result).binancecoin.usd, JSON.parse(result).chainlink.usd, JSON.parse(result).ethereum.usd]
+        return [JSON.parse(result).binancecoin.usd, JSON.parse(result).chainlink.usd, JSON.parse(result).ethereum.usd, 0.3]
 
 
     }

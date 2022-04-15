@@ -19,6 +19,7 @@ import SuccessIcon from '../../assets/images/faucet-success.png'
 import ErrorIcon from '../../assets/images/faucet-error.png'
 import WarningIcon from '../../assets/images/faucet-warning.png'
 import InfoIcon from '../../assets/images/faucet-info.png'
+import { ExternalLink } from '../../theme'
 
 const Wrapper = styled.div`
     ${({ theme }) => theme.flexColumnNoWrap}
@@ -141,8 +142,8 @@ export default function StakeModal() {
                     </CloseIcon>
                     <HeaderRow>Stake Your BLING</HeaderRow>
                     <ContentWrapper>
-                        <FaucetButton>Stake xBling</FaucetButton>
-                        <EndButton>Add Liquidty</EndButton>
+                        <ExternalLink href={"/#/stake"}><FaucetButton>Earn xBLING</FaucetButton></ExternalLink>
+                        <ExternalLink href={"/#/add/0x21C718C22D52d0F3a789b752D4c2fD5908a8A733/0x72Ad551af3c884d02e864B182aD9A34EE414C36C"}><EndButton>Add Liquidity</EndButton></ExternalLink>
                     </ContentWrapper>
                 </UpperSection>
             </Wrapper>

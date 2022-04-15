@@ -38,6 +38,7 @@ import { formatFromBalance } from '../../utils'
 import Bling from '../../assets/images/main_logo.png'
 import MainBling from '../../assets/images/xBling.png'
 import XBling from '../../assets/images/mainStakeLogo.png'
+import { ethPrice } from '@sushiswap/sushi-data/typings/exchange'
 
 const CardBG = '#000'
 const yellowBG = '#daab62'
@@ -281,15 +282,17 @@ export default function Saave() {
         },
         shouldFetch: !!block1d
     })
-
+    const ethPrice = useNativePrice({ chainId: ChainId.MAINNET })
+    const xSushi = useTokens({
+        chainId: ChainId.MAINNET,
+        variables: { where: { id: "0x72Ad551af3c884d02e864B182aD9A34EE414C36C".toLowerCase() } },
+    })?.[0]
+    //todo
     const bar = useBar()
-    // const [xSushiPrice] = [xSushi?.derivedETH * ethPrice, xSushi?.derivedETH * ethPrice * bar?.totalSupply]
-    const [xSushiPrice] = [0.3, 0.3 * bar?.totalSupply]
-    // console.log(bar?.totalSupply, xSushiPrice)
-    // console.log(exchange?.volumeUSD - exchange1d?.volumeUSD)
+
+    const [xSushiPrice] = [xSushi?.derivedETH * ethPrice, xSushi?.derivedETH * ethPrice * bar?.totalSupply]
     const APY1d = aprToApy(
-        (((exchange?.volumeUSD - exchange1d?.volumeUSD) * 0.0005 * 365.25) / (bar?.totalSupply * xSushiPrice)) * 100 ??
-            0
+      (((exchange?.volumeUSD - exchange1d?.volumeUSD) * 0.0005 * 365.25) / (bar?.totalSupply * xSushiPrice)) * 100 ?? 0
     )
 
     const { t } = useTranslation()
@@ -332,7 +335,7 @@ export default function Saave() {
                                             {`For every swap on the exchange, 0.05% of the swap fees are distributed as BLING proportional to your share of the GemKeeper Spell. When your BLING is staked into the GemKeeper Spell, you receive xBLING in return for voting rights and a fully composable token that can interact with other protocols. `}
                                         </TYPE.white>
                                         <TYPE.white fontSize={14} color={theme.text2} style={{ paddingBottom: '10px' }}>
-                                            {`Your xBLING is continuously compounding, when you unstake you will receive all the originally deposited BLING and any additional from fees. Happy casting spells!`}
+                                            {`Your xBLING is compounding, when you unstake you will receive all the originally deposited BLING and any additional from fees. Happy casting spells!`}
                                         </TYPE.white>
                                     </div>
                                 </RowBetween>
@@ -354,14 +357,14 @@ export default function Saave() {
                             <Text color={'#fff'} fontSize={18} fontWeight={700}>
                                 Staking APR
                             </Text>
-                            <ExternalLink
-                                disabled={true}
-                                style={{ color: 'white' }}
-                                // target="_blank"
-                                href="#"
-                            >
+                            {/*<ExternalLink*/}
+                            {/*    disabled={true}*/}
+                            {/*    style={{ color: 'white' }}*/}
+                            {/*    // target="_blank"*/}
+                            {/*    href="#"*/}
+                            {/*>*/}
                                 <StatsButton>View Stats</StatsButton>
-                            </ExternalLink>
+                            {/*</ExternalLink>*/}
                         </div>
                         <div>
                             <p>Yesterday&apos;s APR</p>
