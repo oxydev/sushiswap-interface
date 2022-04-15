@@ -228,7 +228,7 @@ export default function ValutPage(): JSX.Element {
                         <p className="mt-auto text-sm font-normal text-secondary">
                             Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula
                         </p>
-                        <a className="text-base text-center" href="/stake">
+                        <a className="text-base text-center" href="/#/stake">
                             Stake xBling
                         </a>
                     </VaultDesc>

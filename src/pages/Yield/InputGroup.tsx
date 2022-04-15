@@ -19,6 +19,7 @@ import Fraction from 'constants/Fraction'
 import { BigNumber } from '@ethersproject/bignumber'
 import Tooltip, { MouseoverTooltip } from 'components/Tooltip'
 import styled from 'styled-components'
+import { useToggleStakeModal } from 'state/application/hooks'
 
 const fixedFormatting = (value: BigNumber, decimals?: number) => {
     return Fraction.from(value, BigNumber.from(10).pow(BigNumber.from(decimals))).toString(decimals)
@@ -71,6 +72,8 @@ export default function InputGroup({
 
     const [toolTipShow, setToolTipShow] = useState(false)
     // console.log(toolTipShow)
+
+    const toggleStakeModal = useToggleStakeModal()
 
     return (
         <>
@@ -210,12 +213,12 @@ export default function InputGroup({
                     >
                         <Tooltip text="Token can be harvested after the vesting period." show={toolTipShow}>
                             <Button
-                                disabled
                                 color="default"
                                 onClick={async () => {
                                     setPendingTx(true)
                                     await harvest(pid, pairSymbol)
                                     setPendingTx(false)
+                                    toggleStakeModal()
                                 }}
                             >
                                 Harvest{'  '}

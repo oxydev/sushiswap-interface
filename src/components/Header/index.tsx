@@ -36,6 +36,7 @@ import { StyledMenuButton } from 'components/StyledMenu'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { useToggleFaucetModal } from 'state/application/hooks'
 import FaucetModal from 'components/FaucetModal'
+import StakeModal from 'components/StakeModal'
 
 const ExtendedStyledMenuButton = styled(StyledMenuButton)`
     margin-left: auto;
@@ -515,7 +516,6 @@ export default function Header() {
                     <StyledNavLink
                         onClick={() => {
                             toggleFaucetModal()
-                            console.log('hello')
                         }}
                         id={`faucet-nav-link`}
                         as="a"
@@ -619,6 +619,7 @@ export default function Header() {
                 </HeaderElementWrap>
             </HeaderControls>
             <FaucetModal />
+            <StakeModal />
         </HeaderFrame>
     )
 }
