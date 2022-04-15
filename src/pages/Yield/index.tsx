@@ -10,12 +10,26 @@ import useFarms from 'sushi-hooks/useFarms'
 import { ChevronUp, ChevronDown } from 'react-feather'
 import InputGroup from './InputGroup'
 import usePendingSushi from '../../sushi-hooks/usePendingSushi'
+import { useMultipleContractSingleData } from '../../state/multicall/hooks'
+import ERC20_INTERFACE from '../../constants/abis/erc20'
 
 
 export default function BentoBalances(): JSX.Element {
     const query = useFarms()
     const farms = query?.farms
+    const balances = useMultipleContractSingleData(farms?farms.map((a: { lpAddress: any })=>a.lpAddress):[], ERC20_INTERFACE, 'balanceOf', ["0x9F497220C595456D52C86621447cEB89Cc7B94A0"])
+    console.log(farms)
+    console.log(balances)
+    console.log(farms && !balances[0].loading ?farms.map(( now: { tvl: number; balance: number }, index: string | number)=>{
+        const price = now.tvl/now.balance
+        // console.log(price)
+        // @ts-ignore
+        return Number(balances[index].result[0])/(1e18)*price
+        // @ts-ignore
+        // @ts-ignore
+        // acc = acc.add(balances[index].result[0].mul(Number(price)))
 
+    }):'ss')
     const userFarms = query?.userFarms
     // Search Setup
     const options = { keys: ['symbol', 'name', 'pairAddress'], threshold: 0.4 }

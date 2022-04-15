@@ -4,7 +4,7 @@ import { barHistoriesQuery, barQuery } from '../queries/bar'
 import { request } from 'graphql-request'
 
 const BAR = {
-    [ChainId.MAINNET]: 'gemkeeper/bar'
+    [ChainId.MAINNET]: 'gemkeeper/bar_final'
 }
 
 // @ts-ignore TYPE NEEDS FIXING

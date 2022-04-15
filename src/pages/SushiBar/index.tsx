@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { BAR_ADDRESS, ChainId, SUSHI, ZERO } from '@sushiswap/sdk'
 
-import { useTokenBalance } from '../../state/wallet/hooks'
+import useTokenBalance from 'sushi-hooks/useTokenBalance'
 import { tryParseAmount } from '../../functions/parse'
 
 //import { WrapperNoPadding } from '../../components/swap/styleds'
@@ -36,8 +36,8 @@ import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallbac
 import { formatFromBalance } from '../../utils'
 
 import Bling from '../../assets/images/main_logo.png'
-import XBling from '../../assets/images/xBling.png'
-import MainBling from '../../assets/images/mainStakeLogo.png'
+import MainBling from '../../assets/images/xBling.png'
+import XBling from '../../assets/images/mainStakeLogo.png'
 
 const CardBG = '#000'
 const yellowBG = '#daab62'
@@ -282,18 +282,11 @@ export default function Saave() {
         shouldFetch: !!block1d
     })
 
-    const xSushi = useTokens({
-        chainId: ChainId.MAINNET,
-        variables: { where: { id: XSUSHI.address.toLowerCase() } }
-    })?.[0]
-
-    const ethPrice = useNativePrice({ chainId: ChainId.MAINNET })
-
     const bar = useBar()
     // const [xSushiPrice] = [xSushi?.derivedETH * ethPrice, xSushi?.derivedETH * ethPrice * bar?.totalSupply]
     const [xSushiPrice] = [0.3, 0.3 * bar?.totalSupply]
-    console.log(bar?.totalSupply)
-    // console.log(xSushi)
+    // console.log(bar?.totalSupply, xSushiPrice)
+    // console.log(exchange?.volumeUSD - exchange1d?.volumeUSD)
     const APY1d = aprToApy(
         (((exchange?.volumeUSD - exchange1d?.volumeUSD) * 0.0005 * 365.25) / (bar?.totalSupply * xSushiPrice)) * 100 ??
             0
@@ -301,18 +294,22 @@ export default function Saave() {
 
     const { t } = useTranslation()
     //const darkMode = useDarkModeManager()
-    const sushiBalance = useTokenBalance(account ?? undefined, SUSHI[ChainId.MAINNET].BLING)
-    const xSushiBalance = useTokenBalance(account ?? undefined, XSUSHI)
+    const sushiBalanceBigInt = useTokenBalance('0x72Ad551af3c884d02e864B182aD9A34EE414C36C')
+
+    const sushiBalanceFormat = formatFromBalance(sushiBalanceBigInt?.value, sushiBalanceBigInt?.decimals)
+
+    const xSushiBalance = useTokenBalance(XSUSHI.address)
+    const xSushiBalanceFormat = formatFromBalance(xSushiBalance?.value, xSushiBalance?.decimals)
+
     const [activeTab, setActiveTab] = useState(0)
     const [input, setInput] = useState<string>('')
 
-    const balance = activeTab === 0 ? sushiBalance : xSushiBalance
+    const balance = activeTab === 0 ? sushiBalanceFormat : xSushiBalanceFormat
 
     const [usingBalance, setUsingBalance] = useState(false)
 
-    const parsedAmount = usingBalance ? balance : tryParseAmount(input, balance?.currency)
+    const parsedAmount = balance
 
-    const [approvalState, approve] = useApproveCallback(parsedAmount, BAR_ADDRESS[ChainId.MAINNET])
 
     return (
         <>
@@ -326,29 +323,29 @@ export default function Saave() {
                             <AutoColumn gap="md">
                                 <RowBetween>
                                     <TYPE.white fontSize={20} fontWeight={600} color={theme.text1}>
-                                        SushiBar: Make SUSHI work for you
+                                        GemKeeper Spell: Maximize yield by staking BLING for xBLING
                                     </TYPE.white>
                                 </RowBetween>
                                 <RowBetween>
                                     <div>
                                         <TYPE.white fontSize={14} color={theme.text2} style={{ paddingBottom: '10px' }}>
-                                            {`Stake your SUSHI into xSUSHI for ~5% APY. No impermanent loss, no loss of governance rights. Continuously compounding.`}
+                                            {`For every swap on the exchange, 0.05% of the swap fees are distributed as BLING proportional to your share of the GemKeeper Spell. When your BLING is staked into the GemKeeper Spell, you receive xBLING in return for voting rights and a fully composable token that can interact with other protocols. `}
                                         </TYPE.white>
                                         <TYPE.white fontSize={14} color={theme.text2} style={{ paddingBottom: '10px' }}>
-                                            {`xSUSHI automatically earn fees (0.05% of all swaps, including multichain swaps) proportional to your share of the SushiBar.`}
+                                            {`Your xBLING is continuously compounding, when you unstake you will receive all the originally deposited BLING and any additional from fees. Happy casting spells!`}
                                         </TYPE.white>
                                     </div>
                                 </RowBetween>
 
-                                {account && (
-                                    <ExternalLink
-                                        style={{ color: 'white' }}
-                                        target="_blank"
-                                        href={'http://analytics.sushi.com/users/' + account}
-                                    >
-                                        <PortfolioButton>View Portfolio</PortfolioButton>
-                                    </ExternalLink>
-                                )}
+                                {/*{account && (*/}
+                                {/*    <ExternalLink*/}
+                                {/*        style={{ color: 'white' }}*/}
+                                {/*        target="_blank"*/}
+                                {/*        href={'http://analytics.sushi.com/users/' + account}*/}
+                                {/*    >*/}
+                                {/*        <PortfolioButton>View Portfolio</PortfolioButton>*/}
+                                {/*    </ExternalLink>*/}
+                                {/*)}*/}
                             </AutoColumn>
                         </CardSection>
                     </StakeHeader>
@@ -358,15 +355,17 @@ export default function Saave() {
                                 Staking APR
                             </Text>
                             <ExternalLink
+                                disabled={true}
                                 style={{ color: 'white' }}
-                                target="_blank"
-                                href="https://analytics.sushi.com/bar"
+                                // target="_blank"
+                                href="#"
                             >
                                 <StatsButton>View Stats</StatsButton>
                             </ExternalLink>
                         </div>
                         <div>
                             <p>Yesterday&apos;s APR</p>
+                            {/*<h2>Coming soon!</h2>*/}
                             <h2>{`${APY1d ? APY1d.toFixed(2) + '%' : t('Loading')}`}</h2>
                         </div>
                     </StakeAPR>
@@ -380,7 +379,7 @@ export default function Saave() {
                                     }}
                                     selected={activeTab === 0}
                                 >
-                                    SUSHI
+                                    BLING
                                 </Tab>
                                 <Tab
                                     onClick={() => {
@@ -388,13 +387,14 @@ export default function Saave() {
                                     }}
                                     selected={activeTab === 1}
                                 >
-                                    xSUSHI
+                                    xBLING
                                 </Tab>
                             </SushiTab>
 
                             <SushiRate>
-                                <p>{activeTab === 0 ? 'Stake SUSHI' : 'Unstake'}</p>
-                                <div>1 xSUSHI = {Number(bar?.ratio ?? 0)?.toFixed(4)} SUSHI</div>
+                                <p>{activeTab === 0 ? 'Stake BLING' : 'Unstake'}</p>
+                                <div>1 xBLING = {Number(bar?.ratio ?? 0)?.toFixed(4)} BLING</div>
+                                {/*<div>1 xBLING = {Number(1)?.toFixed(4)} BLING</div>*/}
                             </SushiRate>
 
                             <Wrapper style={{ padding: '0px' }} id="swap-page">
@@ -437,13 +437,11 @@ export default function Saave() {
                                         <div>
                                             <Text color={'#fff'} fontSize={18}>
                                                 {account
-                                                    ? xSushiBalance && parseInt(xSushiBalance?.toFixed(8)) !== 0
-                                                        ? xSushiBalance?.toFixed(8)
-                                                        : '0.0'
+                                                    ? xSushiBalanceFormat
                                                     : '-'}
                                             </Text>
                                             <Text color={'#fff'} fontSize={18}>
-                                                xSushi
+                                                xBLING
                                             </Text>
                                         </div>
                                     </BalanceBox>
@@ -458,13 +456,11 @@ export default function Saave() {
                                         <div>
                                             <Text color={'#fff'} fontSize={18}>
                                                 {account
-                                                    ? sushiBalance && parseInt(sushiBalance?.toFixed(8)) !== 0
-                                                        ? sushiBalance?.toFixed(8)
-                                                        : '0.0'
+                                                    ? sushiBalanceFormat
                                                     : '-'}
                                             </Text>
                                             <Text color={'#fff'} fontSize={18}>
-                                                Sushi
+                                                BLING
                                             </Text>
                                         </div>
                                     </BalanceBox>

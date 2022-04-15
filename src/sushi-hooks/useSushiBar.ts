@@ -51,7 +51,7 @@ const useSushiBar = () => {
             if (amount?.value) {
                 try {
                     const tx = await barContract?.enter(amount?.value)
-                    return addTransaction(tx, { summary: 'Enter SushiBar' })
+                    return addTransaction(tx, { summary: 'Enter GemKeeper Spell' })
                 } catch (e) {
                     return e
                 }
@@ -67,7 +67,7 @@ const useSushiBar = () => {
                 try {
                     const tx = await barContract?.leave(amount?.value)
                     //const tx = await barContract?.leave(ethers.utils.parseUnits(amount)) // where amount is string
-                    return addTransaction(tx, { summary: 'Enter SushiBar' })
+                    return addTransaction(tx, { summary: 'Enter GemKeeper Spell' })
                 } catch (e) {
                     return e
                 }

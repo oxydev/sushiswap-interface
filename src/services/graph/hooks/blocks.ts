@@ -8,7 +8,7 @@ import useSWR, { SWRConfiguration } from 'swr'
 import { GraphProps } from '../interfaces/graphProps'
 
 export function useOneDayBlock({ chainId = ChainId.MAINNET, shouldFetch = true, swrConfig = undefined }) {
-    const date = startOfSecond(startOfMinute(startOfHour(subDays(Date.now(), 1))))
+    const date = startOfSecond(startOfMinute(startOfHour(subDays(Date.now(), 7))))
     const start = getUnixTime(date)
     const end = getUnixTime(addSeconds(date, 600))
     return useBlock({

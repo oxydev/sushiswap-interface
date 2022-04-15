@@ -135,7 +135,7 @@ function CurrencyRow({
                 </Text>
                 <TYPE.darkGray className="CurrencySubtitle" ml="0px" fontSize={'12px'} fontWeight={300}>
                     {currency.getName(chainId)} {!isOnSelectedList && customAdded && '• Added by user'}
-                    {currency.getSymbol(chainId) === 'BLING' && ':Coming Soon!'}
+                    {/*{currency.getSymbol(chainId) === 'BLING' && ':Coming Soon!'}*/}
                 </TYPE.darkGray>
             </Column>
             <TokenTags currency={currency} />
@@ -189,9 +189,7 @@ export default function CurrencyList({
             const currency: Currency = data[index]
 
             const isSelected = Boolean(
-                (selectedCurrency && currencyEquals(selectedCurrency, currency)) ||
-                    (currency && currency.getSymbol(chainId) === 'BLING')
-            )
+                (selectedCurrency && currencyEquals(selectedCurrency, currency)))
             const otherSelected = Boolean(otherCurrency && currencyEquals(otherCurrency, currency))
             const handleSelect = () => onCurrencySelect(currency)
 
